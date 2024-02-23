@@ -1,0 +1,42 @@
+.alert-message {
+  width: 400px;
+}
+
+.modal-container1 {
+  background-color: #fff;
+  max-width: 50%;
+  margin: 3em auto;
+  padding: 2em 0em;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header1 {
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+  position: relative;
+}
+
+.form-group1 {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.close-button1 {
+  position: absolute;
+  top: -35%;
+  right: 2%;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.big-close-button1 {
+  font-size: 45px;
+  line-height: 1;
+}

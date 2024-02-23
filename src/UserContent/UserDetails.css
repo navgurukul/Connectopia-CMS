@@ -1,0 +1,21 @@
+.styled-container {
+  position: relative;
+}
+
+.add-user-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.custom-dropdown {
+  width: 150px;
+}
+.flex-container {
+  display: flex;
+  align-items: center;
+}
+
+.narrow-dropdown {
+  width: 200px;
+}

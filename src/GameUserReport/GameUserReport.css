@@ -1,0 +1,42 @@
+.search-container {
+  position: relative;
+  display: inline-block;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #333;
+}
+
+.clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #999;
+}
+
+.search-container input {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.custom-download-btn {
+  color: rgb(12, 9, 9);
+  text-align: end;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.custom-download-btn:hover {
+  color: rgb(198, 20, 35);
+}

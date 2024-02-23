@@ -1,0 +1,113 @@
+.styled-container {
+  margin: 16px;
+  height: 600px;
+  display: flex;
+  width: auto;
+  border: 2px solid black;
+  border-radius: 10px;
+  text-align: start;
+}
+
+.modal-logo {
+  position: absolute;
+  top: -75px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: auto;
+}
+
+.modal-container2 {
+  background-color: #fff;
+  max-width: 50%;
+  margin: 11em auto 3em auto;
+  padding: 2em 0em;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 1em;
+}
+
+.form-group1 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.btn-create-campaign {
+  display: block;
+  width: 40%;
+  /* margin-top: -40px; */
+  margin: -20px auto 0px auto;
+  /* margin: 0 auto; */
+  padding: 0.8em 1em;
+  background-color: #ddd;
+  color: #333;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #ccc;
+}
+
+.create-campaign-heading {
+  text-align: center;
+  /* margin-bottom: 1em; */
+  margin-bottom: 0.2em;
+}
+
+.form-floating {
+  width: 48%;
+  position: relative;
+  margin-bottom: 0;
+  /* margin-bottom: 30px; */
+}
+
+.form-floating button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+#userPassword {
+  padding-right: 40px;
+}
+
+.form-control:focus + label,
+.form-control:valid + label {
+  top: -20px;
+  left: 10px;
+  font-size: 20px;
+  color: #5d5d5d !important;
+  transition: all 0.2s ease-in-out;
+}
+
+label {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  color: #5d5d5d;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+  font-size: 16px;
+}
