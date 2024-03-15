@@ -340,9 +340,6 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                   <label htmlFor="scannerType">Scanner Type</label>
                 </div>
               </div>
-
-              {/* date */}
-
               <div className="form-group">
                 <div className="row">
                   <div className="col-md-6">
@@ -369,7 +366,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                   </div>
                 </div>
 
-                {/* adding new thing */}
+                {/* added timer UI code */}
                 <div className="form-group row">
                   <div className="col-md-4">
                     <div className="form-floating">
@@ -468,3 +465,59 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 };
 
 export default CampaignModal;
+
+
+
+
+{/* <div className="form-group">
+<div className="form-group row">
+  <div className="col-md-4">
+    <div className="form-floating">
+      <input
+        type="number"
+        // id="hours"
+        required
+        placeholder="Hours"
+        className="form-control"
+        min="0"
+        max="23"
+        // value={hours === 0 ? "00" : hours}
+        // onChange={(e) => setHours(e.target.value)}
+      />
+      <label htmlFor="hours">Hours</label>
+    </div>
+  </div>
+  <div className="col-md-4">
+    <div className="form-floating">
+      <input
+        type="number"
+        // id="minutes"
+        required
+        placeholder="Minutes"
+        className="form-control"
+        min="0"
+        max="59"
+        // value={minutes === 0 ? "00" : minutes}
+        // onChange={(e) => setMinutes(e.target.value)}
+      />
+      <label htmlFor="minutes">Minutes</label>
+    </div>
+  </div>
+  <div className="col-md-4">
+    <div className="form-floating">
+      <input
+        type="number"
+        // id="seconds"
+        required
+        placeholder="Seconds"
+        className="form-control"
+        min="0"
+        max="59"
+        // value={seconds === 0 ? "00" : seconds}
+        // onChange={(e) => setSeconds(e.target.value)}
+      />
+      <label htmlFor="seconds">Seconds</label>
+    </div>
+  </div>
+</div>
+</div> */}
