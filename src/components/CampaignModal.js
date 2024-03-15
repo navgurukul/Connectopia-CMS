@@ -17,15 +17,14 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [description, setDescription] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
 
-//  added state for hours, minutes and seconds
+  //  added state for hours, minutes and seconds
 
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
- // Combine hours, minutes, and seconds into a single string
-//    const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-//    console.log(time,'time');
-
+  // Combine hours, minutes, and seconds into a single string
+  //    const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  //    console.log(time,'time');
 
   const retrievedLoggedInUserDataObject =
     localStorage.getItem("loggedInUserData");
@@ -321,6 +320,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                   />
                   <label htmlFor="endDate">Campaign end date</label>
                 </div>
+
                 <div className="form-floating select-wrapper">
                   <select
                     id="scannerType"
@@ -340,33 +340,10 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                   <label htmlFor="scannerType">Scanner Type</label>
                 </div>
               </div>
-              <div className="form-group">
-                <div className="row">
-                  <div className="col-md-6">
-                    <button
-                      type="button"
-                      className="btn-generate-campaign"
-                      onClick={generateCampaignId}
-                    >
-                      Generate Campaign Id
-                    </button>
-                  </div>
-                  <div className="col-md-6">
-                    <input
-                      type="text"
-                      id="campaignName"
-                      required
-                      className="form-control input-campaign"
-                      value={data}
-                      ref={qrRef}
-                      onChange={() => {}}
-                      disabled
-                      readOnly
-                    />
-                  </div>
-                </div>
 
-                {/* added timer UI code */}
+              {/* Added timer   */}
+
+              <div className="form-group">
                 <div className="form-group row">
                   <div className="col-md-4">
                     <div className="form-floating">
@@ -417,6 +394,55 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                     </div>
                   </div>
                 </div>
+
+                {/* added Scan sequence type */}
+
+                <div className="form-floating select-wrapper">
+                  <select
+                    // id="scannerType"
+                    required
+                    placeholder="Scann sequence type"
+                    className="form-control"
+                    // value={scannerType}
+                    // onChange={(e) => setScannerType(e.target.value)}
+                    // onFocus={() => !scannerType && setScannerType("")}
+                  >
+                    <option value="" disabled hidden>
+                      Scan sequence type
+                    </option>
+                    <option value="QRscan">Fixed sequence</option>
+                    <option value="imagescan">Random sequence</option>
+                  </select>
+                  <label htmlFor="scannerType">Scan sequence type</label>
+                </div>
+              </div>
+              
+
+              <div className="form-group">
+                <div className="row">
+                  <div className="col-md-6">
+                    <button
+                      type="button"
+                      className="btn-generate-campaign"
+                      onClick={generateCampaignId}
+                    >
+                      Generate Campaign Id
+                    </button>
+                  </div>
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      id="campaignName"
+                      required
+                      className="form-control input-campaign"
+                      value={data}
+                      ref={qrRef}
+                      onChange={() => {}}
+                      disabled
+                      readOnly
+                    />
+                  </div>
+                </div>
               </div>
               {data && (
                 <div className="QR-form-group" style={{ marginLeft: "10%" }}>
@@ -465,59 +491,3 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 };
 
 export default CampaignModal;
-
-
-
-
-{/* <div className="form-group">
-<div className="form-group row">
-  <div className="col-md-4">
-    <div className="form-floating">
-      <input
-        type="number"
-        // id="hours"
-        required
-        placeholder="Hours"
-        className="form-control"
-        min="0"
-        max="23"
-        // value={hours === 0 ? "00" : hours}
-        // onChange={(e) => setHours(e.target.value)}
-      />
-      <label htmlFor="hours">Hours</label>
-    </div>
-  </div>
-  <div className="col-md-4">
-    <div className="form-floating">
-      <input
-        type="number"
-        // id="minutes"
-        required
-        placeholder="Minutes"
-        className="form-control"
-        min="0"
-        max="59"
-        // value={minutes === 0 ? "00" : minutes}
-        // onChange={(e) => setMinutes(e.target.value)}
-      />
-      <label htmlFor="minutes">Minutes</label>
-    </div>
-  </div>
-  <div className="col-md-4">
-    <div className="form-floating">
-      <input
-        type="number"
-        // id="seconds"
-        required
-        placeholder="Seconds"
-        className="form-control"
-        min="0"
-        max="59"
-        // value={seconds === 0 ? "00" : seconds}
-        // onChange={(e) => setSeconds(e.target.value)}
-      />
-      <label htmlFor="seconds">Seconds</label>
-    </div>
-  </div>
-</div>
-</div> */}
