@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faEye, faPen, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDownload,
+  faEye,
+  faPen,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function LevelContent() {
   const LevelData = [
@@ -14,11 +20,11 @@ export function LevelContent() {
       name: "Progress Bar",
       description: "This indicates the user progress on Stage",
       formats: "PNG, JPG, JPEG",
-
     },
     {
       name: "Text Promt After Successful Scan",
-      description: "This will pop up when the user successfully scans the image",
+      description:
+        "This will pop up when the user successfully scans the image",
       formats: "PNG, JPG, JPEG",
     },
     {
@@ -50,7 +56,7 @@ export function LevelContent() {
     "Level Completion Thought": 4,
     "Level Completion Badge": 5,
     "Time Up Registration": 6,
-    "Reward Claim Badge": 7
+    "Reward Claim Badge": 7,
   };
 
   const [selectedLevel, setSelectedLevel] = useState(1);
@@ -65,8 +71,19 @@ export function LevelContent() {
   const [showPreview, setShowPreview] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
 
-  const campaignId = localStorage.getItem('CampaignId');
-  const scanType = localStorage.getItem('ScanType');
+  const campaignId = localStorage.getItem("CampaignId");
+  const scanType = localStorage.getItem("ScanType");
+
+  const [selectedStages, setSelectedStages] = useState([]);
+
+  const handleSelectChange = (event) => {
+    const selectedValue = event.target.value;
+    const selectedStagesArray = [];
+    for (let i = 1; i <= selectedValue; i++) {
+      selectedStagesArray.push(`Stage${i}`);
+    }
+    setSelectedStages(selectedStagesArray);
+  };
 
   const handleLevelClick = (level) => {
     setSelectedLevel(level);
@@ -113,19 +130,21 @@ export function LevelContent() {
       let endpoint, url;
 
       if (isLevelMap) {
-        endpoint = isImageAvailable ? 'updategif' : 'uploadgif';
+        endpoint = isImageAvailable ? "updategif" : "uploadgif";
         url = `https://skillmuni.in:8080/${endpoint}/${campaignId}/${pageNumber}/${selectedItem.name}/${scanType}`;
       } else {
-        endpoint = isImageAvailable ? 'updateimage' : 'uploadimage';
+        endpoint = isImageAvailable ? "updateimage" : "uploadimage";
         url = `https://skillmuni.in:8080/${endpoint}/${campaignId}/${pageNumber}/${selectedItem.name}/${scanType}`;
       }
 
       fetch(url, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       })
-        .then(response => response.ok ? response.text() : Promise.reject(response))
-        .then(data => {
+        .then((response) =>
+          response.ok ? response.text() : Promise.reject(response)
+        )
+        .then((data) => {
           fetchData();
           setLoading(false);
           setUploadMessage("Image Uploaded Successfully !!");
@@ -144,7 +163,9 @@ export function LevelContent() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://skillmuni.in:8080/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
+      const response = await fetch(
+        `https://skillmuni.in:8080/withoutStatus/allsignedurls/${campaignId}/${scanType}`
+      );
       const data = await response.json();
 
       setImageData(data);
@@ -160,13 +181,13 @@ export function LevelContent() {
   const handleDownloadClick = (imageUrl) => {
     const imagess = imageUrl[0].value;
     // setQrCodeUrl(imageUrl);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = imagess;
-    a.download = 'downloaded_image.png';
+    a.download = "downloaded_image.png";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-  }
+  };
 
   const handlePreviewClick = (imageUrl) => {
     setPreviewImage(imageUrl);
@@ -179,11 +200,92 @@ export function LevelContent() {
 
   return (
     <div className="container">
-      <div className="row text-center">
+      <div className="row">
         <div className="shadowbox">
           <div className="shadowbox-body">
-            <div style={{ textAlign: "start" }}><h6><strong>Select the Stage</strong></h6></div>
-            <div style={{ textAlign: "start", marginBottom: "10px", marginTop: "10px" }}>
+            {/* <select
+              className="form-select-control"
+              required
+              placeholder="Set Number of Stages"
+            >
+              <option value="" disabled hidden>
+                Set Number of Stages
+              </option>
+
+              <option value="1">Stage1</option>
+              <option value="2">Stage2</option>
+              <option value="3">Stage3</option>
+              <option value="3">Stage4</option>
+              <option value="3">Stage5</option>
+              <option value="3">Stage6</option>
+            </select> */}
+
+            {/* <select
+              className="form-select-control"
+              required
+              placeholder="Set Number of Stages"
+              onChange={handleSelectChange}
+            >
+              <option value="" disabled hidden>
+                Set Number of Stages
+              </option>
+              <option value="1">Stage1</option>
+              <option value="2">Stage2</option>
+              <option value="3">Stage3</option>
+              <option value="4">Stage4</option>
+              <option value="5">Stage5</option>
+              <option value="6">Stage6</option>
+            </select>
+
+            <div className="mt-3">
+              {selectedStages.map((stage, index) => (
+                <span key={index} className="me-3">
+                  {stage}{" "}
+                  {index !== selectedStages.length - 1 && (
+                    <FontAwesomeIcon icon={faDotCircle} />
+                  )}
+                </span>
+              ))}
+            </div> */}
+
+            <select
+              className="form-select-control"
+              required
+              defaultValue=""
+              onChange={handleSelectChange}
+            >
+              <option value="" disabled hidden>
+                Set Number of Stages
+              </option>
+              <option value="1">Stage1</option>
+              <option value="2">Stage2</option>
+              <option value="3">Stage3</option>
+              <option value="4">Stage4</option>
+              <option value="5">Stage5</option>
+              <option value="6">Stage6</option>
+            </select>
+
+            <div className="mt-3">
+              {selectedStages.map((stage, index) => (
+                <span key={index} className="me-3">
+                  {stage}
+                  <FontAwesomeIcon icon={faEdit} className="ms-1" />
+                </span>
+              ))}
+            </div>
+
+            <div style={{ textAlign: "start", marginTop: "30px" }}>
+              <h6>
+                <strong>Select the Stage</strong>
+              </h6>
+            </div>
+            <div
+              style={{
+                textAlign: "start",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
               {[1, 2, 3, 4, 5].map((num, index) => (
                 <button
                   key={num}
@@ -201,15 +303,21 @@ export function LevelContent() {
               ))}
             </div>
             <div className="col-12">
-
               {uploadMessage && (
-                <div className="alert alert-success text-center" style={{ marginTop: '-10px', marginBottom: '-10px', paddingTop: '6px', paddingBottom: '6px' }}>
+                <div
+                  className="alert alert-success text-center"
+                  style={{
+                    marginTop: "-10px",
+                    marginBottom: "-10px",
+                    paddingTop: "6px",
+                    paddingBottom: "6px",
+                  }}
+                >
                   {uploadMessage}
                 </div>
               )}
 
               <div className="table-container">
-
                 {loading && (
                   <div>
                     <div
@@ -219,7 +327,10 @@ export function LevelContent() {
                   </div>
                 )}
 
-                <table className="custom-table" style={{ marginTop: '20px' }}>
+                <table
+                  className="custom-table text-center"
+                  style={{ marginTop: "20px" }}
+                >
                   <thead>
                     <tr>
                       <th>Content name</th>
@@ -230,29 +341,33 @@ export function LevelContent() {
                   </thead>
                   <tbody>
                     {LevelData.map((item, index) => {
-                      const basePageNumber = levelStartIndexes[selectedLevel - 1];
+                      const basePageNumber =
+                        levelStartIndexes[selectedLevel - 1];
                       const contentOffset = contentOffsets[item.name] || 0;
                       const pageNumber = basePageNumber + contentOffset;
                       const adjustedIndex = pageNumber.toString();
-                      const isImageAvailable = imageData.hasOwnProperty(adjustedIndex);
+                      const isImageAvailable =
+                        imageData.hasOwnProperty(adjustedIndex);
 
                       const imageUrl = imageData[adjustedIndex];
 
                       return (
                         <tr key={index}>
-                          <td style={{ padding: '6px' }}>
+                          <td style={{ padding: "6px" }}>
                             <strong>{item.name}</strong>
                           </td>
-                          <td style={{ padding: '6px' }}>{item.description}</td>
-                          <td style={{ padding: '6px' }}>{item.formats}</td>
-                          <td style={{ width: '110px', padding: '6px' }}>
+                          <td style={{ padding: "6px" }}>{item.description}</td>
+                          <td style={{ padding: "6px" }}>{item.formats}</td>
+                          <td style={{ width: "110px", padding: "6px" }}>
                             <FontAwesomeIcon
                               className="icon-styles"
                               icon={!isImageAvailable ? faUpload : faPen}
-                              onClick={(event) => handleUploadIconClick(event, item, index)}
+                              onClick={(event) =>
+                                handleUploadIconClick(event, item, index)
+                              }
                               style={{
-                                cursor: 'pointer',
-                                color: isImageAvailable ? 'green' : null
+                                cursor: "pointer",
+                                color: isImageAvailable ? "green" : null,
                               }}
                             />
                             {isImageAvailable && (
@@ -270,7 +385,9 @@ export function LevelContent() {
                                 className="icon-styles"
                                 icon={faEye}
                                 style={{ cursor: "pointer" }}
-                                onClick={() => handlePreviewClick(imageUrl[0].value)}
+                                onClick={() =>
+                                  handlePreviewClick(imageUrl[0].value)
+                                }
                               />
                             )}
                             {item.name === "Level Map" ? (
@@ -311,8 +428,6 @@ export function LevelContent() {
           </div>
         </div>
       )}
-
     </div>
   );
 }
-

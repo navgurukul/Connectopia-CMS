@@ -48,6 +48,19 @@
   margin: 20px auto;
 }
 
+
+.form-select-control{
+  width: 38%;
+  height: 40px;
+  position: relative;
+  display: inline-block;
+
+ 
+}
+
+
+
+
 @media (max-width: 1400px) and (max-height: 800px) {
   .header-content-name,
   .header-description,
