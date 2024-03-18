@@ -30,7 +30,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter basename="/AR-Game-CMS">
+    <BrowserRouter >
       <div>
         <Routes>
           <Route
