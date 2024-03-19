@@ -44,7 +44,7 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = "https://skillmuni.in:8080/editOrganisation";
+        const apiUrl = "http://15.206.198.172//editOrganisation";
         const requestData = {
           organisation: organizationData.organisation,
           neworganisation: name,
@@ -84,7 +84,7 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = "https://skillmuni.in:8080/organisation";
+        const apiUrl = "http://15.206.198.172//organisation";
         const requestData = {
           organisation: name,
           desc: details,

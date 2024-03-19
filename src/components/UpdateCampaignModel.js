@@ -51,7 +51,7 @@ const UpdateCampaignModel = ({
 
     try {
       const response = await axios.post(
-        "https://skillmuni.in:8080/editCampaign",
+        "http://15.206.198.172//editCampaign",
         payload
       );
 

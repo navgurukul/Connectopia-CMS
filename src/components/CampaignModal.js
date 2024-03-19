@@ -35,7 +35,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const generateCampaignId = async () => {
     try {
       const response = await axios.get(
-        "https://skillmuni.in:8080/nextCampaignId"
+        "http://15.206.198.172//nextCampaignId"
       );
 
       const campaignId = response.data.CampaignId;
@@ -107,7 +107,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
     try {
       const response = await axios.post(
-        "https://skillmuni.in:8080/api/createNewCampaign",
+        "http://15.206.198.172//api/createNewCampaign",
         payload
       );
 
@@ -122,7 +122,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         formData.append("image", imageBlob, "qr-code.png");
 
         try {
-          const apiUrl = `https://skillmuni.in:8080/updateimage/${data}/0/Main-QRCode/${scannerType}`;
+          const apiUrl = `http://15.206.198.172//updateimage/${data}/0/Main-QRCode/${scannerType}`;
           const updateImageResponse = await axios.post(apiUrl, formData, {
             headers: {
               "Content-Type": "multipart/form-data",

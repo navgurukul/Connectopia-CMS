@@ -82,9 +82,9 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       let url;
 
       if (userData.usertype === 'superadmin') {
-        url = `https://skillmuni.in:8080/organisation/${organisationList}`;
+        url = `http://15.206.198.172//organisation/${organisationList}`;
       } else {
-        url = `https://skillmuni.in:8080/campaignsByEmailid/${userData.emailid}`;
+        url = `http://15.206.198.172//campaignsByEmailid/${userData.emailid}`;
       }
 
       axios
@@ -109,7 +109,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       campaignname: campaignName,
       status_value: newStatus
     };
-    const apiUrl = 'https://skillmuni.in:8080/setStatus';
+    const apiUrl = 'http://15.206.198.172//setStatus';
 
     try {
       const response = await axios.post(apiUrl, requestData);
@@ -138,7 +138,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
 
 
   const deleteCampaign = async (campaignName) => {
-    const apiUrl = `https://skillmuni.in:8080/deleteCampaign/${campaignName}`;
+    const apiUrl = `http://15.206.198.172//deleteCampaign/${campaignName}`;
     try {
       const response = await axios.delete(apiUrl);
 

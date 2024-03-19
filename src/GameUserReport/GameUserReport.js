@@ -27,7 +27,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     setCampaignList([]);
     setSelectCampaignName("");
     if (userOrganization) {
-      axios.get(`https://skillmuni.in:8080/organisation/${userOrganization}`)
+      axios.get(`http://15.206.198.172//organisation/${userOrganization}`)
         .then((response) => {
           setCampaignList(response.data);
         })
@@ -41,7 +41,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     setCampaignList([]);
     setSelectCampaignName("");
     if (organisationName) {
-      axios.get(`https://skillmuni.in:8080/organisation/${organisationName}`)
+      axios.get(`http://15.206.198.172//organisation/${organisationName}`)
         .then((response) => {
           setCampaignList(response.data);
         })
@@ -99,7 +99,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
 
   const fetchOrganisation = async () => {
     try {
-      const apiUrl = `https://skillmuni.in:8080/organisationlist/${userEmailid}/${userType}`;
+      const apiUrl = `http://15.206.198.172//organisationlist/${userEmailid}/${userType}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setOrganisation(data);
@@ -169,7 +169,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
 
   const fetchUsersByOrganisation = async (selectedOrganisation) => {
     try {
-      const apiUrl = `https://skillmuni.in:8080/users_by_organisation/${selectedOrganisation}`;
+      const apiUrl = `http://15.206.198.172//users_by_organisation/${selectedOrganisation}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setUserDetail(data);
@@ -181,7 +181,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
 
   const fetchUserReport = async (selectCampaignName) => {
     try {
-      const apiUrl = `https://skillmuni.in:8080/getPlayersList/${selectCampaignName}`;
+      const apiUrl = `http://15.206.198.172//getPlayersList/${selectCampaignName}`;
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -220,7 +220,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
 
 
   const deleteUser = (phoneNumber) => {
-    axios.delete(`https://skillmuni.in:8080/deletePlayer/${phoneNumber}/${selectCampaignName}`)
+    axios.delete(`http://15.206.198.172//deletePlayer/${phoneNumber}/${selectCampaignName}`)
       .then(response => {
         fetchUserReport();
       })

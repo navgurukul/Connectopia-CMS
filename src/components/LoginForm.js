@@ -19,7 +19,7 @@ function LoginForm({ handleLogin, setLoggedInUserData }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const endpoint = 'https://skillmuni.in:8080/newLogin';
+        const endpoint = 'http://15.206.198.172//newLogin';
 
         const data = {
             emailid: email,

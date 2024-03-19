@@ -37,7 +37,7 @@ const AddUserModel = ({ onClose, onUserCreated }) => {
             usertype: "user",
         };
         axios
-            .post("https://skillmuni.in:8080/createNewUser", userData)
+            .post("http://15.206.198.172//createNewUser", userData)
             .then((response) => {
                 if (onUserCreated) {
                     onUserCreated();

@@ -18,7 +18,7 @@ const ProductImageScan = () => {
   }, []);
 
   async function fetchAndFilterImages() {
-    const url = `https://skillmuni.in:8080/withoutStatus/allsignedurls/${campaignId}/${scanType}`;
+    const url = `http://15.206.198.172//withoutStatus/allsignedurls/${campaignId}/${scanType}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -65,7 +65,7 @@ const ProductImageScan = () => {
     formData.append("image", file);
     try {
       const response = await axios.post(
-        `https://skillmuni.in:8080/compile-upload/${campaignId}/0/${imageData}/${scanType}`,
+        `http://15.206.198.172//compile-upload/${campaignId}/0/${imageData}/${scanType}`,
         formData,
         {
           headers: {
