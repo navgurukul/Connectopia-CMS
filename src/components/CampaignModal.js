@@ -23,12 +23,15 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   // Combine hours, minutes, and seconds into a single string
-  //    const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  //    console.log(time,'time');
+
+     const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+     console.log(time,'time-----');
 
   const retrievedLoggedInUserDataObject =
     localStorage.getItem("loggedInUserData");
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
+
+  // console.log("userData", userData);
 
   const selectedOrganisation = localStorage.getItem("selectedOrganisation");
 
@@ -82,7 +85,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       !scannerType ||
       !description ||
       !startDate ||
-      !endDate
+      !endDate ||
+      !time
     ) {
       setAlertMessage("Please make sure all fields are filled correctly.");
       setTimeout(() => {
@@ -96,19 +100,23 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
     const payload = {
       campaignid: data,
       organisation: organisationName,
-      campaignname: campaignName,
+      campaign_name: campaignName,
       startdate: startDate,
       enddate: endDate,
       desc: description,
       scantype: scannerType,
       usertype: userData.usertype,
       emailid: userData.emailid,
+      campaign_duration: time,
     };
+
+    // console.log("payload", payload);
 
     try {
       const response = await axios.post(
         "http://15.206.198.172//api/createNewCampaign",
         payload
+        
       );
 
       if (response.data) {
@@ -128,6 +136,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
               "Content-Type": "multipart/form-data",
             },
           });
+
+          console.log("updateImageResponse", updateImageResponse);
 
           if (updateImageResponse.data) {
             if (onCampaignCreated) {
@@ -153,6 +163,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       return;
     }
   };
+
+  console.log("data", data);
 
   function dataURLtoBlob(dataurl) {
     const arr = dataurl.split(","),
