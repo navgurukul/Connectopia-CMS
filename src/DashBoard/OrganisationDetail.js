@@ -82,9 +82,9 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       let url;
 
       if (userData.usertype === 'superadmin') {
-        url = `http://15.206.198.172//organisation/${organisationList}`;
+        url = `https://connectopia.co.in/organisation/${organisationList}`;
       } else {
-        url = `http://15.206.198.172//campaignsByEmailid/${userData.emailid}`;
+        url = `https://connectopia.co.in/campaignsByEmailid/${userData.emailid}`;
       }
 
       axios
@@ -109,7 +109,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       campaignname: campaignName,
       status_value: newStatus
     };
-    const apiUrl = 'http://15.206.198.172//setStatus';
+    const apiUrl = 'https://connectopia.co.in/setStatus';
 
     try {
       const response = await axios.post(apiUrl, requestData);
@@ -138,7 +138,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
 
 
   const deleteCampaign = async (campaignName) => {
-    const apiUrl = `http://15.206.198.172//deleteCampaign/${campaignName}`;
+    const apiUrl = `https://connectopia.co.in/deleteCampaign/${campaignName}`;
     try {
       const response = await axios.delete(apiUrl);
 

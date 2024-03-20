@@ -37,7 +37,7 @@ const AddUserModel = ({ onClose, onUserCreated }) => {
             usertype: "user",
         };
         axios
-            .post("http://15.206.198.172//createNewUser", userData)
+            .post("https://connectopia.co.in/createNewUser", userData)
             .then((response) => {
                 if (onUserCreated) {
                     onUserCreated();

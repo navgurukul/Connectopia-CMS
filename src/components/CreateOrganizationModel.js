@@ -44,7 +44,7 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = "http://15.206.198.172//editOrganisation";
+        const apiUrl = "https://connectopia.co.in/editOrganisation";
         const requestData = {
           organisation: organizationData.organisation,
           neworganisation: name,
@@ -84,7 +84,7 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = "http://15.206.198.172//organisation";
+        const apiUrl = "https://connectopia.co.in/organisation";
         const requestData = {
           organisation: name,
           desc: details,

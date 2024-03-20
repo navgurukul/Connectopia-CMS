@@ -7,6 +7,8 @@ const UpdateCampaignModel = ({
   campainDetails,
   onCampaignUpdated,
 }) => {
+
+  console.log("campainDetails", campainDetails);
   const [campaignName, setcampaignName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -14,16 +16,26 @@ const UpdateCampaignModel = ({
   const [alert, setAlert] = useState({ show: false, message: "" });
 
   // added state for timer update
-
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-
+  const [duration, setDuration] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  
+  
   useEffect(() => {
     setcampaignName(campainDetails.campaign_name);
     setDescription(campainDetails.desc);
     setStartDate(campainDetails.startdate);
     setEndDate(campainDetails.enddate);
+
+  // Parse the campaign_duration string
+  const [hours, minutes, seconds] = campainDetails.campaign_duration
+    .split(":")
+    .map(num => num.padStart(2, "0"));  // Ensure each part is two digits
+
+  // Update the duration state
+  setDuration({ hours, minutes, seconds });
   }, []);
 
   const showAlert = (message) => {
@@ -40,6 +52,7 @@ const UpdateCampaignModel = ({
       showAlert("Please make sure all fields are filled correctly.");
       return;
     }
+    const { hours, minutes, seconds } = duration;
 
     const payload = {
       campaign_name: campainDetails.campaign_name,
@@ -47,11 +60,14 @@ const UpdateCampaignModel = ({
       startdate: startDate,
       enddate: endDate,
       desc: description,
+      campaign_duration: `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
     };
 
     try {
       const response = await axios.post(
-        "http://15.206.198.172//editCampaign",
+        "https://connectopia.co.in/editCampaign",
         payload
       );
 
@@ -229,7 +245,6 @@ const UpdateCampaignModel = ({
               </div>
 
               {/* added timer update code here */}
-
               <div className="form-group">
                 <div className="form-group row">
                   <div className="col-md-4">
@@ -242,8 +257,13 @@ const UpdateCampaignModel = ({
                         className="form-control"
                         min="0"
                         max="23"
-                        value={hours}
-                        onChange={(e) => setHours(e.target.value)}
+                        value={duration.hours}
+                        onChange={(e) =>
+                          setDuration({
+                            ...duration,
+                            hours: Number(e.target.value),
+                          })
+                        }
                       />
                       <label htmlFor="hours">Hours</label>
                     </div>
@@ -258,8 +278,13 @@ const UpdateCampaignModel = ({
                         className="form-control"
                         min="0"
                         max="59"
-                        value={minutes}
-                        onChange={(e) => setMinutes(e.target.value)}
+                        value={duration.minutes}
+                        onChange={(e) =>
+                          setDuration({
+                            ...duration,
+                            minutes: Number(e.target.value),
+                          })
+                        }
                       />
                       <label htmlFor="minutes">Minutes</label>
                     </div>
@@ -274,8 +299,13 @@ const UpdateCampaignModel = ({
                         className="form-control"
                         min="0"
                         max="59"
-                        value={seconds}
-                        onChange={(e) => setSeconds(e.target.value)}
+                        value={duration.seconds}
+                        onChange={(e) =>
+                          setDuration({
+                            ...duration,
+                            seconds: Number(e.target.value),
+                          })
+                        }
                       />
                       <label htmlFor="seconds">Seconds</label>
                     </div>

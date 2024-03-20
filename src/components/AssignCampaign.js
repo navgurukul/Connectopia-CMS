@@ -11,7 +11,7 @@ export function AssignCampaign({ onClose, selectedOrganisation, campaigns, email
     if (selectedOrganisation) {
       axios
         .get(
-          `http://15.206.198.172//organisation/${selectedOrganisation}`
+          `https://connectopia.co.in/organisation/${selectedOrganisation}`
         )
         .then((response) => {
           setCampaignList(response.data);
@@ -28,7 +28,7 @@ export function AssignCampaign({ onClose, selectedOrganisation, campaigns, email
       campaign_name: addCampaign,
     };
     axios
-      .post("http://15.206.198.172//assignCampaignToUser", data)
+      .post("https://connectopia.co.in/assignCampaignToUser", data)
       .then((response) => {
         alert("Campaign assigned successfully!");
         onAddCampaign(selectedOrganisation);
