@@ -18,13 +18,14 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [alertMessage, setAlertMessage] = useState("");
 
   //  added state for hours, minutes and seconds
-
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
-  // Combine hours, minutes, and seconds into a single string
-  //    const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  //    console.log(time,'time');
+
+  const time = `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
 
   const retrievedLoggedInUserDataObject =
     localStorage.getItem("loggedInUserData");
@@ -82,7 +83,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       !scannerType ||
       !description ||
       !startDate ||
-      !endDate
+      !endDate ||
+      !time
     ) {
       setAlertMessage("Please make sure all fields are filled correctly.");
       setTimeout(() => {
@@ -96,13 +98,14 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
     const payload = {
       campaignid: data,
       organisation: organisationName,
-      campaignname: campaignName,
+      campaign_name: campaignName,
       startdate: startDate,
       enddate: endDate,
       desc: description,
       scantype: scannerType,
       usertype: userData.usertype,
       emailid: userData.emailid,
+      campaign_duration: time,
     };
 
     try {
@@ -129,6 +132,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
             },
           });
 
+          console.log("updateImageResponse", updateImageResponse);
+
           if (updateImageResponse.data) {
             if (onCampaignCreated) {
               onCampaignCreated();
@@ -153,6 +158,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       return;
     }
   };
+
+  console.log("data", data);
 
   function dataURLtoBlob(dataurl) {
     const arr = dataurl.split(","),
@@ -397,15 +404,15 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
                 {/* added Scan sequence type */}
 
-                <div className="form-floating select-wrapper">
+                {/* <div className="form-floating select-wrapper">
                   <select
-                    // id="scannerType"
+                    id="scannerType"
                     required
                     placeholder="Scann sequence type"
                     className="form-control"
-                    // value={scannerType}
-                    // onChange={(e) => setScannerType(e.target.value)}
-                    // onFocus={() => !scannerType && setScannerType("")}
+                    value={scannerType}
+                    onChange={(e) => setScannerType(e.target.value)}
+                    onFocus={() => !scannerType && setScannerType("")}
                   >
                     <option value="" disabled hidden>
                       Scan sequence type
@@ -414,9 +421,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                     <option value="imagescan">Random sequence</option>
                   </select>
                   <label htmlFor="scannerType">Scan sequence type</label>
-                </div>
+                </div> */}
               </div>
-              
 
               <div className="form-group">
                 <div className="row">
