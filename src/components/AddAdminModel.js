@@ -37,7 +37,7 @@ const AddAdminModel = ({ onClose, onAdminCreated }) => {
         };
 
         axios
-            .post("http://15.206.198.172/createNewUser", adminData)
+            .post("https://15.206.198.172/createNewUser", adminData)
             .then((response) => {
                 if (onAdminCreated) {
                     onAdminCreated();

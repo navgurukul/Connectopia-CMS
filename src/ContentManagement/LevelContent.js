@@ -114,10 +114,10 @@ export function LevelContent() {
 
       if (isLevelMap) {
         endpoint = isImageAvailable ? 'updategif' : 'uploadgif';
-        url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${selectedItem.name}/${scanType}`;
+        url = `https://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${selectedItem.name}/${scanType}`;
       } else {
         endpoint = isImageAvailable ? 'updateimage' : 'uploadimage';
-        url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${selectedItem.name}/${scanType}`;
+        url = `https://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${selectedItem.name}/${scanType}`;
       }
 
       fetch(url, {
@@ -144,7 +144,7 @@ export function LevelContent() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
+      const response = await fetch(`https://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
       const data = await response.json();
 
       setImageData(data);

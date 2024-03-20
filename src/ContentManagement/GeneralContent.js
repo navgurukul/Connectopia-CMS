@@ -87,7 +87,7 @@ export function GeneralContent() {
       const isImageAvailable = imageData.hasOwnProperty((index + 1).toString());
 
       const endpoint = isImageAvailable ? "updateimage" : "uploadimage";
-      const url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
+      const url = `https://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
       
       fetch(url, {
         method: "POST",
@@ -126,7 +126,7 @@ export function GeneralContent() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
+      const response = await fetch(`https://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
       const data = await response.json();
 
       setImageData(data);

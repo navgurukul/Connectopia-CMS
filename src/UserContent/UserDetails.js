@@ -99,7 +99,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   const fetchOrganisation = async () => {
     if (userData.usertype === "superadmin") {
       try {
-        const apiUrl = `http://15.206.198.172/organisationlist/${userData.emailid}/${userData.usertype}`;
+        const apiUrl = `https://15.206.198.172/organisationlist/${userData.emailid}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         setOrganisation(data);
@@ -120,7 +120,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
 
   const fetchUsersByOrganisation = async (selectedOrganisation) => {
     try {
-      const apiUrl = `http://15.206.198.172/api/users_by_organisation/${selectedOrganisation}`;
+      const apiUrl = `https://15.206.198.172/api/users_by_organisation/${selectedOrganisation}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setUserDetail(data);
@@ -130,7 +130,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   };
 
   const handleDeleteCmsUser = (emailid) => {
-    const url = 'http://15.206.198.172/deletecmsuser';
+    const url = 'https://15.206.198.172/deletecmsuser';
 
     axios({
       method: 'delete',

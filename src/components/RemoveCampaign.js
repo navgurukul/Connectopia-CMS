@@ -12,7 +12,7 @@ export function RemoveCampaign({ onClose, selectedOrganisation, campaigns, email
       campaign_name: removeCampaign,
     };
     try {
-      const response = await axios.delete("http://15.206.198.172/removeCampaignFromUser", { data });
+      const response = await axios.delete("https://15.206.198.172/removeCampaignFromUser", { data });
       if (response.status === 200) {
         alert("Campaign removed successfully!");
         onRemoveCampaign(selectedOrganisation);
