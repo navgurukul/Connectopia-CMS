@@ -10,23 +10,16 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
   const [scannerType, setScannerType] = useState("");
   const [campaignName, setcampaignName] = useState("");
-  const [qrscanData, setQrscanData] = useState("https://master.d1ywywy8pav9t.amplifyapp.com/");
+  const [qrscanData, setQrscanData] = useState(
+    "https://master.d1ywywy8pav9t.amplifyapp.com/"
+  );
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-
-  //  added state for hours, minutes and seconds
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-
-  const time = `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-
-
+  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  
   const retrievedLoggedInUserDataObject =
     localStorage.getItem("loggedInUserData");
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
@@ -93,6 +86,30 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       return;
     }
 
+    if (time.hours < 0 || time.hours > 23) {
+      setAlertMessage("Hours must be between 0 and 23.");
+      setTimeout(() => {
+        setAlertMessage("");
+      }, 3000);
+      return;
+    }
+
+    if (time.minutes < 0 || time.minutes > 59) {
+      setAlertMessage("Minutes must be between 0 and 59.");
+      setTimeout(() => {
+        setAlertMessage("");
+      }, 3000);
+      return;
+    }
+
+    if (time.seconds < 0 || time.seconds > 59) {
+      setAlertMessage("Seconds must be between 0 and 59.");
+      setTimeout(() => {
+        setAlertMessage("");
+      }, 3000);
+      return;
+    }
+
     const organisationName = selectedOrganisation;
 
     const payload = {
@@ -105,7 +122,11 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       scantype: scannerType,
       usertype: userData.usertype,
       emailid: userData.emailid,
-      campaign_duration: time,
+      campaign_duration: `${time.hours
+        .toString()
+        .padStart(2, "0")}:${time.minutes
+        .toString()
+        .padStart(2, "0")}:${time.seconds.toString().padStart(2, "0")}`,
     };
 
     try {
@@ -362,8 +383,10 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                         className="form-control"
                         min="0"
                         max="23"
-                        value={hours === 0 ? "00" : hours}
-                        onChange={(e) => setHours(e.target.value)}
+                        value={time.hours === 0 ? "00" : time.hours}
+                        onChange={(e) =>
+                          setTime({ ...time, hours: e.target.value })
+                        }
                       />
                       <label htmlFor="hours">Hours</label>
                     </div>
@@ -378,8 +401,10 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                         className="form-control"
                         min="0"
                         max="59"
-                        value={minutes === 0 ? "00" : minutes}
-                        onChange={(e) => setMinutes(e.target.value)}
+                        value={time.minutes === 0 ? "00" : time.minutes}
+                        onChange={(e) =>
+                          setTime({ ...time, minutes: e.target.value })
+                        }
                       />
                       <label htmlFor="minutes">Minutes</label>
                     </div>
@@ -394,8 +419,10 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                         className="form-control"
                         min="0"
                         max="59"
-                        value={seconds === 0 ? "00" : seconds}
-                        onChange={(e) => setSeconds(e.target.value)}
+                        value={time.seconds === 0 ? "00" : time.seconds}
+                        onChange={(e) =>
+                          setTime({ ...time, seconds: e.target.value })
+                        }
                       />
                       <label htmlFor="seconds">Seconds</label>
                     </div>
