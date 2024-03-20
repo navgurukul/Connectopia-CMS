@@ -44,7 +44,7 @@ export function Organisation({ onOrgClick }) {
   const fetchOrganizations = async () => {
     if (userData.usertype === "superadmin") {
       try {
-        const apiUrl = `http://15.206.198.172//organisationlist/${userData.emailid}/${userData.usertype}`;
+        const apiUrl = `http://15.206.198.172/organisationlist/${userData.emailid}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         setOrganizations(data);
@@ -71,7 +71,7 @@ export function Organisation({ onOrgClick }) {
 
   const deleteOrganization = async (OrganizationName) => {
     if (window.confirm(`Are you sure you want to delete ${OrganizationName}?`)) {
-      const apiUrl = `http://15.206.198.172//deleteOrganizationData/${OrganizationName}`;
+      const apiUrl = `http://15.206.198.172/deleteOrganizationData/${OrganizationName}`;
       try {
         const response = await axios.delete(apiUrl);
 

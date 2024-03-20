@@ -36,7 +36,7 @@ export function ContentManagement() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://15.206.198.172//withoutStatus/allsignedurls/${campaignId}/${scanType}`);
+      const response = await fetch(`http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
       const data = await response.json();
 
       if (data["0"]) {
