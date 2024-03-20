@@ -10,7 +10,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
   const [scannerType, setScannerType] = useState("");
   const [campaignName, setcampaignName] = useState("");
-  const [qrscanData, setQrscanData] = useState("https://skillmuni.in/AR-Game/");
+  const [qrscanData, setQrscanData] = useState("https://master.d1ywywy8pav9t.amplifyapp.com/");
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -35,7 +35,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const generateCampaignId = async () => {
     try {
       const response = await axios.get(
-        "http://15.206.198.172/nextCampaignId"
+        "https://connectopia.co.in/nextCampaignId"
       );
 
       const campaignId = response.data.CampaignId;
@@ -107,7 +107,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
     try {
       const response = await axios.post(
-        "http://15.206.198.172/api/createNewCampaign",
+        "https://connectopia.co.in/api/createNewCampaign",
         payload
       );
 
@@ -122,7 +122,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         formData.append("image", imageBlob, "qr-code.png");
 
         try {
-          const apiUrl = `http://15.206.198.172/updateimage/${data}/0/Main-QRCode/${scannerType}`;
+          const apiUrl = `https://connectopia.co.in/updateimage/${data}/0/Main-QRCode/${scannerType}`;
           const updateImageResponse = await axios.post(apiUrl, formData, {
             headers: {
               "Content-Type": "multipart/form-data",

@@ -51,7 +51,7 @@ const UpdateCampaignModel = ({
 
     try {
       const response = await axios.post(
-        "http://15.206.198.172/editCampaign",
+        "https://connectopia.co.in/editCampaign",
         payload
       );
 
