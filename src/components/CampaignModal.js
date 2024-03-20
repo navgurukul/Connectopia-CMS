@@ -18,20 +18,18 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [alertMessage, setAlertMessage] = useState("");
 
   //  added state for hours, minutes and seconds
-
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
-  // Combine hours, minutes, and seconds into a single string
 
-     const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-     console.log(time,'time-----');
+  const time = `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
 
   const retrievedLoggedInUserDataObject =
     localStorage.getItem("loggedInUserData");
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
-
-  // console.log("userData", userData);
 
   const selectedOrganisation = localStorage.getItem("selectedOrganisation");
 
@@ -110,13 +108,10 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       campaign_duration: time,
     };
 
-    // console.log("payload", payload);
-
     try {
       const response = await axios.post(
         "https://connectopia.co.in/api/createNewCampaign",
         payload
-        
       );
 
       if (response.data) {
@@ -409,15 +404,15 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
                 {/* added Scan sequence type */}
 
-                <div className="form-floating select-wrapper">
+                {/* <div className="form-floating select-wrapper">
                   <select
-                    // id="scannerType"
+                    id="scannerType"
                     required
                     placeholder="Scann sequence type"
                     className="form-control"
-                    // value={scannerType}
-                    // onChange={(e) => setScannerType(e.target.value)}
-                    // onFocus={() => !scannerType && setScannerType("")}
+                    value={scannerType}
+                    onChange={(e) => setScannerType(e.target.value)}
+                    onFocus={() => !scannerType && setScannerType("")}
                   >
                     <option value="" disabled hidden>
                       Scan sequence type
@@ -426,9 +421,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                     <option value="imagescan">Random sequence</option>
                   </select>
                   <label htmlFor="scannerType">Scan sequence type</label>
-                </div>
+                </div> */}
               </div>
-              
 
               <div className="form-group">
                 <div className="row">

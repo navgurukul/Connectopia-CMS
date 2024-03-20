@@ -7,7 +7,6 @@ const UpdateCampaignModel = ({
   campainDetails,
   onCampaignUpdated,
 }) => {
-
   console.log("campainDetails", campainDetails);
   const [campaignName, setcampaignName] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -15,27 +14,24 @@ const UpdateCampaignModel = ({
   const [description, setDescription] = useState("");
   const [alert, setAlert] = useState({ show: false, message: "" });
 
-  // added state for timer update
   const [duration, setDuration] = useState({
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
-  
-  
+
   useEffect(() => {
     setcampaignName(campainDetails.campaign_name);
     setDescription(campainDetails.desc);
     setStartDate(campainDetails.startdate);
     setEndDate(campainDetails.enddate);
 
-  // Parse the campaign_duration string
-  const [hours, minutes, seconds] = campainDetails.campaign_duration
-    .split(":")
-    .map(num => num.padStart(2, "0"));  // Ensure each part is two digits
-
-  // Update the duration state
-  setDuration({ hours, minutes, seconds });
+    if (campainDetails.campaign_duration) {
+      const [hours, minutes, seconds] = campainDetails.campaign_duration
+        .split(":")
+        .map((num) => num.padStart(2, "0"));
+      setDuration({ hours, minutes, seconds });
+    }
   }, []);
 
   const showAlert = (message) => {
@@ -72,7 +68,6 @@ const UpdateCampaignModel = ({
       );
 
       if (response.data) {
-        console.log("response----", response.data);
         onCampaignUpdated();
         onClose();
       } else {
