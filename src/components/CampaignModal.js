@@ -493,7 +493,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                       (() => {
                         return (
                           <QRCode
-                            value={`${qrscanData}${data}/${scannerType}`}
+                            value={`${qrscanData}?campaignId=${data}&scanType=${scannerType}`}
                             size={100}
                             level={"H"}
                             style={{ marginTop: "-7px", marginLeft: "-9px" }}
