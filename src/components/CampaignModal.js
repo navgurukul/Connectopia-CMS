@@ -18,8 +18,10 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+
   const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
-  
+  const [numberOfStages, setNumberOfStages] = useState(1);
+
   const retrievedLoggedInUserDataObject =
     localStorage.getItem("loggedInUserData");
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
@@ -77,7 +79,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       !description ||
       !startDate ||
       !endDate ||
-      !time
+      !time ||
+      !numberOfStages 
     ) {
       setAlertMessage("Please make sure all fields are filled correctly.");
       setTimeout(() => {
@@ -127,6 +130,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         .padStart(2, "0")}:${time.minutes
         .toString()
         .padStart(2, "0")}:${time.seconds.toString().padStart(2, "0")}`,
+        number_of_stages: numberOfStages, 
     };
 
     try {
@@ -430,6 +434,22 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                 </div>
 
                 {/* added Scan sequence type */}
+
+                <div className="form-floating">
+                  <input
+                    type="number"
+                    id="numberOfStages"
+                    required
+                    placeholder="Enter Number of Stages"
+                    className="form-control"
+                    min="1"
+                    max="100"
+                    style={{ width: "100%" }}
+                    onChange={(e) => setNumberOfStages(e.target.value)}
+                  />
+                  <label htmlFor="numberOfStages">Enter Number of Stages</label>
+                </div>
+
 
                 {/* <div className="form-floating select-wrapper">
                   <select

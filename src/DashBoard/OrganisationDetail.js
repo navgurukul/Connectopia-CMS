@@ -168,6 +168,8 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
     setShowEditCampaignModal(true);
   }
 
+  console.log("campaignList", campaignList)
+
   return (
     <div className="container">
       <div style={{ flex: 1 }}>
