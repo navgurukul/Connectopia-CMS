@@ -182,7 +182,7 @@ export function LevelContent() {
       <div className="row text-center">
         <div className="shadowbox">
           <div className="shadowbox-body">
-            <div style={{ textAlign: "start" }}><h6><strong>Select the Stage</strong></h6></div>
+            <div style={{ textAlign: "start" }}><h6><strong>Select the Level</strong></h6></div>
             <div style={{ textAlign: "start", marginBottom: "10px", marginTop: "10px" }}>
               {[1, 2, 3, 4, 5].map((num, index) => (
                 <button
