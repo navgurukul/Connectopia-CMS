@@ -19,10 +19,10 @@ function LoginForm({ handleLogin, setLoggedInUserData }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const endpoint = 'https://connectopia.co.in/newLogin';
+        const endpoint = 'http://15.206.198.172/cms/cms-user/login';
 
         const data = {
-            emailid: email,
+            email: email,
             password: password
         };
 
@@ -49,7 +49,7 @@ function LoginForm({ handleLogin, setLoggedInUserData }) {
 
                 localStorage.setItem("email", email);
                 localStorage.setItem('user-type', responseData.usertype);
-                localStorage.setItem("organization", responseData.organisation);
+                localStorage.setItem("organization", responseData.name);
             } else {
                 setError(true);
                 setTimeout(() => {

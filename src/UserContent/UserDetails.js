@@ -77,8 +77,8 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
 
   useEffect(() => {
     if (userData.usertype !== 'superadmin') {
-      setOrganisationName(userData.organisation);
-      fetchUsersByOrganisation(userData.organisation);
+      setOrganisationName(userData.name);
+      fetchUsersByOrganisation(userData.name);
     } else {
       fetchOrganisation();
     }
@@ -99,10 +99,11 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   const fetchOrganisation = async () => {
     if (userData.usertype === "superadmin") {
       try {
-        const apiUrl = `https://connectopia.co.in/organisationlist/${userData.emailid}/${userData.usertype}`;
+        const apiUrl = `http://15.206.198.172/cms/organization/list/${userData.email}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         setOrganisation(data);
+        // console.log(data, "data this is the user data")
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -119,18 +120,22 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   }
 
   const fetchUsersByOrganisation = async (selectedOrganisation) => {
+    // console.log(organisation, "selectedOrganisation")
+    let orgId = parseInt(organisation.find(org => org.name === selectedOrganisation).id);
+    // console.log(orgId, "orgId")
     try {
-      const apiUrl = `https://connectopia.co.in/api/users_by_organisation/${selectedOrganisation}`;
+      const apiUrl = `http://15.206.198.172/cms/organization/user/${orgId}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setUserDetail(data);
+      console.log(data, "data this is the user data")
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
   };
 
   const handleDeleteCmsUser = (emailid) => {
-    const url = 'https://connectopia.co.in/deletecmsuser';
+    const url = 'http://15.206.198.172/deletecmsuser';
 
     axios({
       method: 'delete',
@@ -170,8 +175,8 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                 >
                   <option value="">Select an Organization</option>
                   {organisation.map((org, index) => (
-                    <option key={index} value={org.organisation}>
-                      {org.organisation}
+                    <option key={index} value={org.name}>
+                      {org.name}
                     </option>
                   ))}
                 </select>

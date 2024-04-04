@@ -31,7 +31,7 @@ export const ProductScanContent = () => {
 
     const formData = new FormData();
     formData.append("image", imageBlob);
-    const apiUrl = `https://connectopia.co.in/updateimage/${campaign}/0/${qrData}/QRscan`;
+    const apiUrl = `http://15.206.198.172/updateimage/${campaign}/0/${qrData}/QRscan`;
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -62,7 +62,7 @@ export const ProductScanContent = () => {
   const QRDATA = async () => {
     try {
       const response = await fetch(
-        `https://connectopia.co.in/withoutStatus/allsignedurls/${campaign}/QRscan`
+        `http://15.206.198.172/withoutStatus/allsignedurls/${campaign}/QRscan`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

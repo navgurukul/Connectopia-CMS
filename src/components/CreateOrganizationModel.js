@@ -44,7 +44,7 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = "https://connectopia.co.in/editOrganisation";
+        const apiUrl = "http://15.206.198.172/editOrganisation";
         const requestData = {
           organisation: organizationData.organisation,
           neworganisation: name,
@@ -84,10 +84,12 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = "https://connectopia.co.in/organisation";
+        const apiUrl = "http://15.206.198.172/cms/organization/create";
         const requestData = {
-          organisation: name,
-          desc: details,
+          name: name,
+          logo:"#",
+          description: details,
+          
         };
         const response = await fetch(apiUrl, {
           method: "POST",

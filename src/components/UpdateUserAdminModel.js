@@ -52,7 +52,7 @@ const UpdateUserAdminModel = ({
             newemailid: email,
         };
         axios
-            .post("https://connectopia.co.in/editUserDetails", updatedUserData)
+            .post("http://15.206.198.172/editUserDetails", updatedUserData)
             .then((response) => {
                 if (onUpdateUserAdmin) {
                     onUpdateUserAdmin(selectedOrganisation);

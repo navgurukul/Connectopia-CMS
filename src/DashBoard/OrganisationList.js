@@ -31,8 +31,9 @@ export function Organisation({ onOrgClick }) {
   useEffect(() => {
     fetchOrganizations();
   }, []);
-  const filteredOrganizations = organizations.filter((org) =>
-    org.organisation.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOrganizations = organizations.filter((org) =>{
+    console.log(org, "org")
+    return org.name.toLowerCase().includes(searchTerm.toLowerCase())}
   );
 
   const handleEditClick = (name, desc) => {
@@ -44,7 +45,7 @@ export function Organisation({ onOrgClick }) {
   const fetchOrganizations = async () => {
     if (userData.usertype === "superadmin") {
       try {
-        const apiUrl = `https://connectopia.co.in/organisationlist/${userData.emailid}/${userData.usertype}`;
+        const apiUrl = `http://15.206.198.172/cms/organization/list/${userData.email}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         setOrganizations(data);
@@ -71,7 +72,7 @@ export function Organisation({ onOrgClick }) {
 
   const deleteOrganization = async (OrganizationName) => {
     if (window.confirm(`Are you sure you want to delete ${OrganizationName}?`)) {
-      const apiUrl = `https://connectopia.co.in/deleteOrganizationData/${OrganizationName}`;
+      const apiUrl = `http://15.206.198.172/deleteOrganizationData/${OrganizationName}`;
       try {
         const response = await axios.delete(apiUrl);
 
@@ -151,10 +152,10 @@ export function Organisation({ onOrgClick }) {
                                 onOrgClick(org);
                               }}
                             >
-                              {org.organisation}
+                              {org.name}
                             </Link>
                           </td>
-                          <td>{convertUTCtoIST(org.createddate)}</td>
+                          <td>{convertUTCtoIST(org.created_at)}</td>
                           <td className="text-start"
                             style={{ wordWrap: "break-word", maxWidth: "300px", padding: "5px 0px 5px 20px" }}>
                             {org.desc}

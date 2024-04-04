@@ -13,7 +13,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [qrscanData, setQrscanData] = useState(
     "https://master.d1ywywy8pav9t.amplifyapp.com/"
   );
-
+  const [sequence, setSequence] = useState("random");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
@@ -29,10 +29,10 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const generateCampaignId = async () => {
     try {
       const response = await axios.get(
-        "https://connectopia.co.in/nextCampaignId"
+        "http://15.206.198.172/cms/campaign-next"
       );
 
-      const campaignId = response.data.CampaignId;
+      const campaignId = response.data.id;
       setData(campaignId);
 
       if (campaignId) {
@@ -114,14 +114,15 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
     const payload = {
       campaignid: data,
-      organisation: organisationName,
-      campaign_name: campaignName,
+      organisation_id: parseInt(localStorage.getItem("selectedOrgId")),
+      name: campaignName,
       startdate: startDate,
       enddate: endDate,
-      desc: description,
+      description: description,
       scantype: scannerType,
-      usertype: userData.usertype,
-      emailid: userData.emailid,
+      status: "active",
+      scan_sequence:sequence,
+      email: userData.email,
       campaign_duration: `${time.hours
         .toString()
         .padStart(2, "0")}:${time.minutes
@@ -131,7 +132,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
     try {
       const response = await axios.post(
-        "https://connectopia.co.in/api/createNewCampaign",
+        "http://15.206.198.172/cms/campaign/create",
         payload
       );
 
@@ -146,7 +147,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         formData.append("image", imageBlob, "qr-code.png");
 
         try {
-          const apiUrl = `https://connectopia.co.in/updateimage/${data}/0/Main-QRCode/${scannerType}`;
+          const apiUrl = `http://15.206.198.172/updateimage/${data}/0/Main-QRCode/${scannerType}`;
           const updateImageResponse = await axios.post(apiUrl, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -362,8 +363,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                     <option value="" disabled hidden>
                       Scanner Type
                     </option>
-                    <option value="QRscan">QR Code</option>
-                    <option value="imagescan">Image Scan</option>
+                    <option value="qr">QR Code</option>
+                    <option value="image">Image Scan</option>
                   </select>
                   <label htmlFor="scannerType">Scanner Type</label>
                 </div>

@@ -19,19 +19,20 @@ export function HomePage({ handleLogout, loggedInUserData }) {
   console.log(userData, "userData");
 
   useEffect(() => {
-    if (loggedInUserData.organisation) {
-      setSelectedOrg(loggedInUserData.organisation);
-      localStorage.setItem('selectedOrganisation', loggedInUserData.organisation);
-
-      localStorage.setItem('validUserOrganization', loggedInUserData.organisation);
+    if (loggedInUserData.name) {
+      setSelectedOrg(loggedInUserData.name);
+      localStorage.setItem('selectedOrganisation', loggedInUserData.name);
+     
+      localStorage.setItem('validUserOrganization', loggedInUserData.name);
     }
   }, [loggedInUserData])
 
   const handleOrgClick = (org) => {
-    setSelectedOrg(org.organisation);
-
-    localStorage.setItem('selectedOrganisation', org.organisation);
-    localStorage.setItem('selectedOrganisationDesc', org.desc);
+    setSelectedOrg(org.name);
+    console.log(org," this is the org")
+    localStorage.setItem("selectedOrgId", org.id);
+    localStorage.setItem('selectedOrganisation', org.name);
+    localStorage.setItem('selectedOrganisationDesc', org.description);
     setSelected("OrganizationDetails");
 
     const userOrganization = localStorage.getItem('selectedOrganisation');

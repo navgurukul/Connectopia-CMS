@@ -12,7 +12,7 @@ const AddUserModel = ({ onClose, onUserCreated }) => {
     const [alertMessages, setAlertMessages] = useState("");
     const [error, setError] = useState({ name: "", email: "", password: "" });
 
-    const selectedOrganisation = localStorage.getItem("selectedOrganisation");
+    const selectedOrganisation = localStorage.getItem("selectedOrgId");
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -28,18 +28,22 @@ const AddUserModel = ({ onClose, onUserCreated }) => {
     }, [alertMessages]);
 
     function handleAddUser(e) {
+        console.log("Add User");
         e.preventDefault();
         const userData = {
-            emailid: email,
+            email: email,
             password: password,
-            organisation: selectedOrganisation,
+            organization_id: parseInt(selectedOrganisation),
             name: name,
             usertype: "user",
         };
+        console.log(onUserCreated, "onUserCreated");
         axios
-            .post("https://connectopia.co.in/createNewUser", userData)
+            .post("http://15.206.198.172/cms/cms-user/create", userData)
             .then((response) => {
+                console.log(response.data,"response")
                 if (onUserCreated) {
+                    console.log("User created successfully!");
                     onUserCreated();
                 }
                 setAlertMessages("User added successfully!");
@@ -205,7 +209,7 @@ const AddUserModel = ({ onClose, onUserCreated }) => {
                                 must be unique to one another
                             </p>
                             
-                            <button type="submit" className="btn-create-campaign"> Add User </button>
+                            <button type="submit" onClick={handleAddUser} className="btn-create-campaign"> Add User </button>
                         </form>
                     </section>
                 </div>

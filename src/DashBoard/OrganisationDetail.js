@@ -62,8 +62,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
     setShowEditCampaignModal(false);
   };
 
-  let organisationList = localStorage.getItem('selectedOrganisation');
-  organisationList = organisationList.replace(/['"]+/g, '');
+  let organisationList = localStorage.getItem('selectedOrgId');
 
   let selectedOrganisationDesc;
   if (userType === 'superadmin') {
@@ -82,25 +81,28 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       let url;
 
       if (userData.usertype === 'superadmin') {
-        url = `https://connectopia.co.in/organisation/${organisationList}`;
+        url = `http://15.206.198.172/cms/organization/${organisationList}`;
       } else {
-        url = `https://connectopia.co.in/campaignsByEmailid/${userData.emailid}`;
+        url = `http://15.206.198.172/campaignsByEmailid/${userData.email}`;
       }
 
       axios
         .get(url)
         .then((response) => {
           setCampaignList(response.data);
+          console.log(response.data, "response.data")
         })
         .catch((error) => {
           console.error("There was an error fetching data", error);
         });
     }
   };
+  
 
-  const filteredCampaign = campaignList.filter((campaign) =>
-    campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCampaign = campaignList?.filter((campaign) =>
+    campaign?.campaign_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+ 
 
   const updateCampaignStatus = async (campaignName, currentStatus) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
@@ -109,7 +111,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       campaignname: campaignName,
       status_value: newStatus
     };
-    const apiUrl = 'https://connectopia.co.in/setStatus';
+    const apiUrl = 'http://15.206.198.172/setStatus';
 
     try {
       const response = await axios.post(apiUrl, requestData);
@@ -138,7 +140,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
 
 
   const deleteCampaign = async (campaignName) => {
-    const apiUrl = `https://connectopia.co.in/deleteCampaign/${campaignName}`;
+    const apiUrl = `http://15.206.198.172/deleteCampaign/${campaignName}`;
     try {
       const response = await axios.delete(apiUrl);
 
@@ -265,8 +267,8 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                       </thead>
                       <tbody>
 
-                        {filteredCampaign
-                          .filter(campaign => campaign.campaign_name && campaign.campaign_name.trim() !== "")
+                        {campaignList
+                          .filter(campaign => campaign.name && campaign.name.trim() !== "")
                           .map((campaign, index) => {
                             const admins = campaign.users
                               .filter(user => user.usertype === 'admin')
@@ -289,7 +291,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                                       oncampaignClick(campaign.campaignid, campaign.campaign_name, campaign.scantype);
                                     }}
                                   >
-                                    {campaign.campaign_name}
+                                    {campaign.name}
                                   </Link>
                                 </td>
                                 <td>{campaign.startdate}</td>
