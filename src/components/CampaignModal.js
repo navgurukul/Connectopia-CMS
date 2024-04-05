@@ -116,10 +116,11 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       // campaignid: data,
       organization_id: parseInt(localStorage.getItem("selectedOrgId")),
       name: campaignName,
+      description: description,
+      email: userData.email,
+      scantype: scannerType,
       startdate: startDate,
       enddate: endDate,
-      description: description,
-      scantype: scannerType,
       status: "active",
       scan_sequence:sequence,
       email: userData.email,
@@ -129,6 +130,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         .padStart(2, "0")}:${time.minutes
         .toString()
         .padStart(2, "0")}:${time.seconds.toString().padStart(2, "0")}`,
+        total_stages: 1,
+        organization_id: parseInt(localStorage.getItem("selectedOrgId"))
     };
 
     try {
@@ -148,11 +151,15 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         formData.append("image", imageBlob, "qr-code.png");
 
         try {
-          const apiUrl = `http://15.206.198.172/updateimage/${data}/0/Main-QRCode/${scannerType}`;
+          const apiUrl = `https://15.206.198.172/cms/campaign/upload-qr/${data}/Main-QRCode/product`;
           const updateImageResponse = await axios.post(apiUrl, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
+            body:{
+              content_type: "level",
+              scantype: scannerType,
+            }
           });
 
           console.log("updateImageResponse", updateImageResponse);

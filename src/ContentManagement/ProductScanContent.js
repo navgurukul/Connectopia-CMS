@@ -10,7 +10,7 @@ export const ProductScanContent = () => {
   const [data, setData] = useState("");
   const campaign = localStorage.getItem("CampaignId");
   const [uploadedQRs, setUploadedQRs] = useState([]);
-
+  const campaignId = localStorage.getItem('CampaignId');
   useEffect(() => {
     QRDATA();
   }, []);
@@ -62,7 +62,7 @@ export const ProductScanContent = () => {
   const QRDATA = async () => {
     try {
       const response = await fetch(
-        `http://15.206.198.172/withoutStatus/allsignedurls/${campaign}/QRscan`
+        `http://15.206.198.172/cms/campaign/get-signed-url/${campaignId}/qr`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
