@@ -90,7 +90,6 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
         .get(url)
         .then((response) => {
           setCampaignList(response.data);
-          console.log(response.data, "response.data")
         })
         .catch((error) => {
           console.error("There was an error fetching data", error);
@@ -104,21 +103,18 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
   );
  
 
-  const updateCampaignStatus = async (campaignName, currentStatus) => {
+  const updateCampaignStatus = async (campaignName, currentStatus, campaignId) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
 
-    const requestData = {
-      campaignname: campaignName,
-      status_value: newStatus
-    };
-    const apiUrl = 'http://15.206.198.172/setStatus';
+
+    const apiUrl = `http://15.206.198.172/cms/campaign/set-status/${campaignId}/${newStatus}`;
 
     try {
-      const response = await axios.post(apiUrl, requestData);
+      const response = await axios.put(apiUrl);
 
       if (response.status === 200) {
         setCampaignList(prevCampaigns => {
-          const index = prevCampaigns.findIndex(camp => camp.campaign_name === campaignName);
+          const index = prevCampaigns.findIndex(camp => camp.name === campaignName);
 
           const updatedCampaign = {
             ...prevCampaigns[index],
@@ -304,7 +300,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                                   <FontAwesomeIcon
                                     icon={faRocket}
                                     className="icon-style"
-                                    onClick={() => updateCampaignStatus(campaign.campaign_name, campaign.status)}
+                                    onClick={() => updateCampaignStatus(campaign.name, campaign.status, campaign.id)}
                                     style={{ color: rocketIconColor }}
                                   />
                                   {userType !== 'user' ? <FontAwesomeIcon icon={faTrash} className="icon-style" onClick={() => deleteCampaign(campaign.campaign_name)} /> : null}

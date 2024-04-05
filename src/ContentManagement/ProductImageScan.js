@@ -30,6 +30,7 @@ const ProductImageScan = () => {
         .filter((image) => image.key.endsWith(".png"))
         .map((image) => image.value);
       setFilterImage(filteredImages);
+      console.log(filteredImages, "filteredImages")
     } catch (error) {
       console.error(
         "There was a problem with the fetch operation:",
