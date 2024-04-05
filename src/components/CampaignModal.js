@@ -147,11 +147,15 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         formData.append("image", imageBlob, "qr-code.png");
 
         try {
-          const apiUrl = `http://15.206.198.172/updateimage/${data}/0/Main-QRCode/${scannerType}`;
+          const apiUrl = `https://15.206.198.172/cms/campaign/upload-qr/${data}/Main-QRCode/product`;
           const updateImageResponse = await axios.post(apiUrl, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
+            body:{
+              content_type: "level",
+              scantype: scannerType,
+            }
           });
 
           console.log("updateImageResponse", updateImageResponse);
