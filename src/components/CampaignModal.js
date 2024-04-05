@@ -113,21 +113,21 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
     const organisationName = selectedOrganisation;
 
     const payload = {
-      campaignid: data,
-      organisation_id: parseInt(localStorage.getItem("selectedOrgId")),
       name: campaignName,
+      description: description,
+      email: userData.email,
+      scantype: scannerType,
       startdate: startDate,
       enddate: endDate,
-      description: description,
-      scantype: scannerType,
       status: "active",
-      scan_sequence:sequence,
-      email: userData.email,
+      scan_sequence:"random",
       campaign_duration: `${time.hours
         .toString()
         .padStart(2, "0")}:${time.minutes
         .toString()
         .padStart(2, "0")}:${time.seconds.toString().padStart(2, "0")}`,
+        total_stages: 1,
+        organization_id: parseInt(localStorage.getItem("selectedOrgId"))
     };
 
     try {

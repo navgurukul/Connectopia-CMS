@@ -156,12 +156,12 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
     }
   };
 
-  function oncampaignClick(campaignid, campaignName, scantype) {
-    localStorage.setItem("CampaignId", campaignid)
-    localStorage.setItem("CampaigName", campaignName)
+  function oncampaignClick(id, name, scantype) {
+    localStorage.setItem("CampaignId", id)
+    localStorage.setItem("CampaigName", name)
     localStorage.setItem("ScanType", scantype)
-    localStorage.setItem("TempCampaignId", campaignid)
-    localStorage.setItem("TempCampaigName", campaignName)
+    localStorage.setItem("TempCampaignId", id)
+    localStorage.setItem("TempCampaigName", name)
     goToContentManage()
   }
 
@@ -288,7 +288,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                                   <Link className="clickable-link"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      oncampaignClick(campaign.campaignid, campaign.campaign_name, campaign.scantype);
+                                      oncampaignClick(campaign.id, campaign.name, campaign.scantype);
                                     }}
                                   >
                                     {campaign.name}
