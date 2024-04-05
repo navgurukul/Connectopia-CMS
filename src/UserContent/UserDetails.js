@@ -119,6 +119,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
     displayedUsers = filteredUserDetails.filter(user => user.usertype === userTypeFilter);
   }
 
+
   const fetchUsersByOrganisation = async (selectedOrganisation) => {
     // console.log(organisation, "selectedOrganisation")
     let orgId = parseInt(organisation.find(org => org.name === selectedOrganisation).id);
@@ -134,20 +135,21 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
     }
   };
 
-  const handleDeleteCmsUser = (emailid) => {
-    const url = 'http://15.206.198.172/deletecmsuser';
+  const handleDeleteCmsUser = (email) => {
+    const url = 'http://15.206.198.172/cms/cms-user/delete';
 
     axios({
       method: 'delete',
       url: url,
       data: {
-        emailid: emailid,
+        email: email,
       },
       headers: {
         'Content-Type': 'application/json',
       }
     })
       .then(response => {
+        console.log('User deleted successfully!', response);
       })
       .catch(error => {
         console.error('There was an error deleting the user!', error);
@@ -155,7 +157,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   };
 
   return (
-    <div className="container">
+    <div className="container"  >
       <div className="container">
         <div className="row">
           <div className="col-md-4 text-begin ">
@@ -282,10 +284,11 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                         </thead>
                         <tbody>
                           {displayedUsers.map((user, index) => (
+                           
                             <tr key={index}>
                               <td>{user.usertype}</td>
                               <td>{user.name}</td>
-                              <td>{user.emailid}</td>
+                              <td>{user.email}</td>
                               <td>{user.campaigns.map((campaign) => (
                                 <div key={campaign.campaignid}>{campaign.campaign_name}</div>
                               ))}</td>
@@ -299,7 +302,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                                     onClick={() => {
                                       const campaignNames = user.campaigns
                                         .map((cam) => cam.campaign_name)
-                                      const gmail = user.emailid;
+                                      const gmail = user.email;
                                       handleAddCampaign(campaignNames, gmail);
                                     }}
                                   />
@@ -310,7 +313,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                                     className="mr-3"
                                     onClick={() => {
                                       const campaignNames = user.campaigns.map((cam) => cam.campaign_name)
-                                      const gmail = user.emailid;
+                                      const gmail = user.email;
                                       handleRemoveCampaign(campaignNames, gmail);
                                     }}
                                   />
@@ -323,7 +326,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                                   />
                                   &nbsp; &nbsp; &nbsp;
                                   <FontAwesomeIcon icon={faTrash} style={{ cursor: 'pointer' }}
-                                    onClick={() => handleDeleteCmsUser(user.emailid)} />
+                                    onClick={() => handleDeleteCmsUser(user.email)} />
                                 </td>
                                 : null}
 
@@ -360,6 +363,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
           selectedOrganisation={organisationName}
           campaigns={selectedCampaigns}
           email={emailCampaign}
+          
           onRemoveCampaign={fetchUsersByOrganisation}
         />
       )}

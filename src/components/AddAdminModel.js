@@ -13,6 +13,10 @@ const AddAdminModel = ({ onClose, onAdminCreated }) => {
 
     const selectedOrganisation = localStorage.getItem("selectedOrganisation");
 
+    
+
+    console.log(selectedOrganisation, 'selectedOrganisation')
+
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
@@ -36,8 +40,10 @@ const AddAdminModel = ({ onClose, onAdminCreated }) => {
             usertype: "admin",
         };
 
+        // email, password, organisation_id, name, usertype
+
         axios
-            .post("http://15.206.198.172/createNewUser", adminData)
+            .post("http://15.206.198.172/cms/cms-user/create", adminData)
             .then((response) => {
                 if (onAdminCreated) {
                     onAdminCreated();

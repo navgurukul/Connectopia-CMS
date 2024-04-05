@@ -2,17 +2,21 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./CampaignModal.css";
 
-export function RemoveCampaign({ onClose, selectedOrganisation, campaigns, email, onRemoveCampaign }) {
+export function RemoveCampaign({ onClose, selectedOrganisation, campaigns, email, onRemoveCampaign,campaignId}) {
+  console.log(campaigns,'kmao---')
 
   const [removeCampaign, setRemoveCampaign] = useState("");
 
   const assignCampaign = async () => {
     const data = {
       emailid: email,
+      // campaign_id: campaign,
+
       campaign_name: removeCampaign,
     };
+    // /cms/campaign/remove/user
     try {
-      const response = await axios.delete("http://15.206.198.172/removeCampaignFromUser", { data });
+      const response = await axios.delete("http://15.206.198.172/cms/campaign/remove/user", { data });
       if (response.status === 200) {
         alert("Campaign removed successfully!");
         onRemoveCampaign(selectedOrganisation);

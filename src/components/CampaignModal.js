@@ -113,8 +113,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
     const organisationName = selectedOrganisation;
 
     const payload = {
-      campaignid: data,
-      organisation_id: parseInt(localStorage.getItem("selectedOrgId")),
+      // campaignid: data,
+      organization_id: parseInt(localStorage.getItem("selectedOrgId")),
       name: campaignName,
       startdate: startDate,
       enddate: endDate,
@@ -123,6 +123,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       status: "active",
       scan_sequence:sequence,
       email: userData.email,
+      total_stages: 3,
       campaign_duration: `${time.hours
         .toString()
         .padStart(2, "0")}:${time.minutes

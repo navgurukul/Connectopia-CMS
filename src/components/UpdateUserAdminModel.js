@@ -48,11 +48,11 @@ const UpdateUserAdminModel = ({
             name: name,
             password: password,
             usertype: selectedUserType,
-            oldemailid: userDetails.emailid,
-            newemailid: email,
+            email: userDetails.email,
+            newemail: email,
         };
         axios
-            .post("http://15.206.198.172/editUserDetails", updatedUserData)
+            .put("http://15.206.198.172/cms/cms-user/update", updatedUserData)
             .then((response) => {
                 if (onUpdateUserAdmin) {
                     onUpdateUserAdmin(selectedOrganisation);
@@ -125,7 +125,7 @@ const UpdateUserAdminModel = ({
 
     return (
         <div>
-            <div className="modal-overlay">
+            <div className="modal-overlay" >
                 <div className="modal-container1" style={{ marginTop: "1em", paddingTop: "1em" }} >
                     <header className="header1">
                         <h2 className="create-campaign-heading" style={{ marginBlock: "0em" }} > Update User/Admin </h2>
