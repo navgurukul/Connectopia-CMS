@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationData }) => {
+  console.log(organizationData, "organizationData")
 
   const [name, setName] = useState("");
   const [details, setDetails] = useState("");
@@ -44,14 +45,14 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = "http://15.206.198.172/editOrganisation";
+        const apiUrl = `http://15.206.198.172/cms/organization/edit/${organizationData.id}`;
         const requestData = {
-          organisation: organizationData.organisation,
-          neworganisation: name,
-          desc: details,
+          description: details,
+          name:  name,
+          logo: "#"
         };
         const response = await fetch(apiUrl, {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },

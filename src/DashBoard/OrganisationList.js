@@ -12,6 +12,7 @@ export function Organisation({ onOrgClick }) {
   const [name, setName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [details, setDetails] = useState("");
+  const [id, setId] = useState();
   const [organizations, setOrganizations] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
@@ -32,13 +33,14 @@ export function Organisation({ onOrgClick }) {
     fetchOrganizations();
   }, []);
   const filteredOrganizations = organizations.filter((org) =>{
-    console.log(org, "org")
+    // console.log(org, "org")
     return org.name.toLowerCase().includes(searchTerm.toLowerCase())}
   );
 
-  const handleEditClick = (name, desc) => {
+  const handleEditClick = (name, desc, id) => {
     setName(name);
     setDetails(desc);
+    setId(id)
     setShowModal(true);
   };
 
@@ -70,9 +72,9 @@ export function Organisation({ onOrgClick }) {
     }).format(istDate);
   }
 
-  const deleteOrganization = async (OrganizationName) => {
-    if (window.confirm(`Are you sure you want to delete ${OrganizationName}?`)) {
-      const apiUrl = `http://15.206.198.172/deleteOrganizationData/${OrganizationName}`;
+  const deleteOrganization = async (OrganizationId) => {
+    if (window.confirm(`Are you sure you want to delete ${OrganizationId}?`)) {
+      const apiUrl = `http://15.206.198.172/cms/organization/delete/${OrganizationId}`;
       try {
         const response = await axios.delete(apiUrl);
 
@@ -158,7 +160,7 @@ export function Organisation({ onOrgClick }) {
                           <td>{convertUTCtoIST(org.created_at)}</td>
                           <td className="text-start"
                             style={{ wordWrap: "break-word", maxWidth: "300px", padding: "5px 0px 5px 20px" }}>
-                            {org.desc}
+                            {org.description}
                           </td>
                           <td>
                             <FontAwesomeIcon
@@ -166,10 +168,10 @@ export function Organisation({ onOrgClick }) {
                               style={{ marginLeft: '6px' }}
                               className="icon-style"
                               onClick={() =>
-                                handleEditClick(org.organisation, org.desc)
+                                handleEditClick(org.name, org.description, org.id)
                               }
                             />
-                            <FontAwesomeIcon icon={faTrash} className="icon-style" style={{ marginRight: '6px' }} onClick={() => deleteOrganization(org.organisation)} />
+                            <FontAwesomeIcon icon={faTrash} className="icon-style" style={{ marginRight: '6px' }} onClick={() => deleteOrganization(org.id)} />
                             &nbsp; &nbsp;
                           </td>
                         </tr>
@@ -184,7 +186,7 @@ export function Organisation({ onOrgClick }) {
       </div>
 
       {showModal && (
-        <CreateOrganizationModel onClose={handleCloseModal} onOrganizationCreated={fetchOrganizations} organizationData={{ organisation: name, desc: details }} />
+        <CreateOrganizationModel onClose={handleCloseModal} onOrganizationCreated={fetchOrganizations} organizationData={{ organisation: name, desc: details,id:id }} />
       )}
 
     </div>
