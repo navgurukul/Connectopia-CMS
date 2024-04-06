@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faEye, faPen, faUpload } from "@fortawesome/free-solid-svg-icons";
-import './ContentManagement.css';
+import {
+  faDownload,
+  faEye,
+  faPen,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons";
+import "./ContentManagement.css";
 
 export function GeneralContent() {
   const contentData = [
@@ -45,19 +50,24 @@ export function GeneralContent() {
       name: "Progress Bar",
       description: "Progess Bar appears in the start",
       formats: "PNG, JPG, JPEG",
-    }
+    },
   ];
 
   const [imageData, setImageData] = useState({});
-  const [currentUpload, setCurrentUpload] = useState({ item: null, index: null });
+  const [currentUpload, setCurrentUpload] = useState({
+    item: null,
+    index: null,
+  });
   const fileInputRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
 
-  const campaignId = localStorage.getItem('CampaignId');
-  const scanType = localStorage.getItem('ScanType');
+  const campaignId = localStorage.getItem("CampaignId");
+  const scanType = localStorage.getItem("ScanType");
 
+  // console.log("campaignId", campaignId);
+  // console.log("scanType", scanType);
   const handleUploadIconClick = (event, item, index) => {
     setCurrentUpload({ item, index });
 
@@ -88,7 +98,7 @@ export function GeneralContent() {
 
       const endpoint = isImageAvailable ? "updateimage" : "uploadimage";
       const url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
-      
+
       fetch(url, {
         method: "POST",
         body: formData,
@@ -114,20 +124,26 @@ export function GeneralContent() {
   };
 
   const handleDownloadClick = (imageUrl) => {
-      const imagess = imageUrl[0].value;
-      // setQrCodeUrl(imageUrl);
-    const a = document.createElement('a');
+    const imagess = imageUrl[0].value;
+    // setQrCodeUrl(imageUrl);
+    const a = document.createElement("a");
     a.href = imagess;
-    a.download = 'downloaded_image.png';
+    a.download = "downloaded_image.png";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-}
+  };
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
+      const response = await fetch(
+        // `http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`
+        `http://15.206.198.172/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`
+      );
+
+  
       const data = await response.json();
+      console.log("data-image", data);
 
       setImageData(data);
     } catch (error) {
@@ -140,16 +156,16 @@ export function GeneralContent() {
   }, [campaignId, scanType]);
 
   const [showPreview, setShowPreview] = useState(false);
-    const [previewImage, setPreviewImage] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
 
-    const handlePreviewClick = (imageUrl) => {
-        setPreviewImage(imageUrl);
-        setShowPreview(true);
-    };
+  const handlePreviewClick = (imageUrl) => {
+    setPreviewImage(imageUrl);
+    setShowPreview(true);
+  };
 
-    const closePreview = () => {
-        setShowPreview(false);
-    };
+  const closePreview = () => {
+    setShowPreview(false);
+  };
 
   return (
     <div className="container style={{ marginTop: '50px' }}">
@@ -157,23 +173,22 @@ export function GeneralContent() {
         <div className="shadowbox">
           <div className="shadowbox-body">
             <div className="col-12">
-            {uploadMessage && (
+              {uploadMessage && (
                 <div className="alert alert-success text-center">
                   {uploadMessage}
                 </div>
               )}
 
               <div className="table-container">
-
-              {loading && (
+                {loading && (
                   <div>
                     <div
                       className="loading-bar"
                       style={{ width: "100%", marginBottom: "5px" }}
                     ></div>
                   </div>
-              )}
-                
+                )}
+
                 <table className="custom-table">
                   <thead>
                     <tr>
@@ -186,16 +201,19 @@ export function GeneralContent() {
                   <tbody>
                     {contentData.map((item, index) => {
                       const adjustedIndex = (index + 1).toString();
-                      const isImageAvailable = imageData.hasOwnProperty(adjustedIndex);
+                      const isImageAvailable =
+                        imageData.hasOwnProperty(adjustedIndex);
                       const imageUrl = imageData[adjustedIndex];
                       return (
-                      <tr key={index}>
-                        <td><strong>{item.name}</strong></td>
-                        <td>{item.description}</td>
-                        <td>{item.formats}</td>
-                        <td style={{width:'110px'}}>
+                        <tr key={index}>
+                          <td>
+                            <strong>{item.name}</strong>
+                          </td>
+                          <td>{item.description}</td>
+                          <td>{item.formats}</td>
+                          <td style={{ width: "110px" }}>
                             <FontAwesomeIcon
-                            className="icon-styles"
+                              className="icon-styles"
                               icon={!isImageAvailable ? faUpload : faPen}
                               onClick={(event) =>
                                 handleUploadIconClick(event, item, index)
@@ -211,18 +229,19 @@ export function GeneralContent() {
                                 className="icon-styles"
                                 style={{
                                   cursor: "pointer",
-                                  
                                 }}
                                 onClick={() => handleDownloadClick(imageUrl)}
                               />
                             )}
                             {isImageAvailable && (
-                                <FontAwesomeIcon
+                              <FontAwesomeIcon
                                 className="icon-styles"
-                                    icon={faEye}
-                                    style={{ cursor: "pointer"}}
-                                    onClick={() => handlePreviewClick(imageUrl[0].value)}
-                                />
+                                icon={faEye}
+                                style={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  handlePreviewClick(imageUrl[0].value)
+                                }
+                              />
                             )}
                             <input
                               type="file"
@@ -231,8 +250,8 @@ export function GeneralContent() {
                               onChange={handleFileChange}
                             />
                           </td>
-                      </tr>
-                      )
+                        </tr>
+                      );
                     })}
                   </tbody>
                 </table>
@@ -241,17 +260,16 @@ export function GeneralContent() {
           </div>
         </div>
       </div>
-            {showPreview && (
-                <div className="modal modalStyles">
-                    <div className="modal-content modalContentStyles">
-                        <button className="close-button12" onClick={closePreview}>
-                          <span className="big-close-button12">&times;</span>
-                        </button>
-                        <img src={previewImage} alt="Preview" className="imageStyles" />
-                    </div>
-                </div>
-            )}
+      {showPreview && (
+        <div className="modal modalStyles">
+          <div className="modal-content modalContentStyles">
+            <button className="close-button12" onClick={closePreview}>
+              <span className="big-close-button12">&times;</span>
+            </button>
+            <img src={previewImage} alt="Preview" className="imageStyles" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-

@@ -144,7 +144,8 @@ export function LevelContent() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
+      // const response = await fetch(`http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
+      const response = await fetch(`http://15.206.198.172/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`);
       const data = await response.json();
 
       setImageData(data);
