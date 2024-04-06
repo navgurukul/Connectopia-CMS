@@ -135,14 +135,14 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
   };
 
 
-  const deleteCampaign = async (campaignName) => {
-    const apiUrl = `http://15.206.198.172/deleteCampaign/${campaignName}`;
+  const deleteCampaign = async (campaignId) => {
+    const apiUrl = `http://15.206.198.172/cms/campaign/delete/${campaignId}`;
     try {
       const response = await axios.delete(apiUrl);
-
+  
       if (response.status === 200) {
         setCampaignList(prevCampaigns => {
-          return prevCampaigns.filter(camp => camp.campaign_name !== campaignName);
+          return prevCampaigns.filter(camp => camp.id !== campaignId);
         });
       } else {
         console.error('Failed to delete campaign:', response.data);
@@ -303,7 +303,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                                     onClick={() => updateCampaignStatus(campaign.name, campaign.status, campaign.id)}
                                     style={{ color: rocketIconColor }}
                                   />
-                                  {userType !== 'user' ? <FontAwesomeIcon icon={faTrash} className="icon-style" onClick={() => deleteCampaign(campaign.campaign_name)} /> : null}
+                                  {userType !== 'user' ? <FontAwesomeIcon icon={faTrash} className="icon-style" onClick={() => deleteCampaign(campaign.id)} /> : null}
                                 </td>
 
                               </tr>
