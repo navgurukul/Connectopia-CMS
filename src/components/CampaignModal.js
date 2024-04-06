@@ -19,6 +19,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [description, setDescription] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
+
+  const [numberOfStages, setNumberOfStages] = useState();
   
   const retrievedLoggedInUserDataObject =
     localStorage.getItem("loggedInUserData");
@@ -77,7 +79,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       !description ||
       !startDate ||
       !endDate ||
-      !time
+      !time ||
+      !numberOfStages
     ) {
       setAlertMessage("Please make sure all fields are filled correctly.");
       setTimeout(() => {
@@ -124,13 +127,13 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       status: "active",
       scan_sequence:sequence,
       email: userData.email,
-      total_stages: 3,
+      // total_stages: 3,
+      total_stages: numberOfStages,
       campaign_duration: `${time.hours
         .toString()
         .padStart(2, "0")}:${time.minutes
         .toString()
         .padStart(2, "0")}:${time.seconds.toString().padStart(2, "0")}`,
-        total_stages: 1,
         organization_id: parseInt(localStorage.getItem("selectedOrgId"))
     };
 
@@ -436,6 +439,23 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                       <label htmlFor="seconds">Seconds</label>
                     </div>
                   </div>
+                </div>
+
+                  {/* added Scan sequence type */}
+
+                  <div className="form-floating">
+                  <input
+                    type="number"
+                    id="numberOfStages"
+                    required
+                    placeholder="Enter Number of Stages"
+                    className="form-control"
+                    min="1"
+                    max="100"
+                    style={{ width: "100%" }}
+                    onChange={(e) => setNumberOfStages(e.target.value)}
+                  />
+                  <label htmlFor="numberOfStages">Enter Number of Stages</label>
                 </div>
 
                 {/* added Scan sequence type */}

@@ -7,7 +7,6 @@ const UpdateCampaignModel = ({
   campainDetails,
   onCampaignUpdated,
 }) => {
-  console.log("campainDetails", campainDetails);
   const [campaignName, setcampaignName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -20,11 +19,28 @@ const UpdateCampaignModel = ({
     seconds: 0,
   });
 
+  const [numberOfStages, setNumberOfStages] = useState();
+
   useEffect(() => {
-    setcampaignName(campainDetails.campaign_name);
-    setDescription(campainDetails.desc);
-    setStartDate(campainDetails.startdate);
-    setEndDate(campainDetails.enddate);
+    setcampaignName(campainDetails.name);
+    setDescription(campainDetails.description);
+
+    // Converted time to YYYY-MM-DD format
+    const startDateObj = new Date(campainDetails.startdate);
+    const endDateObj = new Date(campainDetails.enddate);
+    const startDateFormatted = `${startDateObj.getFullYear()}-${(
+      "0" +
+      (startDateObj.getMonth() + 1)
+    ).slice(-2)}-${("0" + startDateObj.getDate()).slice(-2)}`;
+    const endDateFormatted = `${endDateObj.getFullYear()}-${(
+      "0" +
+      (endDateObj.getMonth() + 1)
+    ).slice(-2)}-${("0" + endDateObj.getDate()).slice(-2)}`;
+
+    setStartDate(startDateFormatted);
+    setEndDate(endDateFormatted);
+
+    setNumberOfStages(campainDetails.total_stages);
 
     if (campainDetails.campaign_duration) {
       const [hours, minutes, seconds] = campainDetails.campaign_duration
@@ -44,26 +60,33 @@ const UpdateCampaignModel = ({
   const handleUpdateCampaign = async (e) => {
     e.preventDefault();
 
-    if (!campaignName || !description || !startDate || !endDate) {
+    if (
+      !campaignName ||
+      !description ||
+      !startDate ||
+      !endDate ||
+      !numberOfStages
+    ) {
       showAlert("Please make sure all fields are filled correctly.");
       return;
     }
     const { hours, minutes, seconds } = duration;
 
     const payload = {
-      campaign_name: campainDetails.campaign_name,
-      newcampaign_name: campaignName,
+      id: campainDetails.id,
+      name: campaignName,
       startdate: startDate,
       enddate: endDate,
-      desc: description,
+      description: description,
+      total_stages: numberOfStages,
       campaign_duration: `${hours.toString().padStart(2, "0")}:${minutes
         .toString()
         .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
     };
 
     try {
-      const response = await axios.post(
-        "http://15.206.198.172/editCampaign",
+      const response = await axios.put(
+        `http://15.206.198.172/cms/campaign/edit/${campainDetails.id}`,
         payload
       );
 
@@ -205,40 +228,6 @@ const UpdateCampaignModel = ({
                 </div>
               </div>
 
-              <div className="form-group">
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    id="startDate"
-                    required
-                    placeholder="Campaign start date"
-                    className="form-control"
-                    min={getToday()}
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                  />
-                  <label htmlFor="startDate">Campaign start date</label>
-                </div>
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    id="endDate"
-                    required
-                    placeholder="Campaign end date"
-                    className="form-control"
-                    min={startDate}
-                    value={endDate}
-                    onChange={handleEndDateChange}
-                    disabled={!startDate}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                  />
-                  <label htmlFor="endDate">Campaign end date</label>
-                </div>
-              </div>
-
               {/* added timer update code here */}
               <div className="form-group">
                 <div className="form-group row">
@@ -305,6 +294,21 @@ const UpdateCampaignModel = ({
                       <label htmlFor="seconds">Seconds</label>
                     </div>
                   </div>
+                </div>
+                <div className="form-floating">
+                  <input
+                    type="number"
+                    id="numberOfStages"
+                    required
+                    placeholder="Enter Number of Stages"
+                    className="form-control"
+                    min="1"
+                    max="100"
+                    style={{ width: "100%" }}
+                    value={numberOfStages}
+                    onChange={(e) => setNumberOfStages(Number(e.target.value))}
+                  />
+                  <label htmlFor="numberOfStages">Enter Number of Stages</label>
                 </div>
               </div>
 
