@@ -268,12 +268,12 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                           .map((campaign, index) => {
                             const admins = campaign.users
                               .filter(user => user.usertype === 'admin')
-                              .map(admin => admin.name)
+                              .map(admin => admin.email)
                               .join(", ");
 
                             const users = campaign.users
                               .filter(user => user.usertype === 'user')
-                              .map(user => user.name)
+                              .map(user => user.email)
                               .join(", ");
 
                             const rocketIconColor = campaign.status === 'active' ? 'green' : 'red';
