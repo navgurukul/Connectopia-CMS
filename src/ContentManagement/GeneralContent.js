@@ -54,6 +54,7 @@ export function GeneralContent() {
   ];
 
   const [imageData, setImageData] = useState({});
+
   const [currentUpload, setCurrentUpload] = useState({
     item: null,
     index: null,
@@ -94,17 +95,23 @@ export function GeneralContent() {
       const pageNumber = index + 1;
       const contentName = item.name;
 
+      console.log("contentName",contentName);
+
       const isImageAvailable = imageData.hasOwnProperty((index + 1).toString());
 
       const endpoint = isImageAvailable ? "updateimage" : "uploadimage";
       const url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
 
-      fetch(url, {
+      // /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type   
+      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${pageNumber}/${contentName}/${scanType}/1/1/general`;
+
+      fetch(urls, {
         method: "POST",
         body: formData,
       })
         .then((response) =>
-          response.ok ? response.text() : Promise.reject(response)
+        console.log("----kkkkkkk", response),
+          // response.ok ? response.text() : Promise.reject(response)
         )
         .then((data) => {
           fetchData();
@@ -141,9 +148,8 @@ export function GeneralContent() {
         `http://15.206.198.172/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`
       );
 
-  
       const data = await response.json();
-      console.log("data-image", data);
+      console.log("dikha_ab", data);
 
       setImageData(data);
     } catch (error) {
