@@ -16,8 +16,6 @@ export function HomePage({ handleLogout, loggedInUserData }) {
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
 
 
-  console.log(userData, "userData");
-
   useEffect(() => {
     if (loggedInUserData.name) {
       setSelectedOrg(loggedInUserData.name);

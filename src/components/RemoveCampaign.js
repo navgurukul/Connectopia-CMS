@@ -3,7 +3,6 @@ import axios from "axios";
 import "./CampaignModal.css";
 
 export function RemoveCampaign({ onClose, selectedOrganisation, campaigns, email, onRemoveCampaign,campaignId}) {
-  console.log(campaigns,'kmao---')
 
   const [removeCampaign, setRemoveCampaign] = useState("");
 

@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash, faMagnifyingGlass, faX, faCircleMinus, faCirclePlus, faUsers, faUser, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPen,
+  faTrash,
+  faMagnifyingGlass,
+  faX,
+  faCircleMinus,
+  faCirclePlus,
+  faUsers,
+  faUser,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import "./UserDetails.css";
 import { Link } from "react-router-dom";
 import AddUserModel from "../components/AddUserModel";
@@ -11,7 +21,6 @@ import axios from "axios";
 import UpdateUserAdminModel from "../components/UpdateUserAdminModel";
 
 export function UserDetails({ setSelectedName, setSelectedDetail }) {
-
   const [organisation, setOrganisation] = useState([]);
   const [organisationName, setOrganisationName] = useState("");
   const [userDetail, setUserDetail] = useState([]);
@@ -21,12 +30,14 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   const [showModal, setShowModal] = useState(false);
   const [addCampaign, setAddCampaign] = useState(false);
   const [removeCampaign, setRemoveCampaign] = useState(false);
-  const [emailCampaign, setEmailCampaign] = useState("")
+  const [emailCampaign, setEmailCampaign] = useState("");
   const [showMessage, setShowMessage] = useState(false);
   const [userDetails, setUserDetails] = useState({});
-  const [showUpdateUserAdminModel, setShowUpdateUserAdminModel] = useState(false);
+  const [showUpdateUserAdminModel, setShowUpdateUserAdminModel] =
+    useState(false);
 
-  const retrievedLoggedInUserDataObject = localStorage.getItem('loggedInUserData');
+  const retrievedLoggedInUserDataObject =
+    localStorage.getItem("loggedInUserData");
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
 
   const handleShowModal = () => {
@@ -42,7 +53,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   };
 
   function handleUpdateUserAdmin(user) {
-    setUserDetails(user)
+    setUserDetails(user);
     setShowUpdateUserAdminModel(true);
   }
   const handleCloseUpdateUserAdminModal = () => {
@@ -51,12 +62,12 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
 
   const handleRemoveCampaign = (campaigns, gmail) => {
     setSelectedCampaigns(campaigns);
-    setEmailCampaign(gmail)
+    setEmailCampaign(gmail);
     setRemoveCampaign(true);
   };
   const handleAddCampaign = (campaigns, gmail) => {
     setSelectedCampaigns(campaigns);
-    setEmailCampaign(gmail)
+    setEmailCampaign(gmail);
     setAddCampaign(true);
   };
   const handleCloseRemoveCampaign = () => {
@@ -64,19 +75,19 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   };
 
   const showAdmins = () => {
-    setUserTypeFilter('admin');
+    setUserTypeFilter("admin");
   };
 
   const showUsers = () => {
-    setUserTypeFilter('user');
+    setUserTypeFilter("user");
   };
 
   const showAll = () => {
-    setUserTypeFilter('');
+    setUserTypeFilter("");
   };
 
   useEffect(() => {
-    if (userData.usertype !== 'superadmin') {
+    if (userData.usertype !== "superadmin") {
       setOrganisationName(userData.name);
       fetchUsersByOrganisation(userData.name);
     } else {
@@ -116,53 +127,56 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
 
   let displayedUsers = filteredUserDetails;
   if (userTypeFilter) {
-    displayedUsers = filteredUserDetails.filter(user => user.usertype === userTypeFilter);
+    displayedUsers = filteredUserDetails.filter(
+      (user) => user.usertype === userTypeFilter
+    );
   }
-
 
   const fetchUsersByOrganisation = async (selectedOrganisation) => {
     // console.log(organisation, "selectedOrganisation")
-    let orgId = parseInt(organisation.find(org => org.name === selectedOrganisation).id);
+    let orgId = parseInt(
+      organisation.find((org) => org.name === selectedOrganisation).id
+    );
     // console.log(orgId, "orgId")
     try {
       const apiUrl = `http://15.206.198.172/cms/organization/user/${orgId}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setUserDetail(data);
-      console.log(data, "data this is the user data")
+      console.log(data, "data this is the user data");
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
   };
 
   const handleDeleteCmsUser = (email) => {
-    const url = 'http://15.206.198.172/cms/cms-user/delete';
+    const url = "http://15.206.198.172/cms/cms-user/delete";
 
     axios({
-      method: 'delete',
+      method: "delete",
       url: url,
       data: {
         email: email,
       },
       headers: {
-        'Content-Type': 'application/json',
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => {
-        console.log('User deleted successfully!', response);
+      .then((response) => {
+        console.log("User deleted successfully!", response);
       })
-      .catch(error => {
-        console.error('There was an error deleting the user!', error);
+      .catch((error) => {
+        console.error("There was an error deleting the user!", error);
       });
   };
 
   return (
-    <div className="container"  >
+    <div className="container">
       <div className="container">
         <div className="row">
           <div className="col-md-4 text-begin ">
             <div>
-              {userData.usertype === 'superadmin' ?
+              {userData.usertype === "superadmin" ? (
                 <select
                   id="organisationName"
                   className="form-select"
@@ -182,7 +196,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                     </option>
                   ))}
                 </select>
-                : null}
+              ) : null}
             </div>
 
             {showMessage && (
@@ -192,24 +206,34 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                   backgroundColor: "lightyellow",
                   textAlign: "center",
                   marginTop: "10px",
-                  width: '650px',
-                  marginLeft: '100px'
+                  width: "650px",
+                  marginLeft: "100px",
                 }}
               >
-                Please select an organization to perform an action on 'Users/Admins' !!
+                Please select an organization to perform an action on
+                'Users/Admins' !!
               </div>
             )}
 
             <br />
             <div className="row">
               <div className="col-md-4" onClick={showAll}>
-                <button className="create-buttons-new"><FontAwesomeIcon icon={faUsers} />View All</button>
+                <button className="create-buttons-new">
+                  <FontAwesomeIcon icon={faUsers} />
+                  View All
+                </button>
               </div>
               <div className="col-md-4" onClick={showAdmins}>
-                <button className="create-buttons-new" ><FontAwesomeIcon icon={faUser} />View Admins</button>
+                <button className="create-buttons-new">
+                  <FontAwesomeIcon icon={faUser} />
+                  View Admins
+                </button>
               </div>
               <div className="col-md-4" onClick={showUsers}>
-                <button className="create-buttons-new"><FontAwesomeIcon icon={faUser} />View Users</button>
+                <button className="create-buttons-new">
+                  <FontAwesomeIcon icon={faUser} />
+                  View Users
+                </button>
               </div>
             </div>
           </div>
@@ -224,9 +248,19 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
               <div className="col-8"></div> <br />
               <div className="col-4 text-end" style={{ marginTop: "7%" }}>
                 {" "}
-                {userData.usertype !== 'user' ?
-                  <button className="create-buttons" onClick={handleShowModal} style={{ marginRight: '30px', marginTop: '-30px' }}><FontAwesomeIcon icon={faUserPlus} style={{ marginRight: "5px" }} /> Add Users</button>
-                  : null}
+                {userData.usertype !== "user" ? (
+                  <button
+                    className="create-buttons"
+                    onClick={handleShowModal}
+                    style={{ marginRight: "30px", marginTop: "-30px" }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faUserPlus}
+                      style={{ marginRight: "5px" }}
+                    />{" "}
+                    Add Users
+                  </button>
+                ) : null}
               </div>
             </div>
           </div>
@@ -235,9 +269,17 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
         <div className="row text-center">
           <div className="col-12">
             <div className="shadowbox">
-              <div className="row custom-div" style={{ marginTop: '-10px' }}>
+              <div className="row custom-div" style={{ marginTop: "-10px" }}>
                 <div className="col-6">
-                  <strong style={{ float: 'left', marginLeft: '15px', marginTop: '25px' }}>All Admins and Users</strong>
+                  <strong
+                    style={{
+                      float: "left",
+                      marginLeft: "15px",
+                      marginTop: "25px",
+                    }}
+                  >
+                    All Admins and Users
+                  </strong>
                 </div>
                 <div className="col-6 custom-div text-end">
                   <div className="search-container">
@@ -279,29 +321,42 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                             <th>Name</th>
                             <th>Email ID</th>
                             <th>Campaigns</th>
-                            {userData.usertype !== 'user' ? <th>Actions</th> : null}
+                            {userData.usertype !== "user" ? (
+                              <th>Actions</th>
+                            ) : null}
                           </tr>
                         </thead>
                         <tbody>
                           {displayedUsers.map((user, index) => (
-                           
                             <tr key={index}>
                               <td>{user.usertype}</td>
                               <td>{user.name}</td>
                               <td>{user.email}</td>
-                              <td>{user.campaigns.map((campaign) => (
-                                <div key={campaign.campaignid}>{campaign.campaign_name}</div>
-                              ))}</td>
+                              <td>
+                                {user.campaigns.map((campaign) => (
+                                  <div key={campaign.id}>
+                                   {campaign.name}
+                                  </div>
+                                ))}
+                              </td>
+{/* 
+                              {user.campaigns.map((campaign) => (
+                                <div key={campaign.id}>{campaign.name}</div>
+                              ))} */}
 
-                              {userData.usertype !== 'user' ?
+                              {userData.usertype !== "user" ? (
                                 <td>
                                   <FontAwesomeIcon
                                     icon={faCirclePlus}
-                                    style={{ color: "green", cursor: 'pointer' }}
+                                    style={{
+                                      color: "green",
+                                      cursor: "pointer",
+                                    }}
                                     className="mr-3"
                                     onClick={() => {
-                                      const campaignNames = user.campaigns
-                                        .map((cam) => cam.campaign_name)
+                                      const campaignNames = user.campaigns.map(
+                                        (cam) => cam.campaign_name
+                                      );
                                       const gmail = user.email;
                                       handleAddCampaign(campaignNames, gmail);
                                     }}
@@ -309,27 +364,39 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
                                   &nbsp; &nbsp; &nbsp;
                                   <FontAwesomeIcon
                                     icon={faCircleMinus}
-                                    style={{ color: "#FF7F7F", cursor: 'pointer' }}
+                                    style={{
+                                      color: "#FF7F7F",
+                                      cursor: "pointer",
+                                    }}
                                     className="mr-3"
                                     onClick={() => {
-                                      const campaignNames = user.campaigns.map((cam) => cam.campaign_name)
+                                      const campaignNames = user.campaigns.map(
+                                        (cam) => cam.campaign_name
+                                      );
                                       const gmail = user.email;
-                                      handleRemoveCampaign(campaignNames, gmail);
+                                      handleRemoveCampaign(
+                                        campaignNames,
+                                        gmail
+                                      );
                                     }}
                                   />
                                   &nbsp; &nbsp; &nbsp;
                                   <FontAwesomeIcon
                                     icon={faPen}
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     className="mr-3"
                                     onClick={() => handleUpdateUserAdmin(user)}
                                   />
                                   &nbsp; &nbsp; &nbsp;
-                                  <FontAwesomeIcon icon={faTrash} style={{ cursor: 'pointer' }}
-                                    onClick={() => handleDeleteCmsUser(user.email)} />
+                                  <FontAwesomeIcon
+                                    icon={faTrash}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() =>
+                                      handleDeleteCmsUser(user.email)
+                                    }
+                                  />
                                 </td>
-                                : null}
-
+                              ) : null}
                             </tr>
                           ))}
                         </tbody>
@@ -345,7 +412,14 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
 
       {showModal && <AddUserModel onClose={handleCloseModal} />}
 
-      {showUpdateUserAdminModel && <UpdateUserAdminModel userDetails={userDetails} onClose={handleCloseUpdateUserAdminModal} onUpdateUserAdmin={fetchUsersByOrganisation} selectedOrganisation={organisationName} />}
+      {showUpdateUserAdminModel && (
+        <UpdateUserAdminModel
+          userDetails={userDetails}
+          onClose={handleCloseUpdateUserAdminModal}
+          onUpdateUserAdmin={fetchUsersByOrganisation}
+          selectedOrganisation={organisationName}
+        />
+      )}
 
       {addCampaign && (
         <AssignCampaign
@@ -363,11 +437,9 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
           selectedOrganisation={organisationName}
           campaigns={selectedCampaigns}
           email={emailCampaign}
-          
           onRemoveCampaign={fetchUsersByOrganisation}
         />
       )}
-
     </div>
   );
 }

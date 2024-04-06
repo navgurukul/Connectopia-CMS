@@ -25,7 +25,7 @@ const UpdateUserAdminModel = ({
 
     useEffect(() => {
         setName(userDetails.name);
-        setEmail(userDetails.emailid);
+        setEmail(userDetails.email);
         setSelectedUserType(userDetails.usertype);
     }, []);
 
