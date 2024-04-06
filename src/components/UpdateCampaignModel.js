@@ -7,7 +7,7 @@ const UpdateCampaignModel = ({
   campainDetails,
   onCampaignUpdated,
 }) => {
-  console.log("campainDetails", campainDetails);
+  // console.log("campainDetails", campainDetails);
   const [campaignName, setcampaignName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -19,12 +19,14 @@ const UpdateCampaignModel = ({
     minutes: 0,
     seconds: 0,
   });
+  const [numberOfStages, setNumberOfStages] = useState();
 
   useEffect(() => {
     setcampaignName(campainDetails.campaign_name);
     setDescription(campainDetails.desc);
     setStartDate(campainDetails.startdate);
     setEndDate(campainDetails.enddate);
+    setNumberOfStages(campainDetails.number_of_stages)
 
     if (campainDetails.campaign_duration) {
       const [hours, minutes, seconds] = campainDetails.campaign_duration
@@ -44,7 +46,7 @@ const UpdateCampaignModel = ({
   const handleUpdateCampaign = async (e) => {
     e.preventDefault();
 
-    if (!campaignName || !description || !startDate || !endDate) {
+    if (!campaignName || !description || !startDate || !endDate || !numberOfStages) {
       showAlert("Please make sure all fields are filled correctly.");
       return;
     }
@@ -59,6 +61,7 @@ const UpdateCampaignModel = ({
       campaign_duration: `${hours.toString().padStart(2, "0")}:${minutes
         .toString()
         .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
+        number_of_stages: numberOfStages,
     };
 
     try {
@@ -305,6 +308,21 @@ const UpdateCampaignModel = ({
                       <label htmlFor="seconds">Seconds</label>
                     </div>
                   </div>
+                </div>
+                <div className="form-floating">
+                  <input
+                    type="number"
+                    id="numberOfStages"
+                    required
+                    placeholder="Enter Number of Stages"
+                    className="form-control"
+                    min="1"
+                    max="100"
+                    style={{ width: "100%" }}
+                    value={numberOfStages}
+                    onChange={(e) => setNumberOfStages(Number(e.target.value))}
+                  />
+                  <label htmlFor="numberOfStages">Enter Number of Stages</label>
                 </div>
               </div>
 
