@@ -9,37 +9,43 @@ export function LevelContent() {
       name: "Level Map",
       description: "This indicates the user progress on a level map",
       formats: "GIF",
+      order: 1,
     },
     {
       name: "Progress Bar",
       description: "This indicates the user progress on Stage",
       formats: "PNG, JPG, JPEG",
-
+      order: 2,
     },
     {
       name: "Text Promt After Successful Scan",
       description: "This will pop up when the user successfully scans the image",
       formats: "PNG, JPG, JPEG",
+      order: 3,
     },
     {
       name: "Level Completion Thought",
       description: "Character thought after successfully scans",
       formats: "PNG, JPG, JPEG",
+      order: 4,
     },
     {
       name: "Level Completion Badge",
       description: "This icon/ image will appear in the stage progress bar",
       formats: "PNG, JPG, JPEG",
+      order: 5,
     },
     {
       name: "Time Up Registration",
       description: "Registration on Level completed",
       formats: "PNG, JPG, JPEG",
+      order: 6,
     },
     {
       name: "Reward Claim Badge",
       description: "This badge will be shown on the  counters to claim reward",
       formats: "PNG, JPG, JPEG",
+      order: 7,
     },
   ];
 
@@ -69,10 +75,11 @@ export function LevelContent() {
   const scanType = localStorage.getItem('ScanType');
 
   const handleLevelClick = (level) => {
+    // console.log("Level: ", level);
     setSelectedLevel(level);
   };
 
-  const handleUploadIconClick = (event, item, index) => {
+  const handleUploadIconClick = (event, item, imageIndex) => {
     setSelectedItem(item);
 
     if (item.name === "Level Map") {
@@ -88,8 +95,11 @@ export function LevelContent() {
     }
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event, imageIndex) => {
     const file = event.target.files[0];
+    const order = imageIndex + 1;
+    
+    console.log(imageIndex, "This is the image index")
 
     if (file) {
       setLoading(true);
@@ -102,26 +112,29 @@ export function LevelContent() {
       }
 
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("image", file)
 
       const basePageNumber = levelStartIndexes[selectedLevel - 1];
       const contentOffset = contentOffsets[selectedItem.name] || 0;
       const pageNumber = basePageNumber + contentOffset;
-
-      const isImageAvailable = imageData.hasOwnProperty(pageNumber.toString());
-
-      let endpoint, url;
+      const isImageAvailable = imageData && imageData[imageIndex]?.hasOwnProperty("image");
+      console.log(isImageAvailable ? 'upload-gif' : 'update-gif', isImageAvailable)
+      let endpoint, url, method;
 
       if (isLevelMap) {
-        endpoint = isImageAvailable ? 'updategif' : 'uploadgif';
-        url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${selectedItem.name}/${scanType}`;
+        endpoint = isImageAvailable ? 'update-gif' : 'upload-gif';
+        method = "update-gif" ? 'PUT' : 'POST';
+        url = `http://15.206.198.172/cms/campaign/${endpoint}/${campaignId}/${1}/${file.name.replace(/\s/g, '').slice(0, -4)}/${scanType}/${order}/${1}/level`;
       } else {
-        endpoint = isImageAvailable ? 'updateimage' : 'uploadimage';
-        url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${selectedItem.name}/${scanType}`;
+        endpoint = isImageAvailable ? 'update-image' : 'upload-image';
+        console.log( isImageAvailable ? 'PUT' : 'POST' , "This is inside the endpoint")
+        method = isImageAvailable ? 'PUT' : 'POST';
+        url = `http://15.206.198.172/cms/campaign/${endpoint}/${campaignId}/${selectedLevel}/${file.name.replace(/\s/g, '').slice(0, -4)}/${scanType}/${order}/${1}/level`;
       }
+      //28. POST: /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type      
 
       fetch(url, {
-        method: 'POST',
+        method: method,
         body: formData,
       })
         .then(response => response.ok ? response.text() : Promise.reject(response))
@@ -148,7 +161,8 @@ export function LevelContent() {
       const response = await fetch(`http://15.206.198.172/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`);
       const data = await response.json();
 
-      setImageData(data);
+      console.log("Data: ", data)
+      setImageData(data?.level);
     } catch (error) {
       console.error("An error occurred while fetching the data: ", error);
     }
@@ -235,9 +249,11 @@ export function LevelContent() {
                       const contentOffset = contentOffsets[item.name] || 0;
                       const pageNumber = basePageNumber + contentOffset;
                       const adjustedIndex = pageNumber.toString();
-                      const isImageAvailable = imageData.hasOwnProperty(adjustedIndex);
+                      const isImageAvailable = imageData &&
+                      imageData[index]?.hasOwnProperty("image");  
 
-                      const imageUrl = imageData[adjustedIndex];
+                      // console.log("isImageAvailable", isImageAvailable)
+                      const imageUrl = imageData && imageData[adjustedIndex];
 
                       return (
                         <tr key={index}>
@@ -280,14 +296,14 @@ export function LevelContent() {
                                 accept=".gif"
                                 ref={gifInputRef}
                                 style={{ display: "none" }}
-                                onChange={(event) => handleFileChange(event)}
+                                onChange={(event) => handleFileChange(event, index)}
                               />
                             ) : (
                               <input
                                 type="file"
                                 ref={fileInputRef}
                                 style={{ display: "none" }}
-                                onChange={(event) => handleFileChange(event)}
+                                onChange={(event) => handleFileChange(event, index)}
                               />
                             )}
                           </td>

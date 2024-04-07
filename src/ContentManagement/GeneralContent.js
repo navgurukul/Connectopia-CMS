@@ -86,6 +86,7 @@ export function GeneralContent() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const { item, index } = currentUpload;
+    // console.log(currentUpload, "Item")
 
     if (file) {
       setLoading(true);
@@ -95,24 +96,25 @@ export function GeneralContent() {
       const pageNumber = index + 1;
       const contentName = item.name;
 
-      console.log("contentName",contentName);
+      // console.log("contentName",contentName);
 
-      const isImageAvailable = imageData.hasOwnProperty((index + 1).toString());
+      const isImageAvailable = imageData?.hasOwnProperty((index + 1).toString());
+      // console.log(imageData, "imageData")
 
       const endpoint = isImageAvailable ? "updateimage" : "uploadimage";
       const url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
 
       // /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type   
-      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${pageNumber}/${contentName}/${scanType}/1/1/general`;
+      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${pageNumber}/${contentName}/${scanType}/${pageNumber}/1/general`;
 
       fetch(urls, {
         method: "POST",
         body: formData,
       })
-        .then((response) =>
-        console.log("----kkkkkkk", response),
+        .then((response) =>{
+        // console.log("----kkkkkkk", response)
           // response.ok ? response.text() : Promise.reject(response)
-        )
+        })
         .then((data) => {
           fetchData();
           setLoading(false);
@@ -148,10 +150,10 @@ export function GeneralContent() {
         `http://15.206.198.172/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`
       );
 
-      const data = await response.json();
-      console.log("dikha_ab", data);
+      const data = await response?.json();
+      // console.log("dikha_ab", data);
 
-      setImageData(data);
+      setImageData(data?.general );
     } catch (error) {
       console.error("An error occurred while fetching the data: ", error);
     }
@@ -205,11 +207,12 @@ export function GeneralContent() {
                     </tr>
                   </thead>
                   <tbody>
-                    {contentData.map((item, index) => {
-                      const adjustedIndex = (index + 1).toString();
-                      const isImageAvailable =
-                        imageData.hasOwnProperty(adjustedIndex);
-                      const imageUrl = imageData[adjustedIndex];
+                    {contentData?.map((item, index) => {
+                      const adjustedIndex = (index + 1)?.toString();
+                      const isImageAvailable = imageData &&
+                        imageData[index]?.hasOwnProperty("image");  
+                        // console.log("isImageAvailable", isImageAvailable) 
+                      const imageUrl = imageData && imageData[adjustedIndex];
                       return (
                         <tr key={index}>
                           <td>
