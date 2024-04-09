@@ -32,10 +32,13 @@ export function Organisation({ onOrgClick }) {
   useEffect(() => {
     fetchOrganizations();
   }, []);
-  const filteredOrganizations = organizations.filter((org) =>{
-    // console.log(org, "org")
-    return org.name.toLowerCase().includes(searchTerm.toLowerCase())}
-  );
+
+
+  const filteredOrganizations = organizations.filter((org) => {
+    return org.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+  
+  // console.log(filteredOrganizations, "filteredOrganizations");
 
   const handleEditClick = (name, desc, id) => {
     setName(name);
@@ -50,12 +53,15 @@ export function Organisation({ onOrgClick }) {
         const apiUrl = `http://15.206.198.172/cms/organization/list/${userData.email}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
-        setOrganizations(data);
+        setOrganizations(data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
   };
+
+  
+
 
   function convertUTCtoIST(dateString) {
     const date = new Date(dateString);
@@ -145,7 +151,7 @@ export function Organisation({ onOrgClick }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredOrganizations.map((org, index) => (
+                      {filteredOrganizations?.map((org, index) => (
                         <tr key={index}>
                           <td className="text-start" style={{ wordWrap: "break-word", maxWidth: "200px", padding: "5px 20px" }}>
                             <Link className="clickable-link"
