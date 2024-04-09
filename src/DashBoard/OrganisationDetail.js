@@ -262,9 +262,15 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                         </tr>
                       </thead>
                       <tbody>
+                        {
+                          campaignList?.length === 0 || !campaignList && (
+                            <tr>
+                              <td colSpan="6" style={{textAlign:"center"}}>No campaigns found</td>
+                            </tr>
+                          )
+                        }
 
-                        {campaignList
-                          .filter(campaign => campaign.name && campaign.name.trim() !== "")
+                        {campaignList?.filter(campaign => campaign.name && campaign.name.trim() !== "")
                           .map((campaign, index) => {
                             const admins = campaign.users
                               .filter(user => user.usertype === 'admin')
@@ -290,8 +296,8 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                                     {campaign.name}
                                   </Link>
                                 </td>
-                                <td>{campaign.startdate}</td>
-                                <td>{campaign.enddate}</td>
+                                <td>{campaign.startdate.substring(0, 10)}</td>
+                                <td>{campaign.enddate.substring(0, 10)}</td>
                                 <td>{admins}</td>
                                 <td>{users}</td>
 

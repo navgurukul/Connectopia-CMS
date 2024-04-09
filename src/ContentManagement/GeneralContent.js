@@ -147,7 +147,7 @@ export function GeneralContent() {
     try {
       const response = await fetch(
         // `http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`
-        `http://15.206.198.172/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`
+        `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
       );
 
       const data = await response?.json();

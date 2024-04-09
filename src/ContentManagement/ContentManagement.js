@@ -37,13 +37,13 @@ export function ContentManagement() {
   const fetchData = async () => {
     try {
       // const response = await fetch(`https://connectopia.co.in/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
-      const response = await fetch(`http://15.206.198.172/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`);
+      const response = await fetch(`http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`);
 
       const data = await response.json();
       console.log("data", data);
 
-      if (data["0"]) {
-        const imageUrl = data["0"][0].value;
+      if (data?.product) {
+        const imageUrl =data?.product[0]?.image;
         setQrCodeUrl(imageUrl);
       }
     } catch (error) {

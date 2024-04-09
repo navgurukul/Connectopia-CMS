@@ -7,7 +7,7 @@ export function LevelContent() {
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
   const [stageNumber, setStageNumber] = useState([]);
-  const [selectedDiv, setSelectedDiv] = useState(null);
+  const [selectedDiv, setSelectedDiv] = useState(1);
   const [selectedStage, setSelectedStage] = useState("1");
   const [selectedLevel, setSelectedLevel] = useState(1);
 
@@ -59,8 +59,8 @@ export function LevelContent() {
 
   const handleStageClick = (number) => {
     setSelectedDiv(number);
-    setSelectedStage(number); // Update selected stage
-    setSelectedLevel(1); // Reset selected level to 1 when a new stage is clicked
+    setSelectedStage(number);
+    setSelectedLevel(1);
     console.log("Selected Stage: ", number);
   };
 
@@ -143,7 +143,9 @@ export function LevelContent() {
                   <strong>{level.name}</strong>
                 </td>
                 <td>{level.description}</td>
-                <td>{level.formats}</td>
+                <td onClick={()=>{
+                  console.log("format",selectedLevel, selectedDiv, level.order)
+                }}>{level.formats}</td>
               </tr>
             ))}
           </tbody>

@@ -29,12 +29,13 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const selectedOrganisation = localStorage.getItem("selectedOrganisation");
 
   const generateCampaignId = async () => {
+    console.log("This function is called.")
     try {
       const response = await axios.get(
         "http://15.206.198.172/cms/campaign-next"
       );
 
-      const campaignId = response.data.id;
+      const campaignId = response.data.data.id;
       setData(campaignId);
 
       if (campaignId) {
