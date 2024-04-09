@@ -89,7 +89,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       axios
         .get(url)
         .then((response) => {
-          setCampaignList(response.data);
+          setCampaignList(response.data.data);
         })
         .catch((error) => {
           console.error("There was an error fetching data", error);

@@ -1,0 +1,17 @@
+#level-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+  border: 2px solid black;
+}
+
+#table-head {
+  background-color: beige;
+  padding: 20px;
+  height: 3rem;
+}
+
+td {
+  border-right: 2px solid black;
+}
