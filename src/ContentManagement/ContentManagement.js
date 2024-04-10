@@ -94,7 +94,7 @@ export function ContentManagement() {
               <button
                 className={`create-button-but ${isButtonActive('level')}`}
                 onClick={() => handleButtonClick(<LevelContent />, 'level')}>
-                Level Content
+                Stage Content
               </button>
             </div>
             <div className="col-md-4 text-start">
