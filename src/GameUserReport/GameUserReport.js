@@ -19,41 +19,53 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
   const userOrganization = localStorage.getItem('selectedOrganisation');
   const userType = localStorage.getItem('user-type');
   const userEmailid = localStorage.getItem('email');
+  const  organizationId = localStorage.getItem('selectedOrgId');
 
   const retrievedLoggedInUserDataObject = localStorage.getItem('loggedInUserData');
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
 
-  useEffect(() => {
-    setCampaignList([]);
-    setSelectCampaignName("");
-    if (userOrganization) {
-      axios.get(`http://15.206.198.172/organisation/${userOrganization}`)
-        .then((response) => {
-          setCampaignList(response.data);
-        })
-        .catch((error) => {
-          console.error("There was an error fetching data", error);
-        });
-    }
-  }, [userOrganization]);
+  // useEffect(() => {
+  //   setCampaignList([]);
+  //   setSelectCampaignName("");
+  //   if (userOrganization) {
+  //     axios.get(`http://15.206.198.172/cms/organization/${organizationId} `)
+      
+  //   // (`http://15.206.198.172/organisation/${userOrganization}`)     
+  //       .then((response) => {
+  //         console.log('mmmm', response)
+  //         setCampaignList(response.data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("There was an error fetching data", error);
+  //       });
+  //   }
+  // }, [userOrganization]);
 
   useEffect(() => {
-    setCampaignList([]);
+    // setCampaignList([]);
+    
     setSelectCampaignName("");
-    if (organisationName) {
-      axios.get(`http://15.206.198.172/organisation/${organisationName}`)
+    let orgId = organizationId.replace(/\s/g, '_');
+
+
+    // if (organisationName) {
+      axios.get(`http://15.206.198.172/cms/organization/${orgId}`)
+      // (`http://15.206.198.172/organisation/${organisationName}`)
         .then((response) => {
-          setCampaignList(response.data);
+          console.log('mmmm', response)
+          setCampaignList(response.data.data);
         })
         .catch((error) => {
           console.error("There was an error fetching data", error);
         });
-    }
+    // }
   }, [organisationName]);
 
   const filteredUserReport = userReport.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+
 
   function convertUTCtoIST(dateString) {
     const date = new Date(dateString);
@@ -98,11 +110,14 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
   };
 
   const fetchOrganisation = async () => {
+    // http://15.206.198.172/organisationlist/${userEmailid}/${userType}
     try {
-      const apiUrl = `http://15.206.198.172/organisationlist/${userEmailid}/${userType}`;
+      const apiUrl = `http://15.206.198.172/cms/organization/list/${userEmailid}/${userType}`;
+      // /cms/organization/list/:email/:usertype   
       const response = await fetch(apiUrl);
+     
       const data = await response.json();
-      setOrganisation(data);
+      setOrganisation(data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -167,11 +182,14 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     link.click();
   }
 
-  const fetchUsersByOrganisation = async (selectedOrganisation) => {
+  const fetchUsersByOrganisation = async (organizationId) => {
     try {
-      const apiUrl = `http://15.206.198.172/users_by_organisation/${selectedOrganisation}`;
+      organizationId = organizationId.replace(/\s/g, '_');
+      const apiUrl = `http://15.206.198.172/cms/organization/user/${organizationId}`;
+      // /cms/organization/user/:orgid    
       const response = await fetch(apiUrl);
       const data = await response.json();
+      console.log('chai-pani', data)
       setUserDetail(data);
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -181,12 +199,17 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
 
   const fetchUserReport = async (selectCampaignName) => {
     try {
-      const apiUrl = `http://15.206.198.172/getPlayersList/${selectCampaignName}`;
+      const apiUrl = `http://15.206.198.172/cms/customer/players/${selectCampaignName}`;
+      // /cms/customer/players/:campaign_id
+      // http://15.206.198.172/getPlayersList/${selectCampaignName}
       const response = await fetch(apiUrl);
+      
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log('bachuuu', data)
       setUserReport(data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -249,14 +272,15 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
               <option value="">Select an Organization</option>
               {organisation.map((org, index) => (
                 <option key={index} value={org.organisation}>
-                  {org.organisation}
+                  {org.name}
+                
                 </option>
               ))}
             </select>
             : null}
         </div>
 
-        <div className="col-3 text-center">
+        <div className="col-3 text-center" style={{backgroundColor:"pink"}}>
           {(organisationName || userOrganization) && (
             <div>
               <select
@@ -272,15 +296,15 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
                 {campaignList
                   .filter(
                     (campaign) =>
-                      campaign.campaign_name &&
-                      campaign.campaign_name.trim() !== ""
+                      campaign.name &&
+                      campaign.name.trim() !== ""
                   )
                   .map((campaign) => (
                     <option
-                      key={campaign.campaign_name}
-                      value={campaign.campaignid}
+                      key={campaign.name}
+                      value={campaign.id}
                     >
-                      {campaign.campaign_name}
+                      {campaign.name}
                     </option>
                   ))}
               </select>
@@ -356,9 +380,9 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
                         {filteredUserReport.map((user, index) => (
                           <tr key={index}>
                             <td>{user.name}</td>
-                            <td>{user.phonenumber}</td>
-                            <td>{user.emailid}</td>
-                            <td>{convertUTCtoIST(user.date)}</td>
+                            <td>{user.phone}</td>
+                            <td>{user.email}</td>
+                            <td>{convertUTCtoIST(user.created_at)}</td>
                             {userData.usertype !== 'user' ?
                               <td className="text-center">
                                 <FontAwesomeIcon
