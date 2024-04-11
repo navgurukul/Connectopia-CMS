@@ -19,10 +19,9 @@ export function GeneralContent() {
     },
     {
       name: "Welcome Screen",
-      description: "Background is common throughout",
+      description: "Welcome screen for the user to start the quest.",
       formats: "PNG, JPG, JPEG",
       order: 2,
-      
     },
     {
       name: "Instructions Screen",
@@ -64,11 +63,6 @@ export function GeneralContent() {
 
   const [imageData, setImageData] = useState({});
 
-  const [currentUpload, setCurrentUpload] = useState({
-    item: null,
-    index: null,
-  });
- 
   const fileInputRefs = contentData.map(() => React.createRef());
 
   const [loading, setLoading] = useState(false);
@@ -76,60 +70,51 @@ export function GeneralContent() {
 
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
- 
-  // console.log("campaignId", campaignId);
-  // console.log("scanType", scanType);
-  const handleUploadIconClick = (event, item, index) => {
-    setCurrentUpload({ item, index });
 
+  const handleUploadIconClick = (event, item, index, isImageAvailable) => {
     if (fileInputRefs[index].current) {
       fileInputRefs[index].current.value = "";
       fileInputRefs[index].current.click();
     }
-
   };
 
-  useEffect(() => {
-    return () => {
-      setCurrentUpload({ item: null, index: null });
-    };
-  }, []);
-
-  const handleFileChange = (event) => {
+  const handleFileChange = (event, order, isImageAvailable, contentId) => {
     const file = event.target.files[0];
-    const { item, index } = currentUpload;
-    // console.log(currentUpload, "Item")
-
+    console.log(contentId, "Item");
     if (file) {
       setLoading(true);
       const formData = new FormData();
       formData.append("image", file);
 
-      const pageNumber = index + 1;
-      const contentName = item.name;
+      let key = file?.name.slice(0, -4);
+      console.log("key", key);
 
-      // console.log("contentName",contentName);
+      let API_DATA = {
+        url: "",
+        method: "",
+      };
+      isImageAvailable
+        ? (API_DATA = {
+            url: `http://15.206.198.172/cms/campaign/update-image/${contentId}/general`,
+            method: "PUT",
+          })
+        : (API_DATA = {
+            url: `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/general?key=${key}&level=0&stage_id=0`,
+            method: "POST",
+          });
 
-      const isImageAvailable = imageData?.hasOwnProperty(
-        (index + 1).toString()
-      );
-      // console.log(imageData, "imageData")
-
-      const endpoint = isImageAvailable ? "updateimage" : "uploadimage";
-      const url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
-      let order ;
-      let key;
-
-      // /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type
-      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/general?key=${key}`;
-
-      fetch(urls, {
-        method: "POST",
+      fetch(API_DATA.url, {
+        method: API_DATA.method,
         body: formData,
       })
-        .then((response) => {})
+        .then((response) => {
+          console.log(response, "API response");
+        })
         .then((data) => {
+          setTimeout(() => {
           fetchData();
+          }, 2000);
+
           setLoading(false);
           setUploadMessage("Image Uploaded Successfully !!");
           setTimeout(() => setUploadMessage(""), 7000);
@@ -147,7 +132,6 @@ export function GeneralContent() {
 
   const handleDownloadClick = (imageUrl) => {
     const imagess = imageUrl[0].value;
-    // setQrCodeUrl(imageUrl);
     const a = document.createElement("a");
     a.href = imagess;
     a.download = "downloaded_image.png";
@@ -159,19 +143,18 @@ export function GeneralContent() {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        // `http://15.206.198.172/withoutStatus/allsignedurls/${campaignId}/${scanType}`
         `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
       );
 
       const data = await response?.json();
       console.log("dikha_ab", data);
-   
-      setImageData(data?.data?.general);
+
+      setImageData(data?.general);
     } catch (error) {
       console.error("An error occurred while fetching the data: ", error);
     }
   };
-  
+
   useEffect(() => {
     fetchData();
   }, [campaignId, scanType]);
@@ -180,6 +163,7 @@ export function GeneralContent() {
   const [previewImage, setPreviewImage] = useState("");
 
   const handlePreviewClick = (imageUrl) => {
+    console.log("imageUrl", imageUrl);
     setPreviewImage(imageUrl);
     setShowPreview(true);
   };
@@ -187,7 +171,7 @@ export function GeneralContent() {
   const closePreview = () => {
     setShowPreview(false);
   };
- 
+
   return (
     <div className="container style={{ marginTop: '50px' }}">
       <div className="row text-center">
@@ -223,13 +207,17 @@ export function GeneralContent() {
                     {contentData?.map((item, index) => {
                       const adjustedIndex = (index + 1)?.toString();
                       const isImageAvailable =
-                        imageData && imageData[item.order]?.hasOwnProperty("image");
-                        if(imageData ){
-                          // console.log("imageData", imageData);
-                        }
+                        imageData &&
+                        imageData[item.order]?.hasOwnProperty("image");
+                      const contentId = imageData && imageData[item.order]?.id;
+                      // if(imageData ){
+                      //   console.log("imageData", imageData[item.order]);
+                      // }
 
                       // console.log("isImageAvailable", imageData);
-                      const imageUrl = imageData && imageData[adjustedIndex];
+                      const imageUrl =
+                        imageData && imageData[item.order]?.image;
+                      console.log("imageUrl", imageUrl, item.order);
                       return (
                         <tr key={index}>
                           <td>
@@ -242,7 +230,12 @@ export function GeneralContent() {
                               className="icon-styles"
                               icon={!isImageAvailable ? faUpload : faPen}
                               onClick={(event) =>
-                                handleUploadIconClick(event, item, index)
+                                handleUploadIconClick(
+                                  event,
+                                  item,
+                                  index,
+                                  isImageAvailable
+                                )
                               }
                               style={{
                                 cursor: "pointer",
@@ -256,7 +249,9 @@ export function GeneralContent() {
                                 style={{
                                   cursor: "pointer",
                                 }}
-                                onClick={() => handleDownloadClick(imageUrl)}
+                                onClick={() =>
+                                  handleDownloadClick(imageUrl, item.order)
+                                }
                               />
                             )}
                             {isImageAvailable && (
@@ -264,16 +259,21 @@ export function GeneralContent() {
                                 className="icon-styles"
                                 icon={faEye}
                                 style={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  handlePreviewClick(imageUrl[0].value)
-                                }
+                                onClick={() => handlePreviewClick(imageUrl)}
                               />
                             )}
                             <input
                               type="file"
                               ref={fileInputRefs[index]}
                               style={{ display: "none" }}
-                              onChange={()=> handleFileChange()}
+                              onChange={(event) =>
+                                handleFileChange(
+                                  event,
+                                  item.order,
+                                  isImageAvailable,
+                                  contentId
+                                )
+                              }
                             />
                           </td>
                         </tr>
