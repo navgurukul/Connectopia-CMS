@@ -202,7 +202,7 @@ export function LevelContent() {
     }
   }, [levelArr, data, selectedLevel, selectedStage]);
 
-  function uploadImg() {}
+
 
   useEffect(() => {
     fetchData();

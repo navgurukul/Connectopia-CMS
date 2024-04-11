@@ -15,12 +15,10 @@ const ProductImageScan = () => {
 
   const [stages, setStages] = useState([]);
   const [selectedStage, setSelectedStage] = useState("");
-const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState("");
 
-const [selectedStageColor, setSelectedStageColor] = useState('black'); // Define selectedStageColor
-const [selectedImageColor, setSelectedImageColor] = useState('black'); // Define selectedImageColor
-
-
+  const [selectedStageColor, setSelectedStageColor] = useState("black"); // Define selectedStageColor
+  const [selectedImageColor, setSelectedImageColor] = useState("black"); // Define selectedImageColor
 
   useEffect(() => {
     fetchAndFilterImages();
@@ -51,6 +49,8 @@ const [selectedImageColor, setSelectedImageColor] = useState('black'); // Define
   //     );
   //   }
   // }
+
+  
   async function fetchAndFilterImages() {
     const url = `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`;
 
@@ -153,160 +153,179 @@ const [selectedImageColor, setSelectedImageColor] = useState('black'); // Define
   const orders = options.map((option) => option.order);
   return (
     <div className="container">
-    <div className="row">
-      <div className="col-12">
-        <div className="shadowbox">
-          <div className="shadowbox-head">
-            <div className="row">
-              <div className="col-1">
-                <div className="text-begin">
-                  <ul className="list-inline"></ul>
-                </div>
-              </div>
-              <div className="col-10">
-                <h2 className="title text-center">
-                  Generate Image to be Scanned
-                </h2>
-                <hr />
-                {uploadMessage && (
-                  <div
-                    className="alert alert-success text-center"
-                    style={{ marginTop: "-10px", marginBottom: "-10px" }}
-                  >
-                    {uploadMessage}
+      <div className="row">
+        <div className="col-12">
+          <div className="shadowbox">
+            <div className="shadowbox-head">
+              <div className="row">
+                <div className="col-1">
+                  <div className="text-begin">
+                    <ul className="list-inline"></ul>
                   </div>
-                )}
-  
-                <h6>Select the Stage</h6>
-                <select
-                  id="stage"
-                  className="form-select"
-                  style={{ width: "350px", marginLeft: "25px", color: selectedStageColor }}
-                  onChange={(e) => setSelectedStage(e.target.value)}
-                  value={selectedStage}
-                >
-                  {stages.map((stage, index) => (
-                    <option key={index} value={stage} style={{ color: selectedStage === stage ? 'blue' : 'black' }}>
-                      Stage {stage}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div className="row" style={{ marginTop: "20px" }}>
-            <div className="col-6">
-              <div
-                style={{
-                  border: "1px dotted black",
-                  padding: "20px",
-                  width: "350px",
-                  margin: "auto",
-                }}
-              >
-                <div className="mb-2">
-                  <h6>Select the Image Level</h6>
+                </div>
+                <div className="col-10">
+                  <h2 className="title text-center">
+                    Generate Image to be Scanned
+                  </h2>
+                  <hr />
+                  {uploadMessage && (
+                    <div
+                      className="alert alert-success text-center"
+                      style={{ marginTop: "-10px", marginBottom: "-10px" }}
+                    >
+                      {uploadMessage}
+                    </div>
+                  )}
+
+                  <h6>Select the Stage</h6>
                   <select
-                    id="imagedata"
+                    id="stage"
                     className="form-select"
-                    value={selectedImage}
-                    onChange={(e) => setSelectedImage(e.target.value)}
-                    style={{ color: selectedImageColor }}
+                    style={{
+                      width: "350px",
+                      marginLeft: "25px",
+                      color: selectedStageColor,
+                    }}
+                    onChange={(e) => setSelectedStage(e.target.value)}
+                    value={selectedStage}
                   >
-                    {Array.from({ length: 5 }, (_, i) => i + 1).map((level) => (
-                      <option key={level} value={level} style={{ color: selectedImage === level.toString() ? 'blue' : 'black' }}>
-                        Image Level {level}
+                    {stages.map((stage, index) => (
+                      <option
+                        key={index}
+                        value={stage}
+                        style={{
+                          color: selectedStage === stage ? "blue" : "black",
+                        }}
+                      >
+                        Stage {stage}
                       </option>
                     ))}
                   </select>
                 </div>
-                <br />
-                <div>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={(e) => handleFileChange(e)}
-                    disabled={!selectedImage}
-                  />
-                </div>
-                <button
-                  className="btn btn-primary"
-                  style={{ marginTop: "25px", marginLeft: "100px" }}
-                  onClick={handleSave}
-                >
-                  {saving ? "Training..." : "Save Image"}
-                </button>
-  
-                {loading && (
-                  <div style={{ marginTop: "15px" }}>
-                    <div
-                      className="loading-bar"
-                      style={{ width: "100%" }}
-                    ></div>
-                    <p>
-                      Please wait as the image is being trained, this might
-                      take some time.
-                    </p>
-                  </div>
-                )}
               </div>
             </div>
-            <div className="col-6">
-              <div
-                style={{
-                  border: "1px dotted black",
-                  padding: "5px",
-                  width: "500px",
-                  marginLeft: "-50px",
-                }}
-              >
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th className="text-center">Title</th>
-                      <th className="text-center">Image Scanner</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Array.isArray(filterImage) ? (
-                      filterImage.map((imageUrl, index) => (
-                        <tr key={index}>
-                          <td className="text-center">
-                            {imageUrl.split("/").pop().split(".")[0]}
-                          </td>
-                          <td className="text-center">
-                            <a
-                              href={imageUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <img
-                                src={imageUrl}
-                                alt={imageUrl.split("/").pop().split(".")[0]}
-                                style={{ width: "30px", height: "30px" }}
-                              />
-                            </a>
+            <div className="row" style={{ marginTop: "20px" }}>
+              <div className="col-6">
+                <div
+                  style={{
+                    border: "1px dotted black",
+                    padding: "20px",
+                    width: "350px",
+                    margin: "auto",
+                  }}
+                >
+                  <div className="mb-2">
+                    <h6>Select the Image Level</h6>
+                    <select
+                      id="imagedata"
+                      className="form-select"
+                      value={selectedImage}
+                      onChange={(e) => setSelectedImage(e.target.value)}
+                      style={{ color: selectedImageColor }}
+                    >
+                      {Array.from({ length: 5 }, (_, i) => i + 1).map(
+                        (level) => (
+                          <option
+                            key={level}
+                            value={level}
+                            style={{
+                              color:
+                                selectedImage === level.toString()
+                                  ? "blue"
+                                  : "black",
+                            }}
+                          >
+                            Image Level {level}
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </div>
+                  <br />
+                  <div>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={(e) => handleFileChange(e)}
+                      disabled={!selectedImage}
+                    />
+                  </div>
+                  <button
+                    className="btn btn-primary"
+                    style={{ marginTop: "25px", marginLeft: "100px" }}
+                    onClick={handleSave}
+                  >
+                    {saving ? "Training..." : "Save Image"}
+                  </button>
+
+                  {loading && (
+                    <div style={{ marginTop: "15px" }}>
+                      <div
+                        className="loading-bar"
+                        style={{ width: "100%" }}
+                      ></div>
+                      <p>
+                        Please wait as the image is being trained, this might
+                        take some time.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="col-6">
+                <div
+                  style={{
+                    border: "1px dotted black",
+                    padding: "5px",
+                    width: "500px",
+                    marginLeft: "-50px",
+                  }}
+                >
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th className="text-center">Title</th>
+                        <th className="text-center">Image Scanner</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Array.isArray(filterImage) ? (
+                        filterImage.map((imageUrl, index) => (
+                          <tr key={index}>
+                            <td className="text-center">
+                              {imageUrl.split("/").pop().split(".")[0]}
+                            </td>
+                            <td className="text-center">
+                              <a
+                                href={imageUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <img
+                                  src={imageUrl}
+                                  alt={imageUrl.split("/").pop().split(".")[0]}
+                                  style={{ width: "30px", height: "30px" }}
+                                />
+                              </a>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="2" className="text-center">
+                            No images available
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="2" className="text-center">
-                          No images available
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  
   );
 };
 export default ProductImageScan;
-

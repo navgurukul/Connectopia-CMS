@@ -4,6 +4,7 @@ import ProductImageScann from "./productKomal";
 
 const ProductImageScan = () => {
   const [imageData, setImageData] = useState("");
+  const [data, setData]= useState([]);
   const [file, setFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [filterImage, setFilterImage] = useState();
@@ -13,38 +14,16 @@ const ProductImageScan = () => {
   const [order, setOrder] = useState(1);
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
-
+  const [selectedStage, setselectedStage] = useState("stage-1");
+  const[selectedLevel , setselectedLevel] = useState("ImageScan1");
+  const [stageId, setStageId] = useState(0);
   const [stages, setStages] = useState([]);
 
   useEffect(() => {
     fetchAndFilterImages();
   }, []);
 
-  // async function fetchAndFilterImages() {
-  //   const url = `http://15.206.198.172/cms/campaign/get-signed-url/${campaignId}/${scanType}`;
-  //   // /campaign/general-product/:campaign_id/:scantype
-  //   try {
-  //     const response = await fetch(url);
-  //     console.log(response, "aiushdiuyasghd8iuas");
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-  //     const data = await response.json();
-  //     console.log(data, "meraaaaa");
-  //     // const filteredImages = data["0"]
-  //     const filteredImages = data.data
-  //       .filter((image) => image.key.endsWith(".png"))
-  //       .map((image) => image.value);
-  //     console.log(filteredImages, "filteredImages");
-  //     setFilterImage(filteredImages);
-  //     console.log(filteredImages, "filteredImages");
-  //   } catch (error) {
-  //     console.error(
-  //       "There was a problem with the fetch operation:",
-  //       error.message
-  //     );
-  //   }
-  // }
+ 
   async function fetchAndFilterImages() {
     const url = `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`;
 
@@ -57,7 +36,9 @@ const ProductImageScan = () => {
       }
 
       const data = await response.json();
-      // console.log("Data-:", data);
+     data && setData(data.product);
+     data && setStageId(data.product.stages[selectedStage].stage_id)
+      console.log("Data-:", data.product.stages[selectedStage].stage_id);
       setStages(Object.keys(data.product.stages));
     } catch (error) {
       console.error(
@@ -70,6 +51,7 @@ const ProductImageScan = () => {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      setFile(selectedFile);
       if (selectedFile.type === "image/png") {
         setFile(selectedFile);
         setUploadMessage("");
@@ -87,6 +69,9 @@ const ProductImageScan = () => {
   // console.log(order, "LOVE");
 
   const handleSave = async () => {
+
+
+    console.log(selectedLevel, selectedStage,stageId, "selectedLevel, selectedStage")
     // console.log("click me");
     if (!file) {
       alert("Please select a file before saving.");
@@ -133,8 +118,32 @@ const ProductImageScan = () => {
   };
 
   useEffect(() => {
-    console.log(imageData, "orderlll", order);
-  }, [imageData, order]);
+    // console.log(imageData, "orderlll", order);
+    console.log(file, "file");
+  }, [imageData, order, file]);
+
+  const handleStageChange = (e) => {
+
+    setselectedStage(e.target.value);
+    setStageId(data?.stages[e.target.value]?.stage_id)
+    // console.log(data.stages[e.target.value].stage_id, "data.stages[e.target.value]")
+
+
+
+  };
+
+  const handlelevelImageUpload = (e, index) => {
+    setImageData(e.target.value);
+    setOrder(e.target.selectedIndex + 1);
+    setselectedLevel(e.target.value);
+    console.log(e.target.value, "e.target.value");
+  }
+
+
+  // useEffect(()=>{
+  //   console.log(selectedStage, "selectedStage", "selectedStageId", stageId)
+  // },[selectedStage, stageId])
+
 
   const options = [
     { value: "ImageScan1", order: 1 },
@@ -175,6 +184,7 @@ const ProductImageScan = () => {
                     id="stage"
                     className="form-select"
                     style={{ width: "350px", marginLeft: "20px" }}
+                    onChange={(e) => handleStageChange(e)}
                   >
                     {stages.map((stage, index) => (
                       <option key={index} value={stage}>
@@ -202,8 +212,7 @@ const ProductImageScan = () => {
                       className="form-select"
                       value={imageData}
                       onChange={(e, index) => {
-                        setImageData(e.target.value);
-                        setOrder(e.target.selectedIndex + 1);
+                        handlelevelImageUpload(e, index);
                       }}
                     >
                       {values.map((option, index) => (
@@ -219,7 +228,7 @@ const ProductImageScan = () => {
                       type="file"
                       ref={fileInputRef}
                       onChange={(e) => handleFileChange(e)}
-                      disabled={!imageData}
+                      disabled={!selectedLevel}
                     />
                   </div>
                   <button
