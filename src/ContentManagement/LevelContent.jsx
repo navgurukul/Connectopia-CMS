@@ -19,6 +19,8 @@ export function LevelContent() {
   const [levelArr, setLevelArr] = useState([]);
   const [stageId, setStageId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
   const LevelData = [
     {
       name: "Level Map",
@@ -76,6 +78,13 @@ export function LevelContent() {
     // console.log("data[stageName]?.stage_id", data[stageName]?.stage_id);
   };
 
+  const handlePreviewClick = (imageUrl) => {
+    setPreviewImage(imageUrl);
+    setShowPreview(true);
+  };
+  const closePreview = () => {
+    setShowPreview(false);
+  };
   const handleFileChange = (
     event,
     index,
@@ -273,7 +282,7 @@ export function LevelContent() {
           <tbody>
             {LevelData.map((level, index) => {
               let isImageAvailable = levelArr && levelArr[index + 1]?.image;
-
+              let imageUrl = levelArr && levelArr[index + 1]?.image;
               return (
                 <tr id="main-tr" key={level.order}>
                   <td style={{ padding: "6px" }}>
@@ -320,6 +329,7 @@ export function LevelContent() {
                         className="icon-styles"
                         icon={faEye}
                         style={{ cursor: "pointer" }}
+                        onClick={() => handlePreviewClick(imageUrl)}
                       />
                     )}
 
@@ -347,6 +357,16 @@ export function LevelContent() {
           </tbody>
         </table>
       </div>
+      {showPreview && (
+        <div className="modal modalStyles">
+          <div className="modal-content modalContentStyles">
+            <button className="close-button12" onClick={closePreview}>
+              <span className="big-close-button12">&times;</span>
+            </button>
+            <img src={previewImage} alt="Preview" className="imageStyles" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
