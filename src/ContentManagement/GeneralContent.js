@@ -98,23 +98,22 @@ export function GeneralContent() {
 
       // console.log("contentName",contentName);
 
-      const isImageAvailable = imageData?.hasOwnProperty((index + 1).toString());
+      const isImageAvailable = imageData?.hasOwnProperty(
+        (index + 1).toString()
+      );
       // console.log(imageData, "imageData")
 
       const endpoint = isImageAvailable ? "updateimage" : "uploadimage";
       const url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
 
-      // /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type   
-      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${pageNumber}/${contentName}/${scanType}/${pageNumber}/1/general`;
+      // /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type
+      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/general?key=${key}`;
 
       fetch(urls, {
         method: "POST",
         body: formData,
       })
-        .then((response) =>{
-        // console.log("----kkkkkkk", response)
-          // response.ok ? response.text() : Promise.reject(response)
-        })
+        .then((response) => {})
         .then((data) => {
           fetchData();
           setLoading(false);
@@ -151,9 +150,9 @@ export function GeneralContent() {
       );
 
       const data = await response?.json();
-      // console.log("dikha_ab", data);
+      console.log("dikha_ab", data.data);
 
-      setImageData(data?.general );
+      setImageData(data?.data?.general);
     } catch (error) {
       console.error("An error occurred while fetching the data: ", error);
     }
@@ -209,9 +208,9 @@ export function GeneralContent() {
                   <tbody>
                     {contentData?.map((item, index) => {
                       const adjustedIndex = (index + 1)?.toString();
-                      const isImageAvailable = imageData &&
-                        imageData[index]?.hasOwnProperty("image");  
-                        // console.log("isImageAvailable", isImageAvailable) 
+                      const isImageAvailable =
+                        imageData && imageData[index]?.hasOwnProperty("image");
+                      // console.log("isImageAvailable", imageData);
                       const imageUrl = imageData && imageData[adjustedIndex];
                       return (
                         <tr key={index}>

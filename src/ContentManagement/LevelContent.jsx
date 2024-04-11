@@ -11,7 +11,6 @@ import {
 
 export function LevelContent() {
   const [data, setData] = useState();
-  const [imageData, setImageData] = useState({});
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
   const [stageNumber, setStageNumber] = useState([]);
@@ -19,10 +18,6 @@ export function LevelContent() {
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [levelArr, setLevelArr] = useState([]);
   const [stageId, setStageId] = useState(null);
-  const fileInputRef = useRef(null);
-  const levelStartIndexes = [20, 40, 60, 80, 100];
-  const gifInputRef = useRef(null);
-  let formData = new FormData();
   const LevelData = [
     {
       name: "Level Map",
@@ -90,24 +85,35 @@ export function LevelContent() {
     stageId,
     level
   ) => {
-    // //console.log(
-    //   "Upload Icon Clicked",
-    //   isImageAvailable,
-    //   selectedStage,
-    //   selectedLevel,
-    //   order,
-    //   stageId
-    // );
     const file = event.target.files[0];
-    let key = file?.name.replace(/\s/g, "").slice(0, -4);
+    let key = file?.name.slice(0, -4);
+    const isLevelMap = level.name === "Level Map";
+    const isGif = file.type === "image/gif";
+    let url;
+    console.log(isLevelMap, isGif, "Level Map and GIF");
 
-    //console.log("Key: ", key);
+    let condition = `${isLevelMap ? "1" : "0"}-${isGif ? "1" : "0"}`;
+
+    switch (condition) {
+      case "1-1":
+        url = `http://15.206.198.172/cms/campaign/upload-gif/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`;
+        break;
+      case "1-0":
+        alert("Please upload a GIF file for Level Map.");
+        return;
+      case "0-1":
+        alert("Please upload a PNG, JPG, or JPEG file for this level.");
+        return;
+      case "0-0":
+        url = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`;
+        break;
+      default:
+        console.log("Invalid condition");
+        break;
+    }
 
     const formData = new FormData();
     formData.append("image", file);
-    // console.log(stageId, "This is the stage ID that is being passed");
-    const url = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${selectedLevel}/${order}/level?stage_id=${stageId}&key=${key}`;
-
     fetch(url, {
       method: "POST",
       headers: {
@@ -137,14 +143,6 @@ export function LevelContent() {
     stageId,
     level
   ) => {
-    //console.log(
-    //   "Upload Icon Clicked",
-    //   isImageAvailable,
-    //   selectedStage,
-    //   selectedLevel,
-    //   order,
-    //   stageId
-    // );
     const index = order - 1;
     if (fileInputRefs[index].current) {
       fileInputRefs[index].current.value = "";
@@ -163,7 +161,7 @@ export function LevelContent() {
       setData(data.data);
       // console.log("Data: ", data.data);
       setStageNumber(data?.data?.total_stages);
-     if(stageId===null) setStageId(data?.data["stage-1"].stage_id);
+      if (stageId === null) setStageId(data?.data["stage-1"].stage_id);
       if (data.data[stageName]) {
         // console.log("Data at line 180: ", data.data[stageName][levelName]);
         setLevelArr(data.data[stageName][levelName]);
@@ -195,6 +193,7 @@ export function LevelContent() {
 
   return (
     <div className="content-container">
+       <div style={{ textAlign: "start" }}><h6><strong>Select the Stage</strong></h6></div>
       <div className="stage-contanier" style={{ display: "flex" }}>
         {Array.from({ length: stageNumber }, (_, index) => (
           <div
@@ -246,16 +245,6 @@ export function LevelContent() {
           <tbody>
             {LevelData.map((level, index) => {
               let isImageAvailable = levelArr && levelArr[index + 1]?.image;
-              //   let isImageAvailable;
-              //   const filteredData = levelArr?.filter((obj) => obj.order === 6);
-
-              //   if (filteredData?.length > 0) {
-              //     // If there are objects remaining, access the image of the first object
-              //     isImageAvailable = filteredData[0]?.image;
-
-              // }
-              //   console.log(isImageAvailable);
-              // console.log(levelArr);
 
               return (
                 <tr id="main-tr" key={level.order}>
