@@ -107,7 +107,7 @@ export function GeneralContent() {
       const url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
 
       // /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type
-      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/general?key=${key}`;
+      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/general?key=`;
 
       fetch(urls, {
         method: "POST",
