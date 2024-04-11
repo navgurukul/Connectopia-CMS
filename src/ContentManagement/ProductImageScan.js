@@ -17,18 +17,22 @@ const ProductImageScan = () => {
     fetchAndFilterImages();
   }, []);
 
+
   async function fetchAndFilterImages() {
     const url = `http://15.206.198.172/cms/campaign/get-signed-url/${campaignId}/${scanType}`;
     try {
       const response = await fetch(url);
-      console.log(response, "aiushdiuyasghd8iuas")
+      // console.log(response, "shivaa")
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      const filteredImages = data["0"]
+      console.log(data, "meraaaaa")
+      // const filteredImages = data["0"]
+      const filteredImages = data.data
         .filter((image) => image.key.endsWith(".png"))
         .map((image) => image.value);
+        console.log(filteredImages, "filteredImages")
       setFilterImage(filteredImages);
       console.log(filteredImages, "filteredImages")
     } catch (error) {
