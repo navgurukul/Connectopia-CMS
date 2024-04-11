@@ -113,7 +113,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
         const apiUrl = `http://15.206.198.172/cms/organization/list/${userData.email}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
-        setOrganisation(data);
+        setOrganisation(data.data);
         // console.log(data, "data this is the user data")
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -121,9 +121,13 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
     }
   };
 
-  const filteredUserDetails = userDetail.filter((user) =>
-    user.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim())
-  );
+  // const filteredUserDetails = userDetail.filter((user) =>
+  //   user.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim())
+  // );
+
+  const filteredUserDetails = (userDetail || []).filter((user) =>
+  user.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim())
+);
 
   let displayedUsers = filteredUserDetails;
   if (userTypeFilter) {
@@ -142,7 +146,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
       const apiUrl = `http://15.206.198.172/cms/organization/user/${orgId}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
-      setUserDetail(data);
+      setUserDetail(data.data);
       console.log(data, "data this is the user data");
     } catch (error) {
       console.error("Error fetching data: ", error);

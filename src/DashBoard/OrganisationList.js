@@ -56,6 +56,7 @@ export function Organisation({ onOrgClick }) {
         const apiUrl = `http://15.206.198.172/cms/organization/list/${userData.email}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response?.json();
+        console.log(data, "datakoma");
         setOrganizations(data?.data);
       } catch (error) {
         console.error("Error fetching data:", error);
