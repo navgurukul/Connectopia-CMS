@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import ProductImageScann from "./productKomal";
 
 const ProductImageScan = () => {
   const [imageData, setImageData] = useState("");
@@ -13,28 +14,51 @@ const ProductImageScan = () => {
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
 
+  const [stages, setStages] = useState([]);
+
   useEffect(() => {
     fetchAndFilterImages();
   }, []);
 
-
+  // async function fetchAndFilterImages() {
+  //   const url = `http://15.206.198.172/cms/campaign/get-signed-url/${campaignId}/${scanType}`;
+  //   // /campaign/general-product/:campaign_id/:scantype
+  //   try {
+  //     const response = await fetch(url);
+  //     console.log(response, "aiushdiuyasghd8iuas");
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+  //     const data = await response.json();
+  //     console.log(data, "meraaaaa");
+  //     // const filteredImages = data["0"]
+  //     const filteredImages = data.data
+  //       .filter((image) => image.key.endsWith(".png"))
+  //       .map((image) => image.value);
+  //     console.log(filteredImages, "filteredImages");
+  //     setFilterImage(filteredImages);
+  //     console.log(filteredImages, "filteredImages");
+  //   } catch (error) {
+  //     console.error(
+  //       "There was a problem with the fetch operation:",
+  //       error.message
+  //     );
+  //   }
+  // }
   async function fetchAndFilterImages() {
-    const url = `http://15.206.198.172/cms/campaign/get-signed-url/${campaignId}/${scanType}`;
+    const url = `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`;
+
     try {
       const response = await fetch(url);
-      console.log(response, "aiushdiuyasghd8iuas");
+      console.log("Response:", response);
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+
       const data = await response.json();
-      console.log(data, "meraaaaa")
-      // const filteredImages = data["0"]
-      const filteredImages = data.data
-        .filter((image) => image.key.endsWith(".png"))
-        .map((image) => image.value);
-        console.log(filteredImages, "filteredImages")
-      setFilterImage(filteredImages);
-      console.log(filteredImages, "filteredImages");
+      // console.log("Data-:", data);
+      setStages(Object.keys(data.product.stages));
     } catch (error) {
       console.error(
         "There was a problem with the fetch operation:",
@@ -60,7 +84,10 @@ const ProductImageScan = () => {
     }
   };
 
+  // console.log(order, "LOVE");
+
   const handleSave = async () => {
+    // console.log("click me");
     if (!file) {
       alert("Please select a file before saving.");
       return;
@@ -71,7 +98,8 @@ const ProductImageScan = () => {
     formData.append("image", file);
     try {
       const response = await axios.post(
-        `http://15.206.198.172/compile-upload/${campaignId}/0/${imageData}/${scanType}`,
+        `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${order}/image/${scanType}`,
+        // /cms/campaign/upload-mind/:campaign_id/:order/:key/:content_type
         formData,
         {
           headers: {
@@ -79,6 +107,7 @@ const ProductImageScan = () => {
           },
         }
       );
+      // console.log(response, "response----");
       if (
         response.data === "Both .mind and image file got uploaded successfully"
       ) {
@@ -102,8 +131,9 @@ const ProductImageScan = () => {
       }
     }
   };
+
   useEffect(() => {
-    console.log(imageData, "order", order);
+    console.log(imageData, "orderlll", order);
   }, [imageData, order]);
 
   const options = [
@@ -140,6 +170,18 @@ const ProductImageScan = () => {
                       {uploadMessage}
                     </div>
                   )}
+                  <h6>Select the Stage</h6>
+                  <select
+                    id="stage"
+                    className="form-select"
+                    style={{ width: "350px", marginLeft: "20px" }}
+                  >
+                    {stages.map((stage, index) => (
+                      <option key={index} value={stage}>
+                        {stage}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -161,11 +203,11 @@ const ProductImageScan = () => {
                       value={imageData}
                       onChange={(e, index) => {
                         setImageData(e.target.value);
-                       setOrder(e.target.selectedIndex + 1);
+                        setOrder(e.target.selectedIndex + 1);
                       }}
                     >
                       {values.map((option, index) => (
-                        <option key={index} value={option} >
+                        <option key={index} value={option}>
                           {option}
                         </option>
                       ))}
@@ -218,7 +260,7 @@ const ProductImageScan = () => {
                         <th className="text-center">Image Scanner </th>
                       </tr>
                     </thead>
-                    <tbody>
+                    {/* <tbody>
                       {Array.isArray(filterImage) &&
                         filterImage.map((imageUrl, index) => (
                           <tr key={index}>
@@ -240,6 +282,36 @@ const ProductImageScan = () => {
                             </td>
                           </tr>
                         ))}
+                    </tbody> */}
+                    <tbody>
+                      {Array.isArray(filterImage) ? (
+                        filterImage.map((imageUrl, index) => (
+                          <tr key={index}>
+                            <td className="text-center">
+                              {imageUrl.split("/").pop().split(".")[0]}
+                            </td>
+                            <td className="text-center">
+                              <a
+                                href={imageUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <img
+                                  src={imageUrl}
+                                  alt={imageUrl.split("/").pop().split(".")[0]}
+                                  style={{ width: "30px", height: "30px" }}
+                                />
+                              </a>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="2" className="text-center">
+                            No images available
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -252,3 +324,8 @@ const ProductImageScan = () => {
   );
 };
 export default ProductImageScan;
+
+// // `http://15.206.198.172/compile-upload/${campaignId}/0/${imageData}/${scanType}`,
+// `http://15.206.198.172/ /cms/campaign/upload-mind/${campaignId}/${order}/image/${scanType}`,
+// // `http://15.206.198.172/ /cms/campaign/upload-mind/${campaignId}/${order}/${key}/${scanType}`,
+// // /cms/campaign/upload-mind/:campaign_id/:order/:key/:content_type
