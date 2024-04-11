@@ -15,41 +15,50 @@ export function GeneralContent() {
       name: "Background",
       description: "Background is common throughout",
       formats: "PNG, JPG, JPEG",
+      order: 1,
     },
     {
       name: "Welcome Screen",
       description: "Background is common throughout",
       formats: "PNG, JPG, JPEG",
+      order: 2,
+      
     },
     {
       name: "Instructions Screen",
       description: "A banner that explains how to play the quest.",
       formats: "PNG, JPG, JPEG",
+      order: 3,
     },
     {
       name: "Privacy Policy Screen",
       description: "A banner that informs about the privacy policies",
       formats: "PNG, JPG, JPEG",
+      order: 4,
     },
     {
       name: "Time up - wooden plank",
       description: " Time to complete the game",
       formats: "PNG, JPG, JPEG",
+      order: 5,
     },
     {
       name: "sky Background",
       description: "Common for level Map",
       formats: "PNG, JPG, JPEG",
+      order: 6,
     },
     {
       name: "Registration Screen",
       description: "User Registration",
       formats: "PNG, JPG, JPEG",
+      order: 7,
     },
     {
       name: "Progress Bar",
       description: "Progess Bar appears in the start",
       formats: "PNG, JPG, JPEG",
+      order: 8,
     },
   ];
 
@@ -59,22 +68,25 @@ export function GeneralContent() {
     item: null,
     index: null,
   });
-  const fileInputRef = useRef(null);
+ 
+  const fileInputRefs = contentData.map(() => React.createRef());
 
   const [loading, setLoading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
 
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
-
+ 
   // console.log("campaignId", campaignId);
   // console.log("scanType", scanType);
   const handleUploadIconClick = (event, item, index) => {
     setCurrentUpload({ item, index });
 
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+    if (fileInputRefs[index].current) {
+      fileInputRefs[index].current.value = "";
+      fileInputRefs[index].current.click();
     }
+
   };
 
   useEffect(() => {
@@ -105,9 +117,11 @@ export function GeneralContent() {
 
       const endpoint = isImageAvailable ? "updateimage" : "uploadimage";
       const url = `http://15.206.198.172/${endpoint}/${campaignId}/${pageNumber}/${contentName}/${scanType}`;
+      let order ;
+      let key;
 
       // /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type
-      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/general?key=`;
+      const urls = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/general?key=${key}`;
 
       fetch(urls, {
         method: "POST",
@@ -150,14 +164,14 @@ export function GeneralContent() {
       );
 
       const data = await response?.json();
-      console.log("dikha_ab", data.data);
-
+      console.log("dikha_ab", data);
+   
       setImageData(data?.data?.general);
     } catch (error) {
       console.error("An error occurred while fetching the data: ", error);
     }
   };
-
+  
   useEffect(() => {
     fetchData();
   }, [campaignId, scanType]);
@@ -173,7 +187,7 @@ export function GeneralContent() {
   const closePreview = () => {
     setShowPreview(false);
   };
-
+ 
   return (
     <div className="container style={{ marginTop: '50px' }}">
       <div className="row text-center">
@@ -209,7 +223,11 @@ export function GeneralContent() {
                     {contentData?.map((item, index) => {
                       const adjustedIndex = (index + 1)?.toString();
                       const isImageAvailable =
-                        imageData && imageData[index]?.hasOwnProperty("image");
+                        imageData && imageData[item.order]?.hasOwnProperty("image");
+                        if(imageData ){
+                          // console.log("imageData", imageData);
+                        }
+
                       // console.log("isImageAvailable", imageData);
                       const imageUrl = imageData && imageData[adjustedIndex];
                       return (
@@ -253,9 +271,9 @@ export function GeneralContent() {
                             )}
                             <input
                               type="file"
-                              ref={fileInputRef}
+                              ref={fileInputRefs[index]}
                               style={{ display: "none" }}
-                              onChange={handleFileChange}
+                              onChange={()=> handleFileChange()}
                             />
                           </td>
                         </tr>

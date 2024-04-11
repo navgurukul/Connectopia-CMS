@@ -18,6 +18,7 @@ export function LevelContent() {
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [levelArr, setLevelArr] = useState([]);
   const [stageId, setStageId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const LevelData = [
     {
       name: "Level Map",
@@ -87,6 +88,7 @@ export function LevelContent() {
   ) => {
     const file = event.target.files[0];
     let key = file?.name.slice(0, -4);
+    file && setLoading(true);
     const isLevelMap = level.name === "Level Map";
     const isGif = file.type === "image/gif";
     let url;
@@ -100,15 +102,18 @@ export function LevelContent() {
         break;
       case "1-0":
         alert("Please upload a GIF file for Level Map.");
+        setLoading(false);
         return;
       case "0-1":
         alert("Please upload a PNG, JPG, or JPEG file for this level.");
+        setLoading(false);
         return;
       case "0-0":
         url = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`;
         break;
       default:
         console.log("Invalid condition");
+        setLoading(false);
         break;
     }
 
@@ -127,6 +132,7 @@ export function LevelContent() {
         fetchData();
       })
       .catch((error) => {
+        alert("An error occurred while Uploading the file");
         console.error("Error:", error);
       });
   };
@@ -159,6 +165,7 @@ export function LevelContent() {
       );
       const data = await response.json();
       setData(data.data);
+      setLoading(false);
       // console.log("Data: ", data.data);
       setStageNumber(data?.data?.total_stages);
       if (stageId === null) setStageId(data?.data["stage-1"].stage_id);
@@ -169,6 +176,7 @@ export function LevelContent() {
       ////console.log("Stage ID number: ", data?.stages["stage-1"].stage_id);
     } catch (error) {
       console.error("An error occurred while fetching the data: ", error);
+      alert("An error occurred while fetching the data");
     }
   };
 
@@ -193,7 +201,11 @@ export function LevelContent() {
 
   return (
     <div className="content-container">
-       <div style={{ textAlign: "start" }}><h6><strong>Select the Stage</strong></h6></div>
+      <div style={{ textAlign: "start" }}>
+        <h6>
+          <strong>Select the Stage</strong>
+        </h6>
+      </div>
       <div className="stage-contanier" style={{ display: "flex" }}>
         {Array.from({ length: stageNumber }, (_, index) => (
           <div
@@ -232,7 +244,23 @@ export function LevelContent() {
         </div>
       </div>
       <div>
-        <h4>Selected Level: {selectedLevel}</h4>
+        {loading && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <strong>Please wait while the file is being uploaded...</strong>
+            <div
+              className="loading-bar"
+              style={{ width: "100%", margin: "5px" }}
+            ></div>
+          </div>
+        )}
         <table id="level-table">
           <thead>
             <tr id="table-head">

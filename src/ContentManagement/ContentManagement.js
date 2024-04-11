@@ -40,7 +40,7 @@ export function ContentManagement() {
       const response = await fetch(`http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`);
 
       const data = await response.json();
-      console.log("data", data);
+      // console.log("data", data);
 
       if (data?.product) {
         const imageUrl =data?.product[0]?.image;
