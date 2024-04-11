@@ -19,7 +19,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
   const [organisation, setOrganisation] = useState([]);
   const [campaignList, setCampaignList] = useState([]);
   const [showMessage, setShowMessage] = useState(false);
-  const [selectCampaignName, setSelectCampaignName] = useState("");
+  const [selectCampaignId, setSelectCampaignId] = useState("");
 
   const userOrganization = localStorage.getItem("selectedOrganisation");
   const userType = localStorage.getItem("user-type");
@@ -30,40 +30,23 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     localStorage.getItem("loggedInUserData");
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
 
-  // useEffect(() => {
-  //   setCampaignList([]);
-  //   setSelectCampaignName("");
-  //   if (userOrganization) {
-  //     axios.get(`http://15.206.198.172/cms/organization/${organizationId} `)
-
-  //   // (`http://15.206.198.172/organisation/${userOrganization}`)
-  //       .then((response) => {
-  //         console.log('mmmm', response)
-  //         setCampaignList(response.data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("There was an error fetching data", error);
-  //       });
-  //   }
-  // }, [userOrganization]);
-
   useEffect(() => {
-    // setCampaignList([]);
-
-    setSelectCampaignName("");
-    let orgId = organizationId.replace(/\s/g, "_");
-
-    // if (organisationName) {
-    axios
-      .get(`http://15.206.198.172/cms/organization/${orgId}`)
-      // (`http://15.206.198.172/organisation/${organisationName}`)
-      .then((response) => {
-        setCampaignList(response.data.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching data", error);
-      });
-    // }
+    setCampaignList([]);
+    setSelectCampaignId("");
+    if (organisationName) {
+      axios
+        .get(
+          `http://15.206.198.172/cms/organization/${
+            organisationName || organizationId
+          }`
+        )
+        .then((response) => {
+          setCampaignList(response.data.data);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching data", error);
+        });
+    }
   }, [organisationName]);
 
   const filteredUserReport = userReport.filter((user) =>
@@ -118,10 +101,8 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
   };
 
   const fetchOrganisation = async () => {
-    // http://15.206.198.172/organisationlist/${userEmailid}/${userType}
     try {
       const apiUrl = `http://15.206.198.172/cms/organization/list/${userEmailid}/${userType}`;
-      // /cms/organization/list/:email/:usertype
       const response = await fetch(apiUrl);
 
       const data = await response.json();
@@ -203,7 +184,6 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     try {
       organizationId = organizationId.replace(/\s/g, "_");
       const apiUrl = `http://15.206.198.172/cms/organization/user/${organizationId}`;
-      // /cms/organization/user/:orgid
       const response = await fetch(apiUrl);
       const data = await response.json();
       setUserDetail(data);
@@ -212,13 +192,10 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     }
   };
 
-  const fetchUserReport = async (selectCampaignName) => {
+  const fetchUserReport = async (selectCampaignId) => {
     try {
-      const apiUrl = `http://15.206.198.172/cms/customer/players/${selectCampaignName}`;
-      // /cms/customer/players/:campaign_id
-      // http://15.206.198.172/getPlayersList/${selectCampaignName}
+      const apiUrl = `http://15.206.198.172/cms/customer/players/${selectCampaignId}`;
       const response = await fetch(apiUrl);
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -233,20 +210,20 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     fetchUserReport();
     fetchOrganisation();
     setCampaignList([]);
-    setSelectCampaignName("");
+    setSelectCampaignId("");
   }, []);
 
   useEffect(() => {
-    if (selectCampaignName) {
-      fetchUserReport(selectCampaignName);
+    if (selectCampaignId) {
+      fetchUserReport(selectCampaignId);
     }
-  }, [selectCampaignName]);
+  }, [selectCampaignId]);
 
   useEffect(() => {
     if (
       !organisationName ||
-      !selectCampaignName ||
-      selectCampaignName.trim() === "" ||
+      !selectCampaignId ||
+      selectCampaignId.trim() === "" ||
       organisationName.trim() === ""
     ) {
       setShowMessage(true);
@@ -257,12 +234,12 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     } else {
       setShowMessage(false);
     }
-  }, [organisationName, selectCampaignName]);
+  }, [organisationName, selectCampaignId]);
 
   const deleteUser = (phoneNumber) => {
     axios
       .delete(
-        `http://15.206.198.172/deletePlayer/${phoneNumber}/${selectCampaignName}`
+        `http://15.206.198.172/deletePlayer/${phoneNumber}/${selectCampaignId}`
       )
       .then((response) => {
         fetchUserReport();
@@ -291,7 +268,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
             >
               <option value="">Select an Organization</option>
               {organisation.map((org, index) => (
-                <option key={index} value={org.organisation}>
+                <option key={index} value={org.id}>
                   {org.name}
                 </option>
               ))}
@@ -305,15 +282,15 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
               <select
                 id="Campaign"
                 className="form-select"
-                value={selectCampaignName}
+                value={selectCampaignId}
                 onChange={(e) => {
-                  setSelectCampaignName(e.target.value);
+                  setSelectCampaignId(e.target.value);
                 }}
-                onFocus={() => !selectCampaignName && setSelectCampaignName("")}
+                onFocus={() => !selectCampaignId && setSelectCampaignId("")}
               >
                 <option value="">Select Campaign</option>
                 {campaignList
-                  .filter(
+                  ?.filter(
                     (campaign) => campaign.name && campaign.name.trim() !== ""
                   )
                   .map((campaign) => (
@@ -448,3 +425,5 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     </div>
   );
 }
+
+
