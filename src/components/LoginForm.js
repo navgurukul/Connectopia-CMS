@@ -36,20 +36,21 @@ function LoginForm({ handleLogin, setLoggedInUserData }) {
             });
 
             const responseData = await response.json();
+            console.log(responseData.data);
 
-            localStorage.setItem('loggedInUserData', JSON.stringify(responseData));
+            localStorage.setItem('loggedInUserData', JSON.stringify(responseData?.data));
 
             if (response.ok) {
-                handleLogin(responseData);
-                responseData.usertype === 'superadmin' || responseData.usertype === 'admin'
+                handleLogin(responseData?.data);
+                responseData?.data.usertype === 'superadmin' || responseData?.data.usertype === 'admin'
                     ? navigate('/details')
                     : navigate('/campaign');
 
-                setLoggedInUserData(responseData);
+                setLoggedInUserData(responseData?.data);
 
                 localStorage.setItem("email", email);
-                localStorage.setItem('user-type', responseData.usertype);
-                localStorage.setItem("organization", responseData.name);
+                localStorage.setItem('user-type', responseData?.data.usertype);
+                localStorage.setItem("organization", responseData?.data.name);
             } else {
                 setError(true);
                 setTimeout(() => {

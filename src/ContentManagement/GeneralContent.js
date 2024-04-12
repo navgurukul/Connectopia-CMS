@@ -111,9 +111,10 @@ export function GeneralContent() {
           console.log(response, "API response");
         })
         .then((data) => {
-          setTimeout(() => {
           fetchData();
-          }, 2000);
+          setTimeout(() => {
+            fetchData();
+          },8000);
 
           setLoading(false);
           setUploadMessage("Image Uploaded Successfully !!");
