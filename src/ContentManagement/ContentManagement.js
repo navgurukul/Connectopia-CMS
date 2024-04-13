@@ -101,7 +101,7 @@ export function ContentManagement() {
               <button
                 className={`create-button-but ${isButtonActive('productscan')}`}
                 onClick={() =>
-                  scanType === 'QRscan' ?
+                  scanType === 'qr' ?
                     handleButtonClick(<ProductScanContent />, 'productscan') :
                     handleButtonClick(<ProductImageScan />, 'productscan')
                 }
