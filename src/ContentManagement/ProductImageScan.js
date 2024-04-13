@@ -1,21 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import ProductImageScann from "./productKomal";
 
 const ProductImageScan = () => {
   const [imageData, setImageData] = useState("");
-  const [data, setData]= useState([]);
+  const [data, setData] = useState([]);
   const [file, setFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [filterImage, setFilterImage] = useState();
   const [uploadMessage, setUploadMessage] = useState("");
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [order, setOrder] = useState(1);
+  const [level, setLevel] = useState(1);
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
   const [selectedStage, setselectedStage] = useState("stage-1");
-  const[selectedLevel , setselectedLevel] = useState("ImageScan1");
+  const [selectedLevel, setselectedLevel] = useState("ImageScan1");
   const [stageId, setStageId] = useState(0);
   const [stages, setStages] = useState([]);
 
@@ -23,22 +22,17 @@ const ProductImageScan = () => {
     fetchAndFilterImages();
   }, []);
 
- 
   async function fetchAndFilterImages() {
     const url = `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`;
 
     try {
       const response = await fetch(url);
-      console.log("Response:", response);
-
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
       const data = await response.json();
-     data && setData(data.product);
-     data && setStageId(data.product.stages[selectedStage].stage_id)
-      console.log("Data-:", data.product.stages[selectedStage].stage_id);
+      data && setData(data.product);
+      data && setStageId(data.product.stages[selectedStage].stage_id);
       setStages(Object.keys(data.product.stages));
     } catch (error) {
       console.error(
@@ -47,6 +41,8 @@ const ProductImageScan = () => {
       );
     }
   }
+
+  console.log("imagsss", selectedLevel);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -66,13 +62,7 @@ const ProductImageScan = () => {
     }
   };
 
-  // console.log(order, "LOVE");
-
   const handleSave = async () => {
-
-
-    console.log(selectedLevel, selectedStage,stageId, "selectedLevel, selectedStage")
-    // console.log("click me");
     if (!file) {
       alert("Please select a file before saving.");
       return;
@@ -83,8 +73,8 @@ const ProductImageScan = () => {
     formData.append("image", file);
     try {
       const response = await axios.post(
-        `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${order}/image/${scanType}`,
-        // /cms/campaign/upload-mind/:campaign_id/:order/:key/:content_type
+        `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product`,
+        // /cms/campaign/upload-mind/:campaign_id/:stage_id/:level/:key:/content_type
         formData,
         {
           headers: {
@@ -92,7 +82,6 @@ const ProductImageScan = () => {
           },
         }
       );
-      // console.log(response, "response----");
       if (
         response.data === "Both .mind and image file got uploaded successfully"
       ) {
@@ -117,43 +106,34 @@ const ProductImageScan = () => {
     }
   };
 
-  useEffect(() => {
-    // console.log(imageData, "orderlll", order);
-    console.log(file, "file");
-  }, [imageData, order, file]);
+  const images = [
+    { id: 1, url: "https://example.com/image1.png", name: "Image1" },
+    { id: 2, url: "https://example.com/image2.png", name: "Image2" },
+    { id: 3, url: "https://example.com/image3.png", name: "Image3" },
+    { id: 4, url: "https://example.com/image4.png", name: "Image4" },
+    { id: 5, url: "https://example.com/image5.png", name: "Image5" },
+  ];
 
   const handleStageChange = (e) => {
-
     setselectedStage(e.target.value);
-    setStageId(data?.stages[e.target.value]?.stage_id)
-    // console.log(data.stages[e.target.value].stage_id, "data.stages[e.target.value]")
-
-
-
+    setStageId(data?.stages[e.target.value]?.stage_id);
   };
 
   const handlelevelImageUpload = (e, index) => {
     setImageData(e.target.value);
-    setOrder(e.target.selectedIndex + 1);
+    setLevel(e.target.selectedIndex + 1);
     setselectedLevel(e.target.value);
-    console.log(e.target.value, "e.target.value");
-  }
-
-
-  // useEffect(()=>{
-  //   console.log(selectedStage, "selectedStage", "selectedStageId", stageId)
-  // },[selectedStage, stageId])
-
+  };
 
   const options = [
-    { value: "ImageScan1", order: 1 },
-    { value: "ImageScan2", order: 2 },
-    { value: "ImageScan3", order: 3 },
-    { value: "ImageScan4", order: 4 },
-    { value: "ImageScan5", order: 5 },
+    { value: "ImageScan1", level: 1 },
+    { value: "ImageScan2", level: 2 },
+    { value: "ImageScan3", level: 3 },
+    { value: "ImageScan4", level: 4 },
+    { value: "ImageScan5", level: 5 },
   ];
   const values = options.map((option) => option.value);
-  const orders = options.map((option) => option.order);
+  const orders = options.map((option) => option.level);
   return (
     <div className="container">
       <div className="row">
@@ -256,73 +236,82 @@ const ProductImageScan = () => {
               <div className="col-6">
                 <div
                   style={{
-                    border: "1px dotted black",
-                    padding: "5px",
+                    padding: "3px",
                     width: "500px",
-                    marginLeft: "-50px",
+                    maxHeight: "500px",
+                    overflowY: "auto",
                   }}
                 >
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th className="text-center">Title</th>
-                        <th className="text-center">Image Scanner </th>
-                      </tr>
-                    </thead>
-                    {/* <tbody>
-                      {Array.isArray(filterImage) &&
-                        filterImage.map((imageUrl, index) => (
-                          <tr key={index}>
-                            <td className="text-center">
-                              {imageUrl.split("/").pop().split(".")[0]}
-                            </td>
-                            <td className="text-center">
-                              <a
-                                href={imageUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <img
-                                  src={imageUrl}
-                                  alt={imageUrl.split("/").pop().split(".")[0]}
-                                  style={{ width: "30px", height: "30px" }}
-                                />
-                              </a>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody> */}
-                    <tbody>
-                      {Array.isArray(filterImage) ? (
-                        filterImage.map((imageUrl, index) => (
-                          <tr key={index}>
-                            <td className="text-center">
-                              {imageUrl.split("/").pop().split(".")[0]}
-                            </td>
-                            <td className="text-center">
-                              <a
-                                href={imageUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <img
-                                  src={imageUrl}
-                                  alt={imageUrl.split("/").pop().split(".")[0]}
-                                  style={{ width: "30px", height: "30px" }}
-                                />
-                              </a>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="2" className="text-center">
-                            No images available
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                  {data &&
+                    data.stages &&
+                    Object.keys(data.stages).map((stageKey) => {
+                      const stage = data.stages[stageKey];
+                      const imageKeys = Object.keys(stage).filter(
+                        (imageKey) =>
+                          imageKey !== "stage_id" && imageKey !== "campaign_id"
+                      );
+                      return (
+                        <>
+                          <p>{stageKey}</p>
+                          <table
+                            className="table"
+                            style={{ border: "1px dotted black" }}
+                          >
+                            <thead>
+                              <tr>
+                                <th className="text-center">Title</th>
+                                <th className="text-center">Image Scanner</th>
+                              </tr>
+                            </thead>
+                            <tbody style={{ background: "pink" }}>
+                              {imageKeys.length > 0 ? (
+                                imageKeys.map((imageKey, index) => {
+                                  const image = stage[imageKey];
+                                  if (Object.keys(image).length === 0) {
+                                    return (
+                                      <tr key={index}>
+                                        <td colSpan="2" className="text-center">
+                                          No images available
+                                        </td>
+                                      </tr>
+                                    );
+                                  }
+                                  return (
+                                    <tr key={index}>
+                                      <td className="text-center">
+                                        {image.key}
+                                      </td>
+                                      <td className="text-center">
+                                        <a
+                                          href={image.image}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          <img
+                                            src={image.image}
+                                            alt={image.key}
+                                            style={{
+                                              width: "30px",
+                                              height: "30px",
+                                            }}
+                                          />
+                                        </a>
+                                      </td>
+                                    </tr>
+                                  );
+                                })
+                              ) : (
+                                <tr>
+                                  <td colSpan="2" className="text-center">
+                                    No images available
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </>
+                      );
+                    })}
                 </div>
               </div>
             </div>
@@ -333,8 +322,3 @@ const ProductImageScan = () => {
   );
 };
 export default ProductImageScan;
-
-// // `http://15.206.198.172/compile-upload/${campaignId}/0/${imageData}/${scanType}`,
-// `http://15.206.198.172/ /cms/campaign/upload-mind/${campaignId}/${order}/image/${scanType}`,
-// // `http://15.206.198.172/ /cms/campaign/upload-mind/${campaignId}/${order}/${key}/${scanType}`,
-// // /cms/campaign/upload-mind/:campaign_id/:order/:key/:content_type
