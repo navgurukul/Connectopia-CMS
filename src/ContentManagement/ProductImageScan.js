@@ -156,6 +156,7 @@ const ProductImageScan = () => {
                       {uploadMessage}
                     </div>
                   )}
+                  <div className="imageScan__container"></div> 
                   <h6>Select the Stage</h6>
                   <select
                     id="stage"

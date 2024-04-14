@@ -40,7 +40,8 @@ export const ProductScanContent = () => {
     const formData = new FormData();
     formData.append("image", imageBlob);
     // const apiUrl = `http://15.206.198.172/updateimage/${campaign}/0/${qrData}/QRscan`;
-    const apiUrl = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/48/1/keyimage/level`;
+    const apiUrl = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/1/level?level=1&stage_id=46&key=${qrData}`;
+    //https://15.206.198.172/cms/campaign/upload-image/47/1/level?level=1&stage_id=46&key=QR%20-1
 
     // 'https://15.206.198.172/cms/campaign/upload-image/48/0/general?level=1&stage_id=48&key=qr1'
 
@@ -80,7 +81,7 @@ export const ProductScanContent = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Data-get,", data);
+      console.log("Data-get,", data[0]);
       setStages(data.data.stages);
 
       setFetchData(data[0]);
