@@ -16,7 +16,11 @@ const ProductImageScan = () => {
   const [selectedStage, setselectedStage] = useState("stage-1");
   const [selectedLevel, setselectedLevel] = useState("ImageScan1");
   const [stageId, setStageId] = useState(0);
+
   const [stages, setStages] = useState([]);
+
+
+  console.log('stages',stages)
 
   useEffect(() => {
     fetchAndFilterImages();
@@ -106,13 +110,6 @@ const ProductImageScan = () => {
     }
   };
 
-  const images = [
-    { id: 1, url: "https://example.com/image1.png", name: "Image1" },
-    { id: 2, url: "https://example.com/image2.png", name: "Image2" },
-    { id: 3, url: "https://example.com/image3.png", name: "Image3" },
-    { id: 4, url: "https://example.com/image4.png", name: "Image4" },
-    { id: 5, url: "https://example.com/image5.png", name: "Image5" },
-  ];
 
   const handleStageChange = (e) => {
     setselectedStage(e.target.value);

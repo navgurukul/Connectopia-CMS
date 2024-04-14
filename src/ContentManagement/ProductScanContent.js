@@ -8,15 +8,21 @@ export const ProductScanContent = () => {
   const [generateQR, setGenerateQR] = useState(false);
   const qrRef = useRef();
   const [data, setData] = useState("");
-  const campaign = localStorage.getItem("CampaignId");
+  // const campaign = localStorage.getItem("CampaignId");
   const [uploadedQRs, setUploadedQRs] = useState([]);
   const campaignId = localStorage.getItem("CampaignId");
+
+  const [stages, setStages] = useState([]);
+  const [selectedStage, setSelectedStage] = useState("");
+  const [selectedStageId, setSelectedStageId] = useState(null);
+;
 
   useEffect(() => {
     QRDATA();
   }, []);
 
-  console.log("qrData", qrData);
+  console.log(selectedStageId,'selectedStageId');
+  console.log(selectedStage,'selectedStage');
 
   const downloadQRCode = async () => {
     if (data) {
@@ -31,10 +37,12 @@ export const ProductScanContent = () => {
       a.click();
     }
     const imageBlob = dataURLtoBlob(imageData);
-     const formData = new FormData();
+    const formData = new FormData();
     formData.append("image", imageBlob);
-    const apiUrl = `http://15.206.198.172/updateimage/${campaign}/0/${qrData}/QRscan`;
-    // const apiUrl = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/48/1/keyimage/level`;
+    // const apiUrl = `http://15.206.198.172/updateimage/${campaign}/0/${qrData}/QRscan`;
+    const apiUrl = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/48/1/keyimage/level`;
+
+    // 'https://15.206.198.172/cms/campaign/upload-image/48/0/general?level=1&stage_id=48&key=qr1'
 
     try {
       const response = await axios.post(apiUrl, formData, {
@@ -51,8 +59,6 @@ export const ProductScanContent = () => {
       setQrData("");
     }
   };
-
-
 
   function dataURLtoBlob(dataurl) {
     const arr = dataurl.split(","),
@@ -74,7 +80,9 @@ export const ProductScanContent = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Dataofoget,", data);
+      console.log("Data-get,", data);
+      setStages(data.data.stages);
+
       setFetchData(data[0]);
       const uploaded = data[0].map((qr) => qr.key.split(".")[0]);
       setUploadedQRs(uploaded);
@@ -82,6 +90,16 @@ export const ProductScanContent = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+  const handleSelectChange = (e) => {
+    setSelectedStage(e.target.value);
+    const selectedStageData = stages[e.target.value];
+    if (selectedStageData) {
+      setSelectedStageId(selectedStageData.stage_id);
+    }
+  };
+
+
 
   const generateQRCode = () => {
     if (qrData.trim()) {
@@ -114,12 +132,31 @@ export const ProductScanContent = () => {
             </div>
             <div className="row" style={{ marginTop: "20px" }}>
               <div className="col-6">
+                {/* <h6 style={{ marginLeft: "10px" }}>Select the Stage</h6> */}
+
+                <select
+                  className="form-select"
+                  style={{ width: "350px", margin: "auto" }}
+                  value={selectedStage}
+                  onChange={handleSelectChange}
+                >
+                  <option value="">Select a stage</option>
+                  {Object.keys(stages)
+                    .filter((stageKey) => stageKey !== "total_stages")
+                    .map((stageKey) => (
+                      <option key={stageKey} value={stageKey}>
+                        {stageKey}
+                      </option>
+                    ))}
+                </select>
+
                 <div
                   style={{
                     border: "1px dotted black",
                     padding: "20px",
                     width: "350px",
-                    margin: "auto",
+                    margin: "auto ",
+                    marginTop: "25px",
                   }}
                 >
                   <div className="mb-2">
