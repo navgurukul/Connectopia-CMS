@@ -261,7 +261,7 @@ const ProductImageScan = () => {
                                 <th className="text-center">Image Scanner</th>
                               </tr>
                             </thead>
-                            <tbody style={{ background: "pink" }}>
+                            <tbody >
                               {imageKeys.length > 0 ? (
                                 imageKeys.map((imageKey, index) => {
                                   const image = stage[imageKey];

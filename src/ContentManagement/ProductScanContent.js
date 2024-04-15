@@ -8,21 +8,18 @@ export const ProductScanContent = () => {
   const [generateQR, setGenerateQR] = useState(false);
   const qrRef = useRef();
   const [data, setData] = useState("");
-  // const campaign = localStorage.getItem("CampaignId");
+  const [productData, setProductData] = useState([]);
   const [uploadedQRs, setUploadedQRs] = useState([]);
   const campaignId = localStorage.getItem("CampaignId");
-
+  const scanType = localStorage.getItem("ScanType");
   const [stages, setStages] = useState([]);
   const [selectedStage, setSelectedStage] = useState("");
   const [selectedStageId, setSelectedStageId] = useState(null);
-;
+  const [qrLevel, setQrLevel] = useState(null);
 
   useEffect(() => {
     QRDATA();
   }, []);
-
-  console.log(selectedStageId,'selectedStageId');
-  console.log(selectedStage,'selectedStage');
 
   const downloadQRCode = async () => {
     if (data) {
@@ -39,11 +36,10 @@ export const ProductScanContent = () => {
     const imageBlob = dataURLtoBlob(imageData);
     const formData = new FormData();
     formData.append("image", imageBlob);
-    // const apiUrl = `http://15.206.198.172/updateimage/${campaign}/0/${qrData}/QRscan`;
-    const apiUrl = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/1/level?level=1&stage_id=46&key=${qrData}`;
-    //https://15.206.198.172/cms/campaign/upload-image/47/1/level?level=1&stage_id=46&key=QR%20-1
 
-    // 'https://15.206.198.172/cms/campaign/upload-image/48/0/general?level=1&stage_id=48&key=qr1'
+    const apiUrl = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${qrLevel}/product?level=${qrLevel}&stage_id=${selectedStageId}&key=${encodeURIComponent(
+      qrData
+    )}`;
 
     try {
       const response = await axios.post(apiUrl, formData, {
@@ -51,7 +47,6 @@ export const ProductScanContent = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("Image uploaded successfully:", response.data);
     } catch (error) {
       console.error("Error uploading image:", error.message);
     } finally {
@@ -72,18 +67,19 @@ export const ProductScanContent = () => {
     }
     return new Blob([u8arr], { type: mime });
   }
+  
   const QRDATA = async () => {
     try {
       const response = await fetch(
-        `http://15.206.198.172/cms/campaign/get-signed-url/${campaignId}/qr`
+        `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Data-get,", data[0]);
-      setStages(data.data.stages);
-
+      setStages(data.product.stages);
+      const stagesArray = Object.values(data.product.stages);
+      setProductData(stagesArray);
       setFetchData(data[0]);
       const uploaded = data[0].map((qr) => qr.key.split(".")[0]);
       setUploadedQRs(uploaded);
@@ -100,13 +96,29 @@ export const ProductScanContent = () => {
     }
   };
 
-
-
   const generateQRCode = () => {
     if (qrData.trim()) {
       setGenerateQR(true);
     } else {
       alert("Please enter data to generate QR Code.");
+    }
+  };
+
+  const options = [
+    { value: "QR 1", label: "QR Code 1", level: 1 },
+    { value: "QR 2", label: "QR Code 2", level: 2 },
+    { value: "QR 3", label: "QR Code 3", level: 3 },
+    { value: "QR 4", label: "QR Code 4", level: 4 },
+    { value: "QR 5", label: "QR Code 5", level: 5 },
+  ];
+
+  const handleSelectOptionChange = (e) => {
+    setQrData(e.target.value);
+    const selectedOption = options?.find(
+      (option) => option.value === e.target.value
+    );
+    if (selectedOption) {
+      setQrLevel(selectedOption.level);
     }
   };
 
@@ -165,39 +177,18 @@ export const ProductScanContent = () => {
                       id="qrdata"
                       className="form-select"
                       value={qrData}
-                      onChange={(e) => setQrData(e.target.value)}
+                      onChange={handleSelectOptionChange}
                     >
                       <option value="">Select QR</option>
-                      <option
-                        value="QR 1"
-                        disabled={uploadedQRs.includes("QR 1")}
-                      >
-                        QR Code 1
-                      </option>
-                      <option
-                        value="QR 2"
-                        disabled={uploadedQRs.includes("QR 2")}
-                      >
-                        QR Code 2
-                      </option>
-                      <option
-                        value="QR 3"
-                        disabled={uploadedQRs.includes("QR 3")}
-                      >
-                        QR Code 3
-                      </option>
-                      <option
-                        value="QR 4"
-                        disabled={uploadedQRs.includes("QR 4")}
-                      >
-                        QR Code 4
-                      </option>
-                      <option
-                        value="QR 5"
-                        disabled={uploadedQRs.includes("QR 5")}
-                      >
-                        QR Code 5
-                      </option>
+                      {options?.map((option, index) => (
+                        <option
+                          key={index}
+                          value={option.value}
+                          disabled={uploadedQRs.includes(option.value)}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <br />
@@ -230,47 +221,60 @@ export const ProductScanContent = () => {
                   </div>
                 </div>
               </div>
-              {/* for get UI */}
               <div className="col-6 ">
                 <div
                   style={{
-                    border: "1px dotted black",
                     padding: "5px",
                     width: "500px",
                     marginLeft: "-50px",
                   }}
                 >
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th className="text-center">Title</th>
-                        <th className="text-center">Uploaded QR codes</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Array.isArray(fetchData) &&
-                        fetchData.map((item, index) => (
-                          <tr key={item.key}>
-                            <td className="text-center">
-                              {item.key.slice(0, -4)}
-                            </td>
-                            <td className="text-center">
-                              <a
-                                href={item.value}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <img
-                                  src={item.value}
-                                  alt={item.key.slice(0, -4)}
-                                  style={{ width: "30px", height: "30px" }}
-                                />
-                              </a>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                  <div style={{ maxHeight: "580px", overflowY: "auto" }}>
+                    {productData.map((stage, stageIndex) => (
+                      <div key={stageIndex}>
+                        <h2>Stage {stageIndex + 1}</h2>
+                        <table
+                          style={{ border: "1px dotted black" }}
+                          className="table"
+                        >
+                          <thead>
+                            <tr>
+                              <th className="text-center">Title</th>
+                              <th className="text-center">Uploaded QR codes</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {Object.values(stage).map((item, index) => {
+                              if (item.key) {
+                                return (
+                                  <tr key={item.key}>
+                                    <td className="text-center">{item.key}</td>
+                                    <td className="text-center">
+                                      <a
+                                        href={item.image}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        <img
+                                          src={item.image}
+                                          alt={item.key}
+                                          style={{
+                                            width: "30px",
+                                            height: "30px",
+                                          }}
+                                        />
+                                      </a>
+                                    </td>
+                                  </tr>
+                                );
+                              }
+                              return null;
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
