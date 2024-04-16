@@ -36,10 +36,8 @@ export const ProductScanContent = () => {
     const imageBlob = dataURLtoBlob(imageData);
     const formData = new FormData();
     formData.append("image", imageBlob);
-
-    const apiUrl = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${qrLevel}/product?level=${qrLevel}&stage_id=${selectedStageId}&key=${encodeURIComponent(
-      qrData
-    )}`;
+ //http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product
+    const apiUrl = `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${selectedStageId}/${qrLevel}/QR-${qrLevel}/product-qr`;
 
     try {
       const response = await axios.post(apiUrl, formData, {
@@ -69,6 +67,7 @@ export const ProductScanContent = () => {
   }
   
   const QRDATA = async () => {
+   
     try {
       const response = await fetch(
         `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
@@ -81,7 +80,8 @@ export const ProductScanContent = () => {
       const stagesArray = Object.values(data.product.stages);
       setProductData(stagesArray);
       setFetchData(data[0]);
-      const uploaded = data[0].map((qr) => qr.key.split(".")[0]);
+      console.log("Data:", data);
+      const uploaded = data[0]?.map((qr) => qr.key.split(".")[0]);
       setUploadedQRs(uploaded);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -91,6 +91,7 @@ export const ProductScanContent = () => {
   const handleSelectChange = (e) => {
     setSelectedStage(e.target.value);
     const selectedStageData = stages[e.target.value];
+   console.log("Selected Stage Data:", e.target.value, selectedStageData);
     if (selectedStageData) {
       setSelectedStageId(selectedStageData.stage_id);
     }
@@ -114,6 +115,7 @@ export const ProductScanContent = () => {
 
   const handleSelectOptionChange = (e) => {
     setQrData(e.target.value);
+    console.log("Selected QR Data:", e.target.value);
     const selectedOption = options?.find(
       (option) => option.value === e.target.value
     );
@@ -184,7 +186,7 @@ export const ProductScanContent = () => {
                         <option
                           key={index}
                           value={option.value}
-                          disabled={uploadedQRs.includes(option.value)}
+                          disabled={uploadedQRs?.includes(option.value)}
                         >
                           {option.label}
                         </option>
