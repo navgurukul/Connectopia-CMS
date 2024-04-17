@@ -33,10 +33,18 @@ export const ProductScanContent = () => {
       a.download = "QRCode.png";
       a.click();
     }
+  };
+  const saveQR = async () => {
+    if (data) {
+      setGenerateQR(true);
+    }
+    const canvas = qrRef.current.querySelector("canvas");
+    const imageData = canvas.toDataURL("image/png");
+
     const imageBlob = dataURLtoBlob(imageData);
     const formData = new FormData();
     formData.append("image", imageBlob);
- //http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product
+    //http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product
     const apiUrl = `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${selectedStageId}/${qrLevel}/QR-${qrLevel}/product-qr`;
 
     try {
@@ -53,7 +61,6 @@ export const ProductScanContent = () => {
       setQrData("");
     }
   };
-
   function dataURLtoBlob(dataurl) {
     const arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1];
@@ -65,9 +72,8 @@ export const ProductScanContent = () => {
     }
     return new Blob([u8arr], { type: mime });
   }
-  
+
   const QRDATA = async () => {
-   
     try {
       const response = await fetch(
         `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
@@ -91,7 +97,7 @@ export const ProductScanContent = () => {
   const handleSelectChange = (e) => {
     setSelectedStage(e.target.value);
     const selectedStageData = stages[e.target.value];
-   console.log("Selected Stage Data:", e.target.value, selectedStageData);
+    console.log("Selected Stage Data:", e.target.value, selectedStageData);
     if (selectedStageData) {
       setSelectedStageId(selectedStageData.stage_id);
     }
@@ -198,19 +204,29 @@ export const ProductScanContent = () => {
                     type="button"
                     onClick={generateQRCode}
                     className="btn btn-primary"
-                    style={{ marginLeft: "60px" }}
+                    style={{ marginLeft: "60px",width:"150px" }}
                   >
-                    Generate QR Code
+                    Generate QR 
                   </button>
                   <br />
                   {generateQR && (
                     <button
                       type="button"
+                      onClick={saveQR}
+                      className="btn btn-secondary"
+                      style={{ marginLeft: "60px", marginTop: "8px",width:"150px" }}
+                    >
+                      Save QR Code
+                    </button>
+                  )}
+                  {generateQR && (
+                    <button
+                      type="button"
                       onClick={downloadQRCode}
                       className="btn btn-secondary"
-                      style={{ marginLeft: "60px", marginTop: "8px" }}
+                      style={{ marginLeft: "60px", marginTop: "8px",width:"150px" }}
                     >
-                      Download QR Code
+                      Download QR
                     </button>
                   )}
                   <div
