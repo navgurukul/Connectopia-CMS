@@ -28,6 +28,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
   const selectedOrganisation = localStorage.getItem("selectedOrganisation");
 
+
   const generateCampaignId = async () => {
     console.log("This function is called.")
     try {
@@ -155,7 +156,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         formData.append("image", imageBlob, "qr-code.png");
 
         try {
-          const apiUrl = `https://15.206.198.172/cms/campaign/upload-qr/${data}/Main-QRCode/product`;
+          const apiUrl = `http://15.206.198.172/cms/campaign/upload-qr/${data}/Main-QRCode/product`;
           const updateImageResponse = await axios.post(apiUrl, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -193,7 +194,6 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
     }
   };
 
-  console.log("data", data);
 
   function dataURLtoBlob(dataurl) {
     const arr = dataurl.split(","),
