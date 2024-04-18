@@ -4,7 +4,6 @@ import axios from "axios";
 
 export const ProductScanContent = () => {
   const [qrData, setQrData] = useState("");
-  const [fetchData, setFetchData] = useState("");
   const [generateQR, setGenerateQR] = useState(false);
   const qrRef = useRef();
   const [data, setData] = useState("");
@@ -16,6 +15,8 @@ export const ProductScanContent = () => {
   const [selectedStage, setSelectedStage] = useState("");
   const [selectedStageId, setSelectedStageId] = useState(null);
   const [qrLevel, setQrLevel] = useState(null);
+
+  const [productMainQR, setProductMainQR] = useState({});
 
   useEffect(() => {
     QRDATA();
@@ -44,9 +45,7 @@ export const ProductScanContent = () => {
     const imageBlob = dataURLtoBlob(imageData);
     const formData = new FormData();
     formData.append("image", imageBlob);
-    //http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product
     const apiUrl = `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${selectedStageId}/${qrLevel}/QR-${qrLevel}/product-qr`;
-
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -85,10 +84,7 @@ export const ProductScanContent = () => {
       setStages(data.product.stages);
       const stagesArray = Object.values(data.product.stages);
       setProductData(stagesArray);
-      setFetchData(data[0]);
-      console.log("Data:", data);
-      const uploaded = data[0]?.map((qr) => qr.key.split(".")[0]);
-      setUploadedQRs(uploaded);
+      setProductMainQR(data.product);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -97,7 +93,6 @@ export const ProductScanContent = () => {
   const handleSelectChange = (e) => {
     setSelectedStage(e.target.value);
     const selectedStageData = stages[e.target.value];
-    console.log("Selected Stage Data:", e.target.value, selectedStageData);
     if (selectedStageData) {
       setSelectedStageId(selectedStageData.stage_id);
     }
@@ -111,6 +106,8 @@ export const ProductScanContent = () => {
     }
   };
 
+  console.log("ProductData:", data.product);
+
   const options = [
     { value: "QR 1", label: "QR Code 1", level: 1 },
     { value: "QR 2", label: "QR Code 2", level: 2 },
@@ -118,6 +115,8 @@ export const ProductScanContent = () => {
     { value: "QR 4", label: "QR Code 4", level: 4 },
     { value: "QR 5", label: "QR Code 5", level: 5 },
   ];
+
+  const product = (data && data.product) || {};
 
   const handleSelectOptionChange = (e) => {
     setQrData(e.target.value);
@@ -153,8 +152,6 @@ export const ProductScanContent = () => {
             </div>
             <div className="row" style={{ marginTop: "20px" }}>
               <div className="col-6">
-                {/* <h6 style={{ marginLeft: "10px" }}>Select the Stage</h6> */}
-
                 <select
                   className="form-select"
                   style={{ width: "350px", margin: "auto" }}
@@ -204,9 +201,9 @@ export const ProductScanContent = () => {
                     type="button"
                     onClick={generateQRCode}
                     className="btn btn-primary"
-                    style={{ marginLeft: "60px",width:"150px" }}
+                    style={{ marginLeft: "60px", width: "150px" }}
                   >
-                    Generate QR 
+                    Generate QR
                   </button>
                   <br />
                   {generateQR && (
@@ -214,7 +211,11 @@ export const ProductScanContent = () => {
                       type="button"
                       onClick={saveQR}
                       className="btn btn-secondary"
-                      style={{ marginLeft: "60px", marginTop: "8px",width:"150px" }}
+                      style={{
+                        marginLeft: "60px",
+                        marginTop: "8px",
+                        width: "150px",
+                      }}
                     >
                       Save QR Code
                     </button>
@@ -224,7 +225,11 @@ export const ProductScanContent = () => {
                       type="button"
                       onClick={downloadQRCode}
                       className="btn btn-secondary"
-                      style={{ marginLeft: "60px", marginTop: "8px",width:"150px" }}
+                      style={{
+                        marginLeft: "60px",
+                        marginTop: "8px",
+                        width: "150px",
+                      }}
                     >
                       Download QR
                     </button>
@@ -237,6 +242,41 @@ export const ProductScanContent = () => {
                       <QRCode value={qrData} size={160} level={"H"} />
                     )}
                   </div>
+                </div>
+
+                <p
+                  style={{
+                    textAlign: "center",
+                    marginRight: "10px",
+                    marginBottom: "5px",
+                    marginTop: "25px",
+                  }}
+                >
+                  {productMainQR.mainQR && productMainQR.mainQR.key}
+                </p>
+
+                <div
+                  style={{
+                    border: "1px dotted black",
+                    padding: "10px",
+                    width: "200px",
+                    height: "180px",
+                    margin: "auto",
+                    marginTop: "5px",
+                  }}
+                  className="mb-2"
+                >
+                  {productMainQR.mainQR && (
+                    <>
+                      <div style={{ padding: "10px" }}>
+                        <img
+                          src={productMainQR.mainQR.image}
+                          alt={productMainQR.mainQR.key}
+                          style={{ width: "150px", height: "140px" }}
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="col-6 ">

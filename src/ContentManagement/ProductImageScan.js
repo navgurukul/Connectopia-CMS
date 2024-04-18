@@ -19,9 +19,6 @@ const ProductImageScan = () => {
 
   const [stages, setStages] = useState([]);
 
-
-  console.log('stages',stages)
-
   useEffect(() => {
     fetchAndFilterImages();
   }, []);
@@ -46,7 +43,6 @@ const ProductImageScan = () => {
     }
   }
 
-  console.log("imagsss", selectedLevel);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -110,7 +106,6 @@ const ProductImageScan = () => {
     }
   };
 
-
   const handleStageChange = (e) => {
     setselectedStage(e.target.value);
     setStageId(data?.stages[e.target.value]?.stage_id);
@@ -156,7 +151,7 @@ const ProductImageScan = () => {
                       {uploadMessage}
                     </div>
                   )}
-                  <div className="imageScan__container"></div> 
+                  <div className="imageScan__container"></div>
                   <h6>Select the Stage</h6>
                   <select
                     id="stage"
@@ -230,6 +225,39 @@ const ProductImageScan = () => {
                     </div>
                   )}
                 </div>
+                <p
+                  style={{
+                    textAlign: "center",
+                    marginTop: "10px",
+                    marginBottom: "5px",
+                    marginTop: "20px",
+                  }}
+                >
+                  {data.mainQR && data.mainQR.key}
+                </p>
+                <div
+                  style={{
+                    border: "1px dotted black",
+                    padding: "10px",
+                    width: "200px",
+                    height: "180px",
+                    margin: "auto",
+                    marginTop: "5px",
+                  }}
+                  className="mb-2"
+                >
+                  {data.mainQR && (
+                    <>
+                      <div style={{ padding: "10px" }}>
+                        <img
+                          src={data.mainQR.image}
+                          alt={data.mainQR.key}
+                          style={{ width: "150px", height: "140px" }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
               <div className="col-6">
                 <div
@@ -261,7 +289,7 @@ const ProductImageScan = () => {
                                 <th className="text-center">Image Scanner</th>
                               </tr>
                             </thead>
-                            <tbody >
+                            <tbody>
                               {imageKeys.length > 0 ? (
                                 imageKeys.map((imageKey, index) => {
                                   const image = stage[imageKey];
