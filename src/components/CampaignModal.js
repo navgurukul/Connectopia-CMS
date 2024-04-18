@@ -13,7 +13,8 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [qrscanData, setQrscanData] = useState(
     "https://master.d1ywywy8pav9t.amplifyapp.com/"
   );
-  const [sequence, setSequence] = useState("random");
+  // const [sequence, setSequence] = useState("random");
+  const [scanSequenceType, setScanSequenceType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
@@ -21,16 +22,15 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
   const [numberOfStages, setNumberOfStages] = useState();
-  
+
   const retrievedLoggedInUserDataObject =
     localStorage.getItem("loggedInUserData");
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
 
   const selectedOrganisation = localStorage.getItem("selectedOrganisation");
 
-
   const generateCampaignId = async () => {
-    console.log("This function is called.")
+    console.log("This function is called.");
     try {
       const response = await axios.get(
         "http://15.206.198.172/cms/campaign-next"
@@ -127,17 +127,18 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       startdate: startDate,
       enddate: endDate,
       status: "active",
-      scan_sequence:sequence,
+      scan_sequence: scanSequenceType,
       email: userData.email,
-      // total_stages: 3,
       total_stages: numberOfStages,
       campaign_duration: `${time.hours
         .toString()
         .padStart(2, "0")}:${time.minutes
         .toString()
         .padStart(2, "0")}:${time.seconds.toString().padStart(2, "0")}`,
-        organization_id: parseInt(localStorage.getItem("selectedOrgId"))
+      organization_id: parseInt(localStorage.getItem("selectedOrgId")),
     };
+
+    console.log("Payload-yeww", payload);
 
     try {
       const response = await axios.post(
@@ -161,10 +162,10 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            body:{
+            body: {
               content_type: "level",
               scantype: scannerType,
-            }
+            },
           });
 
           console.log("updateImageResponse", updateImageResponse);
@@ -193,7 +194,6 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       return;
     }
   };
-
 
   function dataURLtoBlob(dataurl) {
     const arr = dataurl.split(","),
@@ -381,9 +381,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                   <label htmlFor="scannerType">Scanner Type</label>
                 </div>
               </div>
-
               {/* Added timer   */}
-
               <div className="form-group">
                 <div className="form-group row">
                   <div className="col-md-4">
@@ -441,10 +439,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                     </div>
                   </div>
                 </div>
-
-                  {/* added Scan sequence type */}
-
-                  <div className="form-floating">
+                <div className="form-floating">
                   <input
                     type="number"
                     id="numberOfStages"
@@ -458,27 +453,6 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                   />
                   <label htmlFor="numberOfStages">Enter Number of Stages</label>
                 </div>
-
-                {/* added Scan sequence type */}
-
-                {/* <div className="form-floating select-wrapper">
-                  <select
-                    id="scannerType"
-                    required
-                    placeholder="Scann sequence type"
-                    className="form-control"
-                    value={scannerType}
-                    onChange={(e) => setScannerType(e.target.value)}
-                    onFocus={() => !scannerType && setScannerType("")}
-                  >
-                    <option value="" disabled hidden>
-                      Scan sequence type
-                    </option>
-                    <option value="QRscan">Fixed sequence</option>
-                    <option value="imagescan">Random sequence</option>
-                  </select>
-                  <label htmlFor="scannerType">Scan sequence type</label>
-                </div> */}
               </div>
 
               <div className="form-group">
@@ -506,6 +480,25 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                     />
                   </div>
                 </div>
+                {/* added Scan sequence type */}
+                <div className="form-floating select-wrapper">
+                  <select
+                    id="scanSequenceType"
+                    required
+                    placeholder="Scan sequence type"
+                    className="form-control"
+                    value={scanSequenceType}
+                    onChange={(e) => setScanSequenceType(e.target.value)}
+                    onFocus={() => !scanSequenceType && setScanSequenceType("")}
+                  >
+                    <option value="" disabled hidden>
+                      Scan sequence type
+                    </option>
+                    <option value="fixed">Fixed sequence</option>
+                    <option value="random">Random sequence</option>
+                  </select>
+                  <label htmlFor="scannerType">Scan sequence type</label>
+                </div>
               </div>
               {data && (
                 <div className="QR-form-group" style={{ marginLeft: "10%" }}>
@@ -517,7 +510,11 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                   >
                     Download QR Code
                   </button>
-                  <div ref={qrRef} className="input-QRCode">
+                  <div
+                    ref={qrRef}
+                    className="input-QRCode"
+                    style={{ marginTop: "4px" }}
+                  >
                     {generateQR &&
                       data &&
                       (() => {
