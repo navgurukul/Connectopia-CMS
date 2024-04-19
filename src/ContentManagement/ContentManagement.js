@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
-import '../App.css';
+import "../App.css";
 import { GeneralContent } from "./GeneralContent";
 import { LevelContent } from "./LevelContent";
 import { ProductScanContent } from "./ProductScanContent";
 import ProductImageScan from "./ProductImageScan";
-import './ContentManagement.css';
+import ProductRandomSequence from "./ProductRandomSequence";
+import "./ContentManagement.css";
 
 export function ContentManagement() {
   const [content, setContent] = useState(<GeneralContent />);
   const [activeButton, setActiveButton] = useState("general");
   const [qrCodeUrl, setQrCodeUrl] = useState("");
 
-  const campaignId = localStorage.getItem('CampaignId');
-  const scanType = localStorage.getItem('ScanType');
+  const [scanSequence, setScanSequence] = useState("");
+
+  const campaignId = localStorage.getItem("CampaignId");
+  const scanType = localStorage.getItem("ScanType");
 
   useEffect(() => {
-
     const cleanUp = () => {
-      localStorage.removeItem('TempCampaignId');
-      localStorage.removeItem('TempCampaigName');
+      localStorage.removeItem("TempCampaignId");
+      localStorage.removeItem("TempCampaigName");
     };
     return cleanUp;
   }, []);
@@ -31,20 +33,42 @@ export function ContentManagement() {
   };
 
   const isButtonActive = (buttonName) => {
-    return activeButton === buttonName ? 'selected-button' : '';
+    return activeButton === buttonName ? "selected-button" : "";
   };
 
+  // const fetchData = async () => {
+  //   try {
+  //     // const response = await fetch(`https://connectopia.co.in/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
+  //     const response = await fetch(
+  //       `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
+  //     );
+
+  //     const data = await response.json();
+  //     console.log("priyaaaa", data);
+
+  //     if (data?.product) {
+  //       const imageUrl = data?.product[0]?.image;
+  //       setQrCodeUrl(imageUrl);
+  //     }
+  //   } catch (error) {
+  //     console.error("An error occurred while fetching the data: ", error);
+  //   }
+  // };
   const fetchData = async () => {
     try {
-      // const response = await fetch(`https://connectopia.co.in/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
-      const response = await fetch(`http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`);
-
+      const response = await fetch(
+        `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
+      );
       const data = await response.json();
-      // console.log("data", data);
+      console.log("priyaaaa", data);
 
       if (data?.product) {
-        const imageUrl =data?.product[0]?.image;
+        const imageUrl = data?.product[0]?.image;
         setQrCodeUrl(imageUrl);
+      }
+
+      if (data?.scan_sequence) {
+        setScanSequence(data.scan_sequence);
       }
     } catch (error) {
       console.error("An error occurred while fetching the data: ", error);
@@ -61,10 +85,10 @@ export function ContentManagement() {
       const imageBlob = await imageFetch.blob();
       const objectUrl = URL.createObjectURL(imageBlob);
 
-      const tempLink = document.createElement('a');
+      const tempLink = document.createElement("a");
       tempLink.href = objectUrl;
 
-      tempLink.download = 'Main-QRCode.png';
+      tempLink.download = "Main-QRCode.png";
 
       document.body.appendChild(tempLink);
       tempLink.click();
@@ -73,7 +97,6 @@ export function ContentManagement() {
 
       URL.revokeObjectURL(objectUrl);
     } catch (error) {
-
       console.error("An error occurred while downloading the image:", error);
     }
   };
@@ -85,26 +108,32 @@ export function ContentManagement() {
           <div className="row">
             <div className="col-md-4 text-center">
               <button
-                className={`create-button-but ${isButtonActive('general')}`}
-                onClick={() => handleButtonClick(<GeneralContent />, 'general')}>
+                className={`create-button-but ${isButtonActive("general")}`}
+                onClick={() => handleButtonClick(<GeneralContent />, "general")}
+              >
                 General Content
               </button>
             </div>
             <div className="col-md-4 text-start">
               <button
-                className={`create-button-but ${isButtonActive('level')}`}
-                onClick={() => handleButtonClick(<LevelContent />, 'level')}>
+                className={`create-button-but ${isButtonActive("level")}`}
+                onClick={() => handleButtonClick(<LevelContent />, "level")}
+              >
                 Stage Content
               </button>
             </div>
             <div className="col-md-4 text-start">
               <button
-                className={`create-button-but ${isButtonActive('productscan')}`}
-                onClick={() =>
-                  scanType === 'qr' ?
-                    handleButtonClick(<ProductScanContent />, 'productscan') :
-                    handleButtonClick(<ProductImageScan />, 'productscan')
-                }
+                className={`create-button-but ${isButtonActive("productscan")}`}
+                onClick={() => {
+                  if (scanSequence === "random") {
+                    handleButtonClick(<ProductRandomSequence />, "productscan");
+                  } else {
+                    scanType === "qr"
+                      ? handleButtonClick(<ProductScanContent />, "productscan")
+                      : handleButtonClick(<ProductImageScan />, "productscan");
+                  }
+                }}
               >
                 Product image/QR
               </button>
@@ -113,7 +142,8 @@ export function ContentManagement() {
         </div>
         <div className="col-6 text-end">
           <button className="btn custom-download-btn" onClick={downloadQrCode}>
-            <strong>Download QR code:</strong> <FontAwesomeIcon icon={faDownload} />
+            <strong>Download QR code:</strong>{" "}
+            <FontAwesomeIcon icon={faDownload} />
           </button>
         </div>
       </div>

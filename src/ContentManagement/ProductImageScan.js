@@ -43,7 +43,6 @@ const ProductImageScan = () => {
     }
   }
 
-
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
