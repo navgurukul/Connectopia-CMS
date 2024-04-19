@@ -89,7 +89,7 @@ const ProductImageScan = () => {
         fetchAndFilterImages();
         setTimeout(() => setUploadMessage(""), 7000);
       } else {
-        setUploadMessage("Image  Updated Successfully !!");
+        setUploadMessage("Image Updated Successfully !!");
         fetchAndFilterImages();
         setTimeout(() => setUploadMessage(""), 7000);
       }
@@ -146,7 +146,7 @@ const ProductImageScan = () => {
                   {uploadMessage && (
                     <div
                       className="alert alert-success text-center"
-                      style={{ marginTop: "-10px", marginBottom: "-10px" }}
+                      style={{ marginTop: "-10px", marginBottom: "-9px" }}
                     >
                       {uploadMessage}
                     </div>
@@ -238,9 +238,9 @@ const ProductImageScan = () => {
                 <div
                   style={{
                     border: "1px dotted black",
-                    padding: "10px",
-                    width: "200px",
-                    height: "180px",
+                    padding: "5px",
+                    width: "130px",
+                    height: "130px",
                     margin: "auto",
                     marginTop: "5px",
                   }}
@@ -252,7 +252,7 @@ const ProductImageScan = () => {
                         <img
                           src={data.mainQR.image}
                           alt={data.mainQR.key}
-                          style={{ width: "150px", height: "140px" }}
+                          style={{ width: "100px", height: "100px" }}
                         />
                       </div>
                     </>
