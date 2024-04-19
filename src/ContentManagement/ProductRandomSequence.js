@@ -6,17 +6,15 @@ const ProductRandomSequence = () => {
   const [data, setData] = useState([]);
   const [file, setFile] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [filterImage, setFilterImage] = useState();
   const [uploadMessage, setUploadMessage] = useState("");
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [level, setLevel] = useState(1);
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
   const [selectedStage, setselectedStage] = useState("stage-1");
-  const [selectedLevel, setselectedLevel] = useState("ImageScan1");
+  const [productMainQR, setProductMainQR] = useState({});
   const [stageId, setStageId] = useState(0);
-
+  const [previewUrls, setPreviewUrls] = useState([]);
   const [stages, setStages] = useState([]);
 
   useEffect(() => {
@@ -35,6 +33,7 @@ const ProductRandomSequence = () => {
       data && setData(data.product);
       data && setStageId(data.product.stages[selectedStage].stage_id);
       setStages(Object.keys(data.product.stages));
+      setProductMainQR(data.product);
     } catch (error) {
       console.error(
         "There was a problem with the fetch operation:",
@@ -44,36 +43,43 @@ const ProductRandomSequence = () => {
   }
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      if (selectedFile.type === "image/png") {
-        setFile(selectedFile);
-        setUploadMessage("");
-      } else {
-        setUploadMessage("Please upload PNG format only.");
-        setTimeout(() => setUploadMessage(""), 4000);
-        setFile(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
+    if (e.target.files.length !== 5) {
+      alert("Please select exactly 5 files.");
+      return;
+    }
+    const files = Array.from(e.target.files);
+    const nonPngFiles = files.some((file) => file.type !== "image/png");
+
+    if (nonPngFiles) {
+      setUploadMessage("Please upload PNG format only.");
+      setTimeout(() => setUploadMessage(""), 4000);
+      setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
       }
+    } else {
+      setFile(files);
+      setUploadMessage("");
+      setPreviewUrls(files.map((file) => URL.createObjectURL(file))); 
     }
   };
 
   const handleSave = async () => {
-    if (!file) {
+    if (!file || file.length === 0) {
       alert("Please select a file before saving.");
       return;
     }
     setLoading(true);
     setSaving(true);
     const formData = new FormData();
-    formData.append("image", file);
+
+    for (let i = 0; i < file.length; i++) {
+      formData.append("image", file[i]);
+    }
+
     try {
       const response = await axios.post(
-        `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product`,
-
+        `http://15.206.198.172/cms/campaign/upload-bulk/${campaignId}/${stageId}/product`,
         formData,
         {
           headers: {
@@ -81,8 +87,9 @@ const ProductRandomSequence = () => {
           },
         }
       );
+
       if (
-        response.data === "Both .mind and image file got uploaded successfully"
+        response.data === "Both.mind and image file got uploaded successfully"
       ) {
         setUploadMessage("Image  Uploaded Successfully !!");
         fetchAndFilterImages();
@@ -92,6 +99,7 @@ const ProductRandomSequence = () => {
         fetchAndFilterImages();
         setTimeout(() => setUploadMessage(""), 7000);
       }
+
     } catch (error) {
       console.error("Error uploading file: ", error);
     } finally {
@@ -99,32 +107,17 @@ const ProductRandomSequence = () => {
       setLoading(false);
       setImageData("");
       setFile(null);
+      setPreviewUrls([]);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     }
   };
-
   const handleStageChange = (e) => {
     setselectedStage(e.target.value);
     setStageId(data?.stages[e.target.value]?.stage_id);
   };
 
-  const handlelevelImageUpload = (e, index) => {
-    setImageData(e.target.value);
-    setLevel(e.target.selectedIndex + 1);
-    setselectedLevel(e.target.value);
-  };
-
-  const options = [
-    { value: "ImageScan1", level: 1 },
-    { value: "ImageScan2", level: 2 },
-    { value: "ImageScan3", level: 3 },
-    { value: "ImageScan4", level: 4 },
-    { value: "ImageScan5", level: 5 },
-  ];
-  const values = options.map((option) => option.value);
-  const orders = options.map((option) => option.level);
   return (
     <div className="container">
       <div className="row">
@@ -167,44 +160,50 @@ const ProductRandomSequence = () => {
                 </div>
               </div>
             </div>
-
-            {/* lll */}
-            <div className="row" style={{ marginTop: "20px" }}>
+            <div
+              className="row align-items-start"
+              style={{ marginTop: "20px" }}
+            >
               <div className="col-6">
                 <div
                   style={{
-                    border: "1px dotted black",
-                    padding: "20px",
+                    // border: "1px dotted black",
+                    padding: "5px",
                     width: "350px",
                     margin: "auto",
                   }}
                 >
                   <div className="mb-2">
-                    <h6>Select the images Level wise</h6>
-                    <select
-                      id="imagedata"
-                      className="form-select"
-                      value={imageData}
-                      onChange={(e, index) => {
-                        handlelevelImageUpload(e, index);
-                      }}
+                    <div className="input-section">
+                      <h6>Select 5 images</h6>
+                      <div
+                        style={{ width: "330px", border: "1px solid black" }}
+                      >
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          onChange={handleFileChange}
+                          multiple
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className={`image-preview-container ${
+                        previewUrls.length > 0 ? "has-images" : ""
+                      }`}
                     >
-                      {values.map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
+                      {previewUrls.map((url, index) => (
+                        <div key={index} className="image-preview-item">
+                          <img
+                            src={url}
+                            alt="Preview"
+                            style={{ width: "100px", height: "100px" }}
+                          />
+                        </div>
                       ))}
-                    </select>
+                    </div>
                   </div>
-                  <br />
-                  <div>
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={(e) => handleFileChange(e)}
-                      disabled={!selectedLevel}
-                    />
-                  </div>
+
                   <button
                     className="btn btn-primary"
                     style={{ marginTop: "25px", marginLeft: "100px" }}
@@ -230,19 +229,43 @@ const ProductRandomSequence = () => {
               <div className="col-6">
                 <div
                   style={{
+                    border: "1px dotted black",
+                    padding: "5px",
+                    width: "110px",
+                    height: "110px",
+                    margin: "auto",
+                  }}
+                >
+                  {productMainQR.mainQR && (
+                    <>
+                      <div style={{ padding: "10px" }}>
+                        <img
+                          src={productMainQR.mainQR.image}
+                          alt={productMainQR.mainQR.key}
+                          style={{ width: "80px", height: "80px" }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div
+                  style={{
                     padding: "3px",
                     width: "500px",
-                    maxHeight: "500px",
+                    maxHeight: "370px",
                     overflowY: "auto",
                   }}
                 >
-                  {/* {data &&
+                  {data &&
                     data.stages &&
                     Object.keys(data.stages).map((stageKey) => {
                       const stage = data.stages[stageKey];
                       const imageKeys = Object.keys(stage).filter(
                         (imageKey) =>
-                          imageKey !== "stage_id" && imageKey !== "campaign_id"
+                          imageKey !== "stage_id" &&
+                          imageKey !== "campaign_id" &&
+                          imageKey !== "mind"
                       );
                       return (
                         <>
@@ -305,7 +328,7 @@ const ProductRandomSequence = () => {
                           </table>
                         </>
                       );
-                    })} */}
+                    })}
                 </div>
               </div>
             </div>
@@ -316,3 +339,4 @@ const ProductRandomSequence = () => {
   );
 };
 export default ProductRandomSequence;
+
