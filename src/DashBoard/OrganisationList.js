@@ -39,7 +39,6 @@ export function Organisation({ onOrgClick }) {
     fetchOrganizations();
   }, []);
   const filteredOrganizations = organizations?.filter((org) => {
-    // console.log(org, "org")
     return org.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -56,7 +55,6 @@ export function Organisation({ onOrgClick }) {
         const apiUrl = `https://connectopia.co.in/cms/organization/list/${userData.email}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response?.json();
-        console.log(data, "datakoma");
         setOrganizations(data?.data);
       } catch (error) {
         console.error("Error fetching data:", error);

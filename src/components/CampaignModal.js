@@ -138,8 +138,6 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
       organization_id: parseInt(localStorage.getItem("selectedOrgId")),
     };
 
-    console.log("Payload-yeww", payload);
-
     try {
       const response = await axios.post(
         "https://connectopia.co.in/cms/campaign/create",
@@ -167,8 +165,6 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
               scantype: scannerType,
             },
           });
-
-          console.log("updateImageResponse", updateImageResponse);
 
           if (updateImageResponse.data) {
             if (onCampaignCreated) {
@@ -508,7 +504,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                     onClick={downloadQRCode}
                     disabled={!generateQR || !data}
                   >
-                    Download QR Code
+                    Download QR Code 
                   </button>
                   <div
                     ref={qrRef}

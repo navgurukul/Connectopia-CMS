@@ -28,7 +28,6 @@ const AddUserModel = ({ onClose, onUserCreated }) => {
     }, [alertMessages]);
 
     function handleAddUser(e) {
-        console.log("Add User");
         e.preventDefault();
         const userData = {
             email: email,

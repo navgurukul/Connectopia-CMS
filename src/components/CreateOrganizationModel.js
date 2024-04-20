@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationData }) => {
-  console.log(organizationData, "organizationData")
-
   const [name, setName] = useState("");
   const [details, setDetails] = useState("");
   const [alertMessage, setAlertMessage] = useState("");

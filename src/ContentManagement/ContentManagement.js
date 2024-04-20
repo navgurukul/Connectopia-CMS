@@ -12,10 +12,8 @@ import "./ContentManagement.css";
 export function ContentManagement() {
   const [content, setContent] = useState(<GeneralContent />);
   const [activeButton, setActiveButton] = useState("general");
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
-
+  const [mainQRImageUrl, setMainQRImageUrl] = useState(null);
   const [scanSequence, setScanSequence] = useState("");
-
   const campaignId = localStorage.getItem("CampaignId");
   const scanType = localStorage.getItem("ScanType");
 
@@ -35,18 +33,16 @@ export function ContentManagement() {
   const isButtonActive = (buttonName) => {
     return activeButton === buttonName ? "selected-button" : "";
   };
-  
+
   const fetchData = async () => {
     try {
       const response = await fetch(
         `https://connectopia.co.in/cms/campaign/general-product/${campaignId}/${scanType}`
       );
       const data = await response.json();
-      console.log("priyaaaa", data);
 
-      if (data?.product) {
-        const imageUrl = data?.product[0]?.image;
-        setQrCodeUrl(imageUrl);
+      if (data?.product?.mainQR?.image) {
+        setMainQRImageUrl(data.product.mainQR.image);
       }
 
       if (data?.scan_sequence) {
@@ -63,13 +59,17 @@ export function ContentManagement() {
 
   const downloadQrCode = async () => {
     try {
-      const imageFetch = await fetch(qrCodeUrl);
+      if (!mainQRImageUrl) {
+        console.error("No image URL provided");
+        return;
+      }
+
+      const imageFetch = await fetch(mainQRImageUrl);
       const imageBlob = await imageFetch.blob();
       const objectUrl = URL.createObjectURL(imageBlob);
 
       const tempLink = document.createElement("a");
       tempLink.href = objectUrl;
-
       tempLink.download = "Main-QRCode.png";
 
       document.body.appendChild(tempLink);

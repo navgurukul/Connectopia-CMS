@@ -67,6 +67,11 @@
 
 }
 
+
+.custom-download-btn:hover {
+  color: green !important;
+}
+
 .image-preview-container.has-images {
   border: 1px dotted black;
   display: flex;

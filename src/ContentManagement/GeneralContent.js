@@ -114,7 +114,7 @@ export function GeneralContent() {
           fetchData();
           setTimeout(() => {
             fetchData();
-          },8000);
+          }, 8000);
 
           setLoading(false);
           setUploadMessage("Image Uploaded Successfully !!");
@@ -148,7 +148,6 @@ export function GeneralContent() {
       );
 
       const data = await response?.json();
-      console.log("dikha_ab", data);
 
       setImageData(data?.general);
     } catch (error) {

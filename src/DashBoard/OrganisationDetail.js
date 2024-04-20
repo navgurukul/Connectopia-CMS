@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash, faRocket, faMagnifyingGlass, faX, faPlus, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPen,
+  faTrash,
+  faRocket,
+  faMagnifyingGlass,
+  faX,
+  faPlus,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import "./Organisation.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import CampaignModal from "../components/CampaignModal";
 import AddUserModel from "../components/AddUserModel";
-import AddAdminModel from "../components/AddAdminModel"
+import AddAdminModel from "../components/AddAdminModel";
 import UpdateCampaignModel from "../components/UpdateCampaignModel";
 
 export function OrganisationDetail({ backToDashboard, goToContentManage }) {
-
   const [searchTerm, setSearchTerm] = useState("");
   const [campaignList, setCampaignList] = useState([]);
   const [showCampaignModal, setShowCampaignModal] = useState(false);
@@ -20,21 +27,21 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
   const [showEditCampaignModal, setShowEditCampaignModal] = useState(false);
   const [campainDetails, setCampainDetails] = useState({});
 
-  const userType = localStorage.getItem('user-type');
+  const userType = localStorage.getItem("user-type");
 
-  const retrievedLoggedInUserDataObject = localStorage.getItem('loggedInUserData');
+  const retrievedLoggedInUserDataObject =
+    localStorage.getItem("loggedInUserData");
   const userData = JSON.parse(retrievedLoggedInUserDataObject);
 
   useEffect(() => {
-    const userTypee = localStorage.getItem('user-type');
+    const userTypee = localStorage.getItem("user-type");
 
     const cleanUp = () => {
-      if (userTypee === 'superadmin') {
-        localStorage.removeItem('validUserOrganization');
+      if (userTypee === "superadmin") {
+        localStorage.removeItem("validUserOrganization");
       }
     };
     return cleanUp;
-
   }, []);
 
   const handleShowAddAdminModal = () => {
@@ -62,12 +69,12 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
     setShowEditCampaignModal(false);
   };
 
-  let organisationList = localStorage.getItem('selectedOrgId');
+  let organisationList = localStorage.getItem("selectedOrgId");
 
   let selectedOrganisationDesc;
-  if (userType === 'superadmin') {
-    selectedOrganisationDesc = localStorage.getItem('selectedOrganisationDesc');
-    selectedOrganisationDesc = selectedOrganisationDesc.replace(/['"]+/g, '');
+  if (userType === "superadmin") {
+    selectedOrganisationDesc = localStorage.getItem("selectedOrganisationDesc");
+    selectedOrganisationDesc = selectedOrganisationDesc.replace(/['"]+/g, "");
   }
 
   useEffect(() => {
@@ -80,10 +87,10 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
     if (organisationList) {
       let url;
 
-      if (userData.usertype === 'superadmin') {
-        url = `https://connectopia.co.in/cms/organization/${organisationList}`;
+      if (userData.usertype === "superadmin") {
+        url = `http://15.206.198.172/cms/organization/${organisationList}`;
       } else {
-        url = `https://connectopia.co.in/campaignsByEmailid/${userData.email}`;
+        url = `http://15.206.198.172/campaignsByEmailid/${userData.email}`;
       }
 
       axios
@@ -95,30 +102,33 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
           console.error("There was an error fetching data", error);
         });
     }
-  };
-  
+  }
 
   const filteredCampaign = campaignList?.filter((campaign) =>
-    campaign?.campaign_name?.toLowerCase().includes(searchTerm.toLowerCase())
+    campaign?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
- 
 
-  const updateCampaignStatus = async (campaignName, currentStatus, campaignId) => {
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+  const updateCampaignStatus = async (
+    campaignName,
+    currentStatus,
+    campaignId
+  ) => {
+    const newStatus = currentStatus === "active" ? "inactive" : "active";
 
-
-    const apiUrl = `https://connectopia.co.in/cms/campaign/set-status/${campaignId}/${newStatus}`;
+    const apiUrl = `http://15.206.198.172/cms/campaign/set-status/${campaignId}/${newStatus}`;
 
     try {
       const response = await axios.put(apiUrl);
 
       if (response.status === 200) {
-        setCampaignList(prevCampaigns => {
-          const index = prevCampaigns.findIndex(camp => camp.name === campaignName);
+        setCampaignList((prevCampaigns) => {
+          const index = prevCampaigns.findIndex(
+            (camp) => camp.name === campaignName
+          );
 
           const updatedCampaign = {
             ...prevCampaigns[index],
-            status: newStatus
+            status: newStatus,
           };
 
           const updatedCampaigns = [...prevCampaigns];
@@ -127,42 +137,41 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
           return updatedCampaigns;
         });
       } else {
-        console.error('Status update failed:', response.data);
+        console.error("Status update failed:", response.data);
       }
     } catch (error) {
-      console.error('There was an error updating the status:', error);
+      console.error("There was an error updating the status:", error);
     }
   };
 
-
   const deleteCampaign = async (campaignId) => {
-    const apiUrl = `https://connectopia.co.in/cms/campaign/delete/${campaignId}`;
+    const apiUrl = `http://15.206.198.172/cms/campaign/delete/${campaignId}`;
     try {
       const response = await axios.delete(apiUrl);
-  
+
       if (response.status === 200) {
-        setCampaignList(prevCampaigns => {
-          return prevCampaigns.filter(camp => camp.id !== campaignId);
+        setCampaignList((prevCampaigns) => {
+          return prevCampaigns.filter((camp) => camp.id !== campaignId);
         });
       } else {
-        console.error('Failed to delete campaign:', response.data);
+        console.error("Failed to delete campaign:", response.data);
       }
     } catch (error) {
-      console.error('There was an error deleting the campaign:', error);
+      console.error("There was an error deleting the campaign:", error);
     }
   };
 
   function oncampaignClick(id, name, scantype) {
-    localStorage.setItem("CampaignId", id)
-    localStorage.setItem("CampaigName", name)
-    localStorage.setItem("ScanType", scantype)
-    localStorage.setItem("TempCampaignId", id)
-    localStorage.setItem("TempCampaigName", name)
-    goToContentManage()
+    localStorage.setItem("CampaignId", id);
+    localStorage.setItem("CampaigName", name);
+    localStorage.setItem("ScanType", scantype);
+    localStorage.setItem("TempCampaignId", id);
+    localStorage.setItem("TempCampaigName", name);
+    goToContentManage();
   }
 
   function handleUpdateCampaign(campaign) {
-    setCampainDetails(campaign)
+    setCampainDetails(campaign);
     setShowEditCampaignModal(true);
   }
 
@@ -172,11 +181,14 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
         <div className="container">
           <div className="row">
             <div className="col-md-6 ">
-              <button className="create-button" onClick={handleShowCampaignModal}>
-                <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} /> Create Campaigns
+              <button
+                className="create-button"
+                onClick={handleShowCampaignModal}
+              >
+                <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />{" "}
+                Create Campaigns
               </button>
             </div>
-
 
             <div className="col-md-6 ">
               <div className="row">
@@ -184,9 +196,13 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                   <h5 className="text-center">Manage Users</h5>
                 </div>
 
-                {userType === 'superadmin' && (
+                {userType === "superadmin" && (
                   <div className="col-md-6 text-end ">
-                    <Link to="/" className="clickable-link" onClick={backToDashboard}>
+                    <Link
+                      to="/"
+                      className="clickable-link"
+                      onClick={backToDashboard}
+                    >
                       <p>&lt; Back to Organization</p>
                     </Link>
                   </div>
@@ -195,32 +211,58 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
 
               <div className="row ">
                 <>
-
                   <div className="col-md-4 text-end">
-                    <button className="create-buttons" onClick={handleShowAddUserModal}><FontAwesomeIcon icon={faUserPlus} style={{ marginRight: "5px" }} /> Add users</button>
+                    <button
+                      className="create-buttons"
+                      onClick={handleShowAddUserModal}
+                    >
+                      <FontAwesomeIcon
+                        icon={faUserPlus}
+                        style={{ marginRight: "5px" }}
+                      />{" "}
+                      Add users
+                    </button>
                   </div>
-                  {userType !== 'user' ?
+                  {userType !== "user" ? (
                     <div className="col-md-4 text-start">
-                      <button className="create-buttons" onClick={handleShowAddAdminModal}><FontAwesomeIcon icon={faUserPlus} style={{ marginRight: "5px" }} /> Add admins</button>
+                      <button
+                        className="create-buttons"
+                        onClick={handleShowAddAdminModal}
+                      >
+                        <FontAwesomeIcon
+                          icon={faUserPlus}
+                          style={{ marginRight: "5px" }}
+                        />{" "}
+                        Add admins
+                      </button>
                     </div>
-                    : null}
-                  <div className="col-md-4">
-                  </div>
+                  ) : null}
+                  <div className="col-md-4"></div>
                 </>
               </div>
             </div>
-
           </div>
         </div>
-        <strong style={{ marginLeft: '10px' }}>Oganization Description:</strong> {userType === 'superadmin' ? selectedOrganisationDesc : userData.organisation_desc}
+        <strong style={{ marginLeft: "10px" }}>Oganization Description:</strong>{" "}
+        {userType === "superadmin"
+          ? selectedOrganisationDesc
+          : userData.organisation_desc}
       </div>
 
       <div className="row ">
         <div className="col-12 custom-div">
           <div className="shadowbox">
-            <div className="row custom-div" style={{ marginTop: '-15px' }}>
+            <div className="row custom-div" style={{ marginTop: "-15px" }}>
               <div className="col-6">
-                <strong style={{ float: 'left', marginLeft: '10px', marginTop: '25px' }}>CURRENT CAMPAIGNS</strong>
+                <strong
+                  style={{
+                    float: "left",
+                    marginLeft: "10px",
+                    marginTop: "25px",
+                  }}
+                >
+                  CURRENT CAMPAIGNS
+                </strong>
               </div>
               <div className="col-6 custom-div text-end">
                 <div className="search-container">
@@ -262,35 +304,53 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {
-                          campaignList?.length === 0 || !campaignList && (
+                        {campaignList?.length === 0 ||
+                          (!campaignList && (
                             <tr>
-                              <td colSpan="6" style={{textAlign:"center"}}>No campaigns found</td>
+                              <td colSpan="6" style={{ textAlign: "center" }}>
+                                No campaigns found
+                              </td>
                             </tr>
+                          ))}
+                        {campaignList
+                          ?.filter((campaign) =>
+                            campaign?.name
+                              ?.toLowerCase()
+                              .includes(searchTerm.toLowerCase())
                           )
-                        }
-
-                        {campaignList?.filter(campaign => campaign.name && campaign.name.trim() !== "")
                           .map((campaign, index) => {
                             const admins = campaign.users
-                              .filter(user => user.usertype === 'admin')
-                              .map(admin => admin.email)
+                              .filter((user) => user.usertype === "admin")
+                              .map((admin) => admin.email)
                               .join(", ");
 
                             const users = campaign.users
-                              .filter(user => user.usertype === 'user')
-                              .map(user => user.email)
+                              .filter((user) => user.usertype === "user")
+                              .map((user) => user.email)
                               .join(", ");
 
-                            const rocketIconColor = campaign.status === 'active' ? 'green' : 'red';
+                            const rocketIconColor =
+                              campaign.status === "active" ? "green" : "red";
 
                             return (
                               <tr key={index}>
-                                <td className="text-start" style={{ wordWrap: "break-word", maxWidth: "250px", padding: "5px 20px" }}>
-                                  <Link className="clickable-link"
+                                <td
+                                  className="text-start"
+                                  style={{
+                                    wordWrap: "break-word",
+                                    maxWidth: "250px",
+                                    padding: "5px 20px",
+                                  }}
+                                >
+                                  <Link
+                                    className="clickable-link"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      oncampaignClick(campaign.id, campaign.name, campaign.scantype);
+                                      oncampaignClick(
+                                        campaign.id,
+                                        campaign.name,
+                                        campaign.scantype
+                                      );
                                     }}
                                   >
                                     {campaign.name}
@@ -302,16 +362,35 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
                                 <td>{users}</td>
 
                                 <td>
-                                  <FontAwesomeIcon icon={faPen} className="icon-style" onClick={() => handleUpdateCampaign(campaign)} />
+                                  <FontAwesomeIcon
+                                    icon={faPen}
+                                    className="icon-style"
+                                    onClick={() =>
+                                      handleUpdateCampaign(campaign)
+                                    }
+                                  />
                                   <FontAwesomeIcon
                                     icon={faRocket}
                                     className="icon-style"
-                                    onClick={() => updateCampaignStatus(campaign.name, campaign.status, campaign.id)}
+                                    onClick={() =>
+                                      updateCampaignStatus(
+                                        campaign.name,
+                                        campaign.status,
+                                        campaign.id
+                                      )
+                                    }
                                     style={{ color: rocketIconColor }}
                                   />
-                                  {userType !== 'user' ? <FontAwesomeIcon icon={faTrash} className="icon-style" onClick={() => deleteCampaign(campaign.id)} /> : null}
+                                  {userType !== "user" ? (
+                                    <FontAwesomeIcon
+                                      icon={faTrash}
+                                      className="icon-style"
+                                      onClick={() =>
+                                        deleteCampaign(campaign.id)
+                                      }
+                                    />
+                                  ) : null}
                                 </td>
-
                               </tr>
                             );
                           })}
@@ -326,21 +405,33 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       </div>
 
       {showCampaignModal && (
-        <CampaignModal onClose={handleCloseCampaignModal} onCampaignCreated={fetchCampaigns} />
+        <CampaignModal
+          onClose={handleCloseCampaignModal}
+          onCampaignCreated={fetchCampaigns}
+        />
       )}
 
       {showAddUserModal && (
-        <AddUserModel onClose={handleCloseAddUserModal} onUserCreated={fetchCampaigns} />
+        <AddUserModel
+          onClose={handleCloseAddUserModal}
+          onUserCreated={fetchCampaigns}
+        />
       )}
 
       {showAddAdminModal && (
-        <AddAdminModel onClose={handleCloseAddAdminModal} onAdminCreated={fetchCampaigns} />
+        <AddAdminModel
+          onClose={handleCloseAddAdminModal}
+          onAdminCreated={fetchCampaigns}
+        />
       )}
 
       {showEditCampaignModal && (
-        <UpdateCampaignModel onClose={handleCloseEditCampaignModal} campainDetails={campainDetails} onCampaignUpdated={fetchCampaigns} />
+        <UpdateCampaignModel
+          onClose={handleCloseEditCampaignModal}
+          campainDetails={campainDetails}
+          onCampaignUpdated={fetchCampaigns}
+        />
       )}
-
     </div>
   );
 }
