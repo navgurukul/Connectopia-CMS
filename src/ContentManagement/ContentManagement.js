@@ -35,25 +35,7 @@ export function ContentManagement() {
   const isButtonActive = (buttonName) => {
     return activeButton === buttonName ? "selected-button" : "";
   };
-
-  // const fetchData = async () => {
-  //   try {
-  //     // const response = await fetch(`https://connectopia.co.in/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
-  //     const response = await fetch(
-  //       `https://connectopia.co.in/cms/campaign/general-product/${campaignId}/${scanType}`
-  //     );
-
-  //     const data = await response.json();
-  //     console.log("priyaaaa", data);
-
-  //     if (data?.product) {
-  //       const imageUrl = data?.product[0]?.image;
-  //       setQrCodeUrl(imageUrl);
-  //     }
-  //   } catch (error) {
-  //     console.error("An error occurred while fetching the data: ", error);
-  //   }
-  // };
+  
   const fetchData = async () => {
     try {
       const response = await fetch(
