@@ -22,7 +22,7 @@ const ProductRandomSequence = () => {
   }, []);
 
   async function fetchAndFilterImages() {
-    const url = `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`;
+    const url = `https://connectopia.co.in/cms/campaign/general-product/${campaignId}/${scanType}`;
 
     try {
       const response = await fetch(url);
@@ -79,7 +79,7 @@ const ProductRandomSequence = () => {
 
     try {
       const response = await axios.post(
-        `http://15.206.198.172/cms/campaign/upload-bulk/${campaignId}/${stageId}/product`,
+        `https://connectopia.co.in/cms/campaign/upload-bulk/${campaignId}/${stageId}/product`,
         formData,
         {
           headers: {

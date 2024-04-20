@@ -15,7 +15,7 @@ export function RemoveCampaign({ onClose, selectedOrganisation, campaigns, email
     };
     // /cms/campaign/remove/user
     try {
-      const response = await axios.delete("http://15.206.198.172/cms/campaign/remove/user", { data });
+      const response = await axios.delete("https://connectopia.co.in/cms/campaign/remove/user", { data });
       if (response.status === 200) {
         alert("Campaign removed successfully!");
         onRemoveCampaign(selectedOrganisation);

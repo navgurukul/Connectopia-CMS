@@ -43,7 +43,7 @@ const AddAdminModel = ({ onClose, onAdminCreated }) => {
         // email, password, organisation_id, name, usertype
 
         axios
-            .post("http://15.206.198.172/cms/cms-user/create", adminData)
+            .post("https://connectopia.co.in/cms/cms-user/create", adminData)
             .then((response) => {
                 if (onAdminCreated) {
                     onAdminCreated();

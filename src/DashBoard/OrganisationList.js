@@ -53,7 +53,7 @@ export function Organisation({ onOrgClick }) {
   const fetchOrganizations = async () => {
     if (userData.usertype === "superadmin") {
       try {
-        const apiUrl = `http://15.206.198.172/cms/organization/list/${userData.email}/${userData.usertype}`;
+        const apiUrl = `https://connectopia.co.in/cms/organization/list/${userData.email}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response?.json();
         console.log(data, "datakoma");
@@ -81,7 +81,7 @@ export function Organisation({ onOrgClick }) {
 
   const deleteOrganization = async (OrganizationId) => {
     if (window.confirm(`Are you sure you want to delete ${OrganizationId}?`)) {
-      const apiUrl = `http://15.206.198.172/cms/organization/delete/${OrganizationId}`;
+      const apiUrl = `https://connectopia.co.in/cms/organization/delete/${OrganizationId}`;
       try {
         const response = await axios.delete(apiUrl);
 

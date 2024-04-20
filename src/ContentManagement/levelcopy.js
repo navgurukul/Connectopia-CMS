@@ -123,12 +123,12 @@ export function LevelContent() {
       if (isLevelMap) {
         endpoint = isImageAvailable ? 'update-gif' : 'upload-gif';
         method = "update-gif" ? 'PUT' : 'POST';
-        url = `http://15.206.198.172/cms/campaign/${endpoint}/${campaignId}/${1}/${file.name.replace(/\s/g, '').slice(0, -4)}/${scanType}/${order}/${1}/level`;
+        url = `https://connectopia.co.in/cms/campaign/${endpoint}/${campaignId}/${1}/${file.name.replace(/\s/g, '').slice(0, -4)}/${scanType}/${order}/${1}/level`;
       } else {
         endpoint = isImageAvailable ? 'update-image' : 'upload-image';
         console.log( isImageAvailable ? 'PUT' : 'POST' , "This is inside the endpoint")
         method = isImageAvailable ? 'PUT' : 'POST';
-        url = `http://15.206.198.172/cms/campaign/${endpoint}/${campaignId}/${selectedLevel}/${file.name.replace(/\s/g, '').slice(0, -4)}/${scanType}/${order}/${1}/level`;
+        url = `https://connectopia.co.in/cms/campaign/${endpoint}/${campaignId}/${selectedLevel}/${file.name.replace(/\s/g, '').slice(0, -4)}/${scanType}/${order}/${1}/level`;
       }
       //28. POST: /cms/campaign/upload-image/:campaign_id/:level/:key/:scantype/:order/:stage_number/:content_type      
 
@@ -156,7 +156,7 @@ export function LevelContent() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://15.206.198.172/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`);
+      const response = await fetch(`https://connectopia.co.in/cms/campaign/get-signed-url/no-status/${campaignId}/${scanType}`);
       const data = await response.json();
 
       console.log("Data: ", data)

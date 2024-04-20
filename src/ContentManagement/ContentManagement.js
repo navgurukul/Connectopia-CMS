@@ -40,7 +40,7 @@ export function ContentManagement() {
   //   try {
   //     // const response = await fetch(`https://connectopia.co.in/withoutStatus/allsignedurls/${campaignId}/${scanType}`);
   //     const response = await fetch(
-  //       `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
+  //       `https://connectopia.co.in/cms/campaign/general-product/${campaignId}/${scanType}`
   //     );
 
   //     const data = await response.json();
@@ -57,7 +57,7 @@ export function ContentManagement() {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
+        `https://connectopia.co.in/cms/campaign/general-product/${campaignId}/${scanType}`
       );
       const data = await response.json();
       console.log("priyaaaa", data);

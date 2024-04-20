@@ -39,7 +39,7 @@ const AddUserModel = ({ onClose, onUserCreated }) => {
         };
         console.log(onUserCreated, "onUserCreated");
         axios
-            .post("http://15.206.198.172/cms/cms-user/create", userData)
+            .post("https://connectopia.co.in/cms/cms-user/create", userData)
             .then((response) => {
                 console.log(response.data,"response")
                 if (onUserCreated) {

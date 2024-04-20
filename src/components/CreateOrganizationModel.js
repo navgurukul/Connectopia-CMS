@@ -45,7 +45,7 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = `http://15.206.198.172/cms/organization/edit/${organizationData.id}`;
+        const apiUrl = `https://connectopia.co.in/cms/organization/edit/${organizationData.id}`;
         const requestData = {
           description: details,
           name:  name,
@@ -85,7 +85,7 @@ const CreateOrganizationModel = ({ onClose, onOrganizationCreated, organizationD
         return;
       }
       try {
-        const apiUrl = "http://15.206.198.172/cms/organization/create";
+        const apiUrl = "https://connectopia.co.in/cms/organization/create";
         const requestData = {
           name: name,
           logo:"#",

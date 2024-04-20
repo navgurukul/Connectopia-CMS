@@ -36,7 +36,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
     if (organisationName) {
       axios
         .get(
-          `http://15.206.198.172/cms/organization/${
+          `https://connectopia.co.in/cms/organization/${
             organisationName || organizationId
           }`
         )
@@ -102,7 +102,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
 
   const fetchOrganisation = async () => {
     try {
-      const apiUrl = `http://15.206.198.172/cms/organization/list/${userEmailid}/${userType}`;
+      const apiUrl = `https://connectopia.co.in/cms/organization/list/${userEmailid}/${userType}`;
       const response = await fetch(apiUrl);
 
       const data = await response.json();
@@ -183,7 +183,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
   const fetchUsersByOrganisation = async (organizationId) => {
     try {
       organizationId = organizationId.replace(/\s/g, "_");
-      const apiUrl = `http://15.206.198.172/cms/organization/user/${organizationId}`;
+      const apiUrl = `https://connectopia.co.in/cms/organization/user/${organizationId}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setUserDetail(data);
@@ -194,7 +194,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
 
   const fetchUserReport = async (selectCampaignId) => {
     try {
-      const apiUrl = `http://15.206.198.172/cms/customer/players/${selectCampaignId}`;
+      const apiUrl = `https://connectopia.co.in/cms/customer/players/${selectCampaignId}`;
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -239,7 +239,7 @@ export function UserGameReport({ setSelectedName, setSelectedDetail }) {
   const deleteUser = (phoneNumber) => {
     axios
       .delete(
-        `http://15.206.198.172/deletePlayer/${phoneNumber}/${selectCampaignId}`
+        `https://connectopia.co.in/deletePlayer/${phoneNumber}/${selectCampaignId}`
       )
       .then((response) => {
         fetchUserReport();

@@ -52,7 +52,7 @@ const UpdateUserAdminModel = ({
             newemail: email,
         };
         axios
-            .put("http://15.206.198.172/cms/cms-user/update", updatedUserData)
+            .put("https://connectopia.co.in/cms/cms-user/update", updatedUserData)
             .then((response) => {
                 if (onUpdateUserAdmin) {
                     onUpdateUserAdmin(selectedOrganisation);

@@ -19,7 +19,7 @@ function LoginForm({ handleLogin, setLoggedInUserData }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const endpoint = 'http://15.206.198.172/cms/cms-user/login';
+        const endpoint = 'https://connectopia.co.in/cms/cms-user/login';
 
         const data = {
             email: email,

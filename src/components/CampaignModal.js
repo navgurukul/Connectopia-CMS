@@ -33,7 +33,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
     console.log("This function is called.");
     try {
       const response = await axios.get(
-        "http://15.206.198.172/cms/campaign-next"
+        "https://connectopia.co.in/cms/campaign-next"
       );
 
       const campaignId = response.data.data.id;
@@ -142,7 +142,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
 
     try {
       const response = await axios.post(
-        "http://15.206.198.172/cms/campaign/create",
+        "https://connectopia.co.in/cms/campaign/create",
         payload
       );
 
@@ -157,7 +157,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
         formData.append("image", imageBlob, "qr-code.png");
 
         try {
-          const apiUrl = `http://15.206.198.172/cms/campaign/upload-qr/${data}/Main-QRCode/product`;
+          const apiUrl = `https://connectopia.co.in/cms/campaign/upload-qr/${data}/Main-QRCode/product`;
           const updateImageResponse = await axios.post(apiUrl, formData, {
             headers: {
               "Content-Type": "multipart/form-data",

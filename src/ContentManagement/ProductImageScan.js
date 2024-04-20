@@ -24,7 +24,7 @@ const ProductImageScan = () => {
   }, []);
 
   async function fetchAndFilterImages() {
-    const url = `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`;
+    const url = `https://connectopia.co.in/cms/campaign/general-product/${campaignId}/${scanType}`;
 
     try {
       const response = await fetch(url);
@@ -73,7 +73,7 @@ const ProductImageScan = () => {
 
     try {
       const response = await axios.post(
-        `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product`,
+        `https://connectopia.co.in/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product`,
         // /cms/campaign/upload-mind/:campaign_id/:stage_id/:level/:key:/content_type
         formData,
         {

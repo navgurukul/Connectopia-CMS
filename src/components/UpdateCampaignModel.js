@@ -86,7 +86,7 @@ const UpdateCampaignModel = ({
 
     try {
       const response = await axios.put(
-        `http://15.206.198.172/cms/campaign/edit/${campainDetails.id}`,
+        `https://connectopia.co.in/cms/campaign/edit/${campainDetails.id}`,
         payload
       );
 

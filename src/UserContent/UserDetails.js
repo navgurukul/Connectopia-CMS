@@ -110,7 +110,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   const fetchOrganisation = async () => {
     if (userData.usertype === "superadmin") {
       try {
-        const apiUrl = `http://15.206.198.172/cms/organization/list/${userData.email}/${userData.usertype}`;
+        const apiUrl = `https://connectopia.co.in/cms/organization/list/${userData.email}/${userData.usertype}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         setOrganisation(data.data);
@@ -143,7 +143,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
     );
     // console.log(orgId, "orgId")
     try {
-      const apiUrl = `http://15.206.198.172/cms/organization/user/${orgId}`;
+      const apiUrl = `https://connectopia.co.in/cms/organization/user/${orgId}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setUserDetail(data.data);
@@ -154,7 +154,7 @@ export function UserDetails({ setSelectedName, setSelectedDetail }) {
   };
 
   const handleDeleteCmsUser = (email) => {
-    const url = "http://15.206.198.172/cms/cms-user/delete";
+    const url = "https://connectopia.co.in/cms/cms-user/delete";
 
     axios({
       method: "delete",

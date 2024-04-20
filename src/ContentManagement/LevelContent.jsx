@@ -107,7 +107,7 @@ export function LevelContent() {
 
     switch (condition) {
       case "1-1":
-        url = `http://15.206.198.172/cms/campaign/upload-gif/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`;
+        url = `https://connectopia.co.in/cms/campaign/upload-gif/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`;
         break;
       case "1-0":
         alert("Please upload a GIF file for Level Map.");
@@ -118,7 +118,7 @@ export function LevelContent() {
         setLoading(false);
         return;
       case "0-0":
-        url = `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`;
+        url = `https://connectopia.co.in/cms/campaign/upload-image/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`;
         break;
       default:
         console.log("Invalid condition");
@@ -170,7 +170,7 @@ export function LevelContent() {
     let levelName = "level-" + selectedLevel;
     try {
       const response = await fetch(
-        `http://15.206.198.172/cms/campaign/stages/with-level/${campaignId}`
+        `https://connectopia.co.in/cms/campaign/stages/with-level/${campaignId}`
       );
       const data = await response.json();
       setData(data.data);

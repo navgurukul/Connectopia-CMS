@@ -81,9 +81,9 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
       let url;
 
       if (userData.usertype === 'superadmin') {
-        url = `http://15.206.198.172/cms/organization/${organisationList}`;
+        url = `https://connectopia.co.in/cms/organization/${organisationList}`;
       } else {
-        url = `http://15.206.198.172/campaignsByEmailid/${userData.email}`;
+        url = `https://connectopia.co.in/campaignsByEmailid/${userData.email}`;
       }
 
       axios
@@ -107,7 +107,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
 
 
-    const apiUrl = `http://15.206.198.172/cms/campaign/set-status/${campaignId}/${newStatus}`;
+    const apiUrl = `https://connectopia.co.in/cms/campaign/set-status/${campaignId}/${newStatus}`;
 
     try {
       const response = await axios.put(apiUrl);
@@ -136,7 +136,7 @@ export function OrganisationDetail({ backToDashboard, goToContentManage }) {
 
 
   const deleteCampaign = async (campaignId) => {
-    const apiUrl = `http://15.206.198.172/cms/campaign/delete/${campaignId}`;
+    const apiUrl = `https://connectopia.co.in/cms/campaign/delete/${campaignId}`;
     try {
       const response = await axios.delete(apiUrl);
   

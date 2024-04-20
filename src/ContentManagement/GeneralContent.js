@@ -95,11 +95,11 @@ export function GeneralContent() {
       };
       isImageAvailable
         ? (API_DATA = {
-            url: `http://15.206.198.172/cms/campaign/update-image/${contentId}/general`,
+            url: `https://connectopia.co.in/cms/campaign/update-image/${contentId}/general`,
             method: "PUT",
           })
         : (API_DATA = {
-            url: `http://15.206.198.172/cms/campaign/upload-image/${campaignId}/${order}/general?key=${key}&level=0&stage_id=0`,
+            url: `https://connectopia.co.in/cms/campaign/upload-image/${campaignId}/${order}/general?key=${key}&level=0&stage_id=0`,
             method: "POST",
           });
 
@@ -144,7 +144,7 @@ export function GeneralContent() {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://15.206.198.172/cms/campaign/general-product/${campaignId}/${scanType}`
+        `https://connectopia.co.in/cms/campaign/general-product/${campaignId}/${scanType}`
       );
 
       const data = await response?.json();
