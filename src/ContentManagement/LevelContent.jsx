@@ -215,13 +215,16 @@ export function LevelContent() {
           <strong>Select the Stage</strong>
         </h6>
       </div>
-      <div className="stage-contanier" style={{ display: "flex" }}>
+      <div className="stage-contanier" style={{ display: "flex",marginTop:"20px" }}>
         {Array.from({ length: stageNumber }, (_, index) => (
           <div
             key={index + 1}
             style={{
               color: "red",
-              border: selectedStage === index + 1 ? "2px solid blue" : "none",
+              border: selectedStage === index + 1 ? "2px solid black" : "none",
+              borderRadius:"10%",
+              backgroundColor: selectedStage === index + 1 ? "green" : "white",
+              color: selectedStage === index + 1 ? "white" : "black",
               cursor: "pointer",
               marginRight: "10px",
               padding: "5px",

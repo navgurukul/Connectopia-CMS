@@ -70,6 +70,7 @@ const ProductImageScan = () => {
     setSaving(true);
     const formData = new FormData();
     formData.append("image", file);
+
     try {
       const response = await axios.post(
         `http://15.206.198.172/cms/campaign/upload-mind/${campaignId}/${stageId}/${level}/${selectedLevel}/product`,
@@ -80,12 +81,14 @@ const ProductImageScan = () => {
             "Content-Type": "multipart/form-data",
           },
         }
-      );
+      ); 
+       setLevel(1);
       if (
         response.data === "Both .mind and image file got uploaded successfully"
       ) {
         setUploadMessage("Image  Uploaded Successfully !!");
         fetchAndFilterImages();
+      
         setTimeout(() => setUploadMessage(""), 7000);
       } else {
         setUploadMessage("Image Updated Successfully !!");
@@ -94,6 +97,7 @@ const ProductImageScan = () => {
       }
     } catch (error) {
       console.error("Error uploading file: ", error);
+      alert("Error uploading file. File already exists.");
     } finally {
       setSaving(false);
       setLoading(false);
@@ -112,6 +116,7 @@ const ProductImageScan = () => {
 
   const handlelevelImageUpload = (e, index) => {
     setImageData(e.target.value);
+    console.log(e.target.value, "This is the value",e.target.selectedIndex + 1);
     setLevel(e.target.selectedIndex + 1);
     setselectedLevel(e.target.value);
   };
@@ -139,7 +144,7 @@ const ProductImageScan = () => {
                 </div>
                 <div className="col-10">
                   <h2 className="title text-center">
-                    Generate Image to be Scan
+                    Generate Image to be Scanned
                   </h2>
                   <hr />
                   {uploadMessage && (
@@ -150,25 +155,14 @@ const ProductImageScan = () => {
                       {uploadMessage}
                     </div>
                   )}
-                  <div className="imageScan__container"></div>
-                  <h6>Select the Stage</h6>
-                  <select
-                    id="stage"
-                    className="form-select"
-                    style={{ width: "350px", marginLeft: "20px" }}
-                    onChange={(e) => handleStageChange(e)}
-                  >
-                    {stages.map((stage, index) => (
-                      <option key={index} value={stage}>
-                        {stage}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
             </div>
-            <div className="row" style={{ marginTop: "20px" }}>
+            <div className="row">
               <div className="col-6">
+                <h6 style={{ textAlign: "center", margin: "15px 0" }}>
+                  Select the Stage and Images Level Wise
+                </h6>
                 <div
                   style={{
                     border: "1px dotted black",
@@ -177,6 +171,20 @@ const ProductImageScan = () => {
                     margin: "auto",
                   }}
                 >
+                  <div className="imageScan__container"></div>
+
+                  <select
+                    id="stage"
+                    className="form-select"
+                    style={{ width: "300px" }}
+                    onChange={(e) => handleStageChange(e)}
+                  >
+                    {stages.map((stage, index) => (
+                      <option key={index} value={stage}>
+                        {stage}
+                      </option>
+                    ))}
+                  </select>
                   <div className="mb-2">
                     <h6>Select the images Level wise</h6>
                     <select

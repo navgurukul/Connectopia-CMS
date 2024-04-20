@@ -60,7 +60,7 @@ const ProductRandomSequence = () => {
     } else {
       setFile(files);
       setUploadMessage("");
-      setPreviewUrls(files.map((file) => URL.createObjectURL(file))); 
+      setPreviewUrls(files.map((file) => URL.createObjectURL(file)));
     }
   };
 
@@ -99,7 +99,6 @@ const ProductRandomSequence = () => {
         fetchAndFilterImages();
         setTimeout(() => setUploadMessage(""), 7000);
       }
-
     } catch (error) {
       console.error("Error uploading file: ", error);
     } finally {
@@ -130,10 +129,43 @@ const ProductRandomSequence = () => {
                     <ul className="list-inline"></ul>
                   </div>
                 </div>
-                <div className="col-10">
+                <div
+                  className="col-10"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                  }}
+                >
                   <h2 className="title text-center">
-                    Random Sequence Image to be Scan
+                    Add images for Random Scanning
                   </h2>
+                  <div>
+                  <div
+                    style={{
+                      border: "1px dotted black",
+                      padding: "5px",
+                      width: "110px",
+                      height: "110px",
+                      margin: "auto",
+                    }}
+                  >
+                    
+                    {productMainQR.mainQR && (
+                      <>
+                  
+                        <div style={{ padding: "10px" }}>
+                          <img
+                            src={productMainQR.mainQR.image}
+                            alt={productMainQR.mainQR.key}
+                            style={{ width: "80px", height: "80px" }}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <h5>Main QR code</h5>
+                  </div>
                   <hr />
                   {uploadMessage && (
                     <div
@@ -143,23 +175,10 @@ const ProductRandomSequence = () => {
                       {uploadMessage}
                     </div>
                   )}
-                  <div className="imageScan__container"></div>
-                  <h6>Select the Stage</h6>
-                  <select
-                    id="stage"
-                    className="form-select"
-                    style={{ width: "350px", marginLeft: "20px" }}
-                    onChange={(e) => handleStageChange(e)}
-                  >
-                    {stages.map((stage, index) => (
-                      <option key={index} value={stage}>
-                        {stage}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
             </div>
+           < hr/>
             <div
               className="row align-items-start"
               style={{ marginTop: "20px" }}
@@ -174,7 +193,21 @@ const ProductRandomSequence = () => {
                   }}
                 >
                   <div className="mb-2">
-                    <div className="input-section">
+                    <div className="imageScan__container"></div>
+                    <h6>Select the Stage</h6>
+                    <select
+                      id="stage"
+                      className="form-select"
+                      style={{ width: "350px"}}
+                      onChange={(e) => handleStageChange(e)}
+                    >
+                      {stages.map((stage, index) => (
+                        <option key={index} value={stage}>
+                          {stage}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="input-section" style={{margin:"1rem 0"}}>
                       <h6>Select 5 images</h6>
                       <div
                         style={{ width: "330px", border: "1px solid black" }}
@@ -190,14 +223,14 @@ const ProductRandomSequence = () => {
                     <div
                       className={`image-preview-container ${
                         previewUrls.length > 0 ? "has-images" : ""
-                      }`}
+                      }` }
                     >
                       {previewUrls.map((url, index) => (
                         <div key={index} className="image-preview-item">
                           <img
                             src={url}
                             alt="Preview"
-                            style={{ width: "100px", height: "100px" }}
+                            style={{ width: "70px", height: "70px" }}
                           />
                         </div>
                       ))}
@@ -227,28 +260,6 @@ const ProductRandomSequence = () => {
                 </div>
               </div>
               <div className="col-6">
-                <div
-                  style={{
-                    border: "1px dotted black",
-                    padding: "5px",
-                    width: "110px",
-                    height: "110px",
-                    margin: "auto",
-                  }}
-                >
-                  {productMainQR.mainQR && (
-                    <>
-                      <div style={{ padding: "10px" }}>
-                        <img
-                          src={productMainQR.mainQR.image}
-                          alt={productMainQR.mainQR.key}
-                          style={{ width: "80px", height: "80px" }}
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
-
                 <div
                   style={{
                     padding: "3px",
@@ -339,4 +350,3 @@ const ProductRandomSequence = () => {
   );
 };
 export default ProductRandomSequence;
-
