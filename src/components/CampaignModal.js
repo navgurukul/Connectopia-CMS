@@ -11,7 +11,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [scannerType, setScannerType] = useState("");
   const [campaignName, setcampaignName] = useState("");
   const [qrscanData, setQrscanData] = useState(
-    "https://master.d1ywywy8pav9t.amplifyapp.com/"
+    "https://dev.d1ywywy8pav9t.amplifyapp.com/"
   );
   // const [sequence, setSequence] = useState("random");
   const [scanSequenceType, setScanSequenceType] = useState("");
@@ -520,7 +520,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
                       (() => {
                         return (
                           <QRCode
-                            value={`${qrscanData}?campaignId=${data}&scanType=${scannerType}`}
+                            value={`${qrscanData}?campaignId=${data}&scantype=${scannerType}`}
                             size={100}
                             level={"H"}
                             style={{ marginTop: "-7px", marginLeft: "-9px" }}
