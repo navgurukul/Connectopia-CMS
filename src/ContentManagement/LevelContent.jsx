@@ -110,9 +110,11 @@ export function LevelContent() {
         url = `https://connectopia.co.in/cms/campaign/upload-gif/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`;
         break;
       case "1-0":
-        alert("Please upload a GIF file for Level Map.");
-        setLoading(false);
-        return;
+
+      console.log("This is running for 1-0")
+        url = `https://connectopia.co.in/cms/campaign/upload-image/${campaignId}/${order}/level?stage_id=${stageId}&key=${key}&level=${selectedLevel}`
+      
+        break;
       case "0-1":
         alert("Please upload a PNG, JPG, or JPEG file for this level.");
         setLoading(false);
@@ -172,7 +174,9 @@ export function LevelContent() {
       const response = await fetch(
         `https://connectopia.co.in/cms/campaign/stages/with-level/${campaignId}`
       );
-      const data = await response.json();
+  
+      const data = await response?.json();
+      console.log("Data: ", data.data);
       setData(data.data);
       setLoading(false);
       // console.log("Data: ", data.data);
@@ -180,7 +184,7 @@ export function LevelContent() {
       if (stageId === null) setStageId(data?.data["stage-1"].stage_id);
       if (data.data[stageName]) {
         // console.log("Data at line 180: ", data.data[stageName][levelName]);
-        setLevelArr(data.data[stageName][levelName]);
+        setLevelArr(data?.data[stageName][levelName]);
       }
       ////console.log("Stage ID number: ", data?.stages["stage-1"].stage_id);
     } catch (error) {
