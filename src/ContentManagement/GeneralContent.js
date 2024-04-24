@@ -59,6 +59,12 @@ export function GeneralContent() {
       formats: "PNG, JPG, JPEG",
       order: 8,
     },
+    {
+      name: "Button",
+      description: "Button to start the game",
+      formats: "PNG, JPG, JPEG",
+      order: 9,
+    },
   ];
 
   const [imageData, setImageData] = useState({});
