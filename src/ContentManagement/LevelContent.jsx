@@ -152,6 +152,18 @@ export function LevelContent() {
     setSelectedLevel(level);
   };
 
+  
+  const handleDownloadClick = (imageUrl) => {
+    const imagess = imageUrl;
+    // setQrCodeUrl(imageUrl);
+    const a = document.createElement('a');
+    a.href = imagess;
+    a.download = 'downloaded_image.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
   const handleUploadIconClick = (
     isImageAvailable,
     selectedStage,
@@ -309,6 +321,7 @@ export function LevelContent() {
                         className="icon-styles"
                         icon={faDownload}
                         style={{ cursor: "pointer" }}
+                        onClick={() => handleDownloadClick(imageUrl)}
                       />
                     )}
                     {
