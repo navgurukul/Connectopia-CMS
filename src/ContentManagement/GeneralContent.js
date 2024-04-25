@@ -67,6 +67,7 @@ export function GeneralContent() {
     },
   ];
 
+  const [imageUrl, setImageUrl] = useState(null);
   const [imageData, setImageData] = useState({});
 
   const fileInputRefs = contentData.map(() => React.createRef());
@@ -83,7 +84,6 @@ export function GeneralContent() {
       fileInputRefs[index].current.click();
     }
   };
-
   const handleFileChange = (event, order, isImageAvailable, contentId) => {
     const file = event.target.files[0];
     console.log(contentId, "Item");
@@ -91,10 +91,10 @@ export function GeneralContent() {
       setLoading(true);
       const formData = new FormData();
       formData.append("image", file);
-
+  
       let key = file?.name.slice(0, -4);
       console.log("key", key);
-
+  
       let API_DATA = {
         url: "",
         method: "",
@@ -108,20 +108,23 @@ export function GeneralContent() {
             url: `https://connectopia.co.in/cms/campaign/upload-image/${campaignId}/${order}/general?key=${key}&level=0&stage_id=0`,
             method: "POST",
           });
-
+  
       fetch(API_DATA.url, {
         method: API_DATA.method,
         body: formData,
       })
         .then((response) => {
           console.log(response, "API response");
+          return response.json(); 
         })
         .then((data) => {
+          setImageUrl(data.imageUrl); 
+  
           fetchData();
           setTimeout(() => {
             fetchData();
           }, 8000);
-
+  
           setLoading(false);
           setUploadMessage("Image Uploaded Successfully !!");
           setTimeout(() => setUploadMessage(""), 7000);
@@ -136,7 +139,6 @@ export function GeneralContent() {
       setLoading(false);
     }
   };
-
   const handleDownloadClick = (imageUrl) => {
     const imagess = imageUrl[0].value;
     const a = document.createElement("a");
@@ -169,8 +171,8 @@ export function GeneralContent() {
   const [previewImage, setPreviewImage] = useState("");
 
   const handlePreviewClick = (imageUrl) => {
-    console.log("imageUrl", imageUrl);
-    setPreviewImage(imageUrl);
+    const imageUrlWithCacheBuster = `${imageUrl}?timestamp=${Date.now()}`;
+    setPreviewImage(imageUrlWithCacheBuster);
     setShowPreview(true);
   };
 
@@ -216,14 +218,9 @@ export function GeneralContent() {
                         imageData &&
                         imageData[item.order]?.hasOwnProperty("image");
                       const contentId = imageData && imageData[item.order]?.id;
-                      // if(imageData ){
-                      //   console.log("imageData", imageData[item.order]);
-                      // }
-
-                      // console.log("isImageAvailable", imageData);
                       const imageUrl =
                         imageData && imageData[item.order]?.image;
-                      console.log("imageUrl", imageUrl, item.order);
+                      // console.log("imageUrl", imageUrl, item.order);
                       return (
                         <tr key={index}>
                           <td>
