@@ -7,6 +7,7 @@ import { LevelContent } from "./LevelContent";
 import { ProductScanContent } from "./ProductScanContent";
 import ProductImageScan from "./ProductImageScan";
 import ProductRandomSequence from "./ProductRandomSequence";
+
 import "./ContentManagement.css";
 
 export function ContentManagement() {
@@ -108,7 +109,7 @@ export function ContentManagement() {
               <button
                 className={`create-button-but ${isButtonActive("productscan")}`}
                 onClick={() => {
-                  if (scanSequence === "random") {
+                  if (scanSequence === "random" && scanType === "image") {
                     handleButtonClick(<ProductRandomSequence />, "productscan");
                   } else {
                     scanType === "qr"
