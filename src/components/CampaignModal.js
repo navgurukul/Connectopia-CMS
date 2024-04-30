@@ -11,7 +11,7 @@ const CampaignModal = ({ onClose, onCampaignCreated }) => {
   const [scannerType, setScannerType] = useState("");
   const [campaignName, setcampaignName] = useState("");
   const [qrscanData, setQrscanData] = useState(
-    "https://dev.d1ywywy8pav9t.amplifyapp.com/"
+    "https://feature-qr-scan.d1ywywy8pav9t.amplifyapp.com/"
   );
   // const [sequence, setSequence] = useState("random");
   const [scanSequenceType, setScanSequenceType] = useState("");
