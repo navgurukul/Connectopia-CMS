@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import QRCode from "qrcode.react";
 import axios from "axios";
+import "./productscan.css";
+import html2canvas from "html2canvas";
 
 export const ProductScanContent = () => {
   const [qrData, setQrData] = useState("");
@@ -30,7 +32,7 @@ export const ProductScanContent = () => {
     const imageData = canvas.toDataURL("image/png");
     if (canvas) {
       const a = document.createElement("a");
-      a.href = canvas.toDataURL("image/png");
+      a.href = imageData;
       a.download = "QRCode.png";
       a.click();
     }
@@ -39,25 +41,29 @@ export const ProductScanContent = () => {
     if (data) {
       setGenerateQR(true);
     }
-    const canvas = qrRef.current.querySelector("canvas");
-    const imageData = canvas.toDataURL("image/png");
 
-    const imageBlob = dataURLtoBlob(imageData);
-    const formData = new FormData();
-    formData.append("image", imageBlob);
-    const apiUrl = `https://connectopia.co.in/cms/campaign/upload-mind/${campaignId}/${selectedStageId}/${qrLevel}/QR-${qrLevel}/product-qr`;
-    try {
-      const response = await axios.post(apiUrl, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-    } catch (error) {
-      console.error("Error uploading image:", error.message);
-    } finally {
-      setData("");
-      QRDATA();
-      setQrData("");
+    const wrapper = qrRef.current;
+    if (wrapper) {
+      const canvas = await html2canvas(wrapper);
+      const imageData = canvas.toDataURL("image/png");
+
+      const imageBlob = dataURLtoBlob(imageData);
+      const formData = new FormData();
+      formData.append("image", imageBlob);
+      const apiUrl = `https://connectopia.co.in/cms/campaign/upload-mind/${campaignId}/${selectedStageId}/${qrLevel}/QR-${qrLevel}/product-qr`;
+      try {
+        const response = await axios.post(apiUrl, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      } finally {
+        setData("");
+        QRDATA();
+        setQrData("");  
+      }
     }
   };
   function dataURLtoBlob(dataurl) {
@@ -236,11 +242,25 @@ export const ProductScanContent = () => {
                   )}
                   <div
                     ref={qrRef}
-                    style={{ marginTop: "20px", marginLeft: "60px", padding: "15px 15px", border:"2px solid black", width: "200px", height: "200px"}}
+                    className="input-QRCode"
+                    style={{
+                      margin: "auto",
+                      marginTop: "20px",
+                      width: "120px",
+                    }}
                   >
-                    {generateQR && qrData && (
-                      <QRCode value={qrData} size={160} level={"H"} />
-                    )}
+                    {generateQR &&
+                      qrData &&
+                      (() => {
+                        return (
+                          <QRCode
+                            value={qrData}
+                            size={100}
+                            level={"H"}
+                            style={{ marginTop: "-7px", marginLeft: "-9px" }}
+                          />
+                        );
+                      })()}
                   </div>
                 </div>
 
