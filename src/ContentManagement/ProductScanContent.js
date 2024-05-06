@@ -236,7 +236,7 @@ export const ProductScanContent = () => {
                   )}
                   <div
                     ref={qrRef}
-                    style={{ marginTop: "20px", marginLeft: "60px" }}
+                    style={{ marginTop: "20px", marginLeft: "60px", padding: "15px 15px", border:"2px solid black", width: "200px", height: "200px"}}
                   >
                     {generateQR && qrData && (
                       <QRCode value={qrData} size={160} level={"H"} />
